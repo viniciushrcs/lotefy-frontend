@@ -57,7 +57,7 @@ export default function LoginPage() {
               Ainda não tem cadastro?
             </Text>
             <Anchor
-              href="https://mantine.dev/"
+              href="http://localhost:3000/signup"
               className="text-[#56D963] text-sm font-normal leading-5"
             >
               Crie uma conta
