@@ -5,7 +5,7 @@ import Background from "../../public/images/Section.png";
 import RectangleIcon from "../../public/icons/Rectangle.svg";
 import BackButton from "../../public/icons/BackButton.svg";
 
-export default function LoginPage() {
+export default function Login() {
   return (
     <div className="grid grid-cols-[1fr_1.32fr] h-screen">
       <div className="flex justify-center items-center">
