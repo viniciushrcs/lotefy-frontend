@@ -5,3 +5,10 @@ export * as BuildingIcon from "./tabler_building.svg";
 export * as PasscodeIcon from "./passcode.svg";
 export * as FileIcon from "./file.svg";
 export * as CompletedIcon from "./check-circle-broken.svg";
+
+export * as UserIconIdentification from "./UserIcon.svg";
+export * as UserCheckIcon from "./UserCheckIcon.svg";
+export * as MessageRegisterIcon from "./MessageIcon.svg";
+export * as CompanyIcon from "./CompanyIcon.svg";
+export * as FileRegisterIcon from "./FileIcon.svg";
+export * as PasswordIcon from "./PasswordIcon.svg";

@@ -2,6 +2,8 @@ import NextImage from "next/image";
 import { Anchor, Button, Image, InputBase, Text } from "@mantine/core";
 import BackButton from "../../public/icons/BackButton.svg";
 import { IMaskInput } from "react-imask";
+import { SignUpContext } from "../../context/SignUpContext";
+import { useContext } from "react";
 
 interface Props {
   icon: any;
@@ -11,6 +13,7 @@ interface Props {
   backAnchorName: string;
   prevStep: any;
   nextStep: any;
+  children: React.ReactNode;
 }
 
 export default function RegisterInput({
@@ -21,11 +24,13 @@ export default function RegisterInput({
   backAnchorName,
   prevStep,
   nextStep,
+  children,
 }: Props) {
+  const { userData, updateUserData } = useContext(SignUpContext);
   return (
     <div className="flex justify-center items-center">
       <div className="max-h-[22.8rem] max-w-[22rem] w-[22rem] h-[22.8rem] ">
-        <div className="flex justify-center items-center flex-col">
+        <div className="flex justify-center items-center flex-col text-center">
           <Image
             component={NextImage}
             src={icon}
@@ -41,22 +46,15 @@ export default function RegisterInput({
             {inputDescription}
           </Text>
         </div>
-        <InputBase
-          radius="xs"
-          size="md"
-          component={IMaskInput}
-          mask="000.000.000-00"
-          placeholder="000.000.000-00"
-          className="mb-[1.5rem]"
-        />
+        {children}
         <Button
           variant="filled"
           color="#56D963"
           radius="xs"
-          size="md"
+          size="lg"
           fullWidth
           style={{ "--button-fz": "16px" }}
-          className="mb-[2rem]"
+          className="mb-[2rem] font-light"
           onClick={nextStep}
         >
           {buttonName}

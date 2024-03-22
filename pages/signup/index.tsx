@@ -1,14 +1,13 @@
 import { Text } from "@mantine/core";
-import UserIcon from "../../public/icons/UserIcon.svg";
 import { useState } from "react";
-import RegisterInput from "../../components/RegisterInput";
 import StepperComponent from "../../components/Stepper";
 import logo from "../../public/images/Logo.png";
 import NextImage from "next/image";
 import { Image } from "@mantine/core";
+import { InputRegisterDisplayer } from "../../components/InputRegisterDisplayer";
 
 export default function SignUp() {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
 
   const nextStep = () =>
     setActive((current) => (current < 6 ? current + 1 : current));
@@ -27,15 +26,7 @@ export default function SignUp() {
           left={34}
           top={35}
         />
-        <RegisterInput
-          icon={UserIcon}
-          inputHeader={"Seu CPF"}
-          inputDescription={"Informe seu CPF, por favor"}
-          buttonName={"Proximo"}
-          backAnchorName={"Volte ao login"}
-          prevStep={prevStep}
-          nextStep={nextStep}
-        />
+        {InputRegisterDisplayer(active, prevStep, nextStep)}
       </div>
       <div className="p-12">
         <Text className="text-[#0F1728] text-center text-[2rem] font-medium leading-[38px] pb-[5rem]">
