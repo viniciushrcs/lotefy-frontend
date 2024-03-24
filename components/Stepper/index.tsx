@@ -4,15 +4,13 @@ import * as Icons from "../../public/icons/index";
 
 interface Props {
   active: number;
-  setActive: any;
 }
 
-export default function StepperComponent({ active, setActive }: Props) {
+export default function StepperComponent({ active }: Props) {
   return (
     <>
       <Stepper
         active={active}
-        onStepClick={setActive}
         orientation="vertical"
         color="#56D963"
         iconSize={49}
@@ -123,7 +121,6 @@ export default function StepperComponent({ active, setActive }: Props) {
             />
           }
         />
-        <Stepper.Completed> </Stepper.Completed>
       </Stepper>
     </>
   );

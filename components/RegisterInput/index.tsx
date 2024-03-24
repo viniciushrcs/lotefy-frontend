@@ -1,19 +1,17 @@
 import NextImage from "next/image";
-import { Anchor, Button, Image, InputBase, Text } from "@mantine/core";
+import { Anchor, Button, Image, Text } from "@mantine/core";
 import BackButton from "../../public/icons/BackButton.svg";
-import { IMaskInput } from "react-imask";
-import { SignUpContext } from "../../context/SignUpContext";
-import { useContext } from "react";
 
 interface Props {
   icon: any;
   inputHeader: string;
   inputDescription: string;
-  buttonName: string;
-  backAnchorName: string;
-  prevStep: any;
-  nextStep: any;
+  buttonName?: string;
+  backAnchorName?: string;
+  prevStep?: any;
+  nextStep?: any;
   children: React.ReactNode;
+  verifyComponent?: boolean;
 }
 
 export default function RegisterInput({
@@ -25,8 +23,8 @@ export default function RegisterInput({
   prevStep,
   nextStep,
   children,
+  verifyComponent,
 }: Props) {
-  const { userData, updateUserData } = useContext(SignUpContext);
   return (
     <div className="flex justify-center items-center">
       <div className="max-h-[22.8rem] max-w-[22rem] w-[22rem] h-[22.8rem] ">
@@ -47,34 +45,50 @@ export default function RegisterInput({
           </Text>
         </div>
         {children}
-        <Button
-          variant="filled"
-          color="#56D963"
-          radius="xs"
-          size="lg"
-          fullWidth
-          style={{ "--button-fz": "16px" }}
-          className="mb-[2rem] font-light"
-          onClick={nextStep}
-        >
-          {buttonName}
-        </Button>
-        <div className="flex gap-[0.25rem]  justify-center items-center">
-          <Image
-            component={NextImage}
-            src={BackButton}
-            alt="Logo"
-            h={20}
-            w={20}
-          />
-          <Anchor
-            // href="http://localhost:3000/login"
-            className="text-[#56D963] text-sm font-normal leading-5"
-            onClick={prevStep}
+        {buttonName && (
+          <Button
+            variant="filled"
+            color="#56D963"
+            radius="xs"
+            size="lg"
+            fullWidth
+            style={{ "--button-fz": "16px" }}
+            className="mb-[2rem] font-light"
+            onClick={nextStep}
           >
-            {backAnchorName}
-          </Anchor>
-        </div>
+            {buttonName}
+          </Button>
+        )}
+        {verifyComponent && (
+          <div className="flex gap-[2.5px] mb-[2rem]">
+            <Text>Nao recebeu?</Text>
+            <Anchor className="text-[#56D963]">Reenviar código</Anchor>
+            <Text>ou</Text>
+            <Anchor className="text-[#56D963]">Verificar email</Anchor>
+          </div>
+        )}
+        {backAnchorName && (
+          <div className="flex gap-[0.25rem] justify-center items-center">
+            <Image
+              component={NextImage}
+              src={BackButton}
+              alt="Logo"
+              h={20}
+              w={20}
+            />
+            <Anchor
+              // href={
+              //   backAnchorName === "Volte ao login"
+              //     ? "http://localhost:3000/login"
+              //     : undefined
+              // }
+              className="text-[#56D963] text-sm font-normal leading-5"
+              onClick={prevStep}
+            >
+              {backAnchorName}
+            </Anchor>
+          </div>
+        )}
       </div>
     </div>
   );

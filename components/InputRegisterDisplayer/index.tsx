@@ -2,21 +2,77 @@ import RegisterInput from "../RegisterInput";
 import * as Icons from "../../public/icons/index";
 import { InputBase } from "@mantine/core";
 import { IMaskInput } from "react-imask";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import Verify from "../Verify";
+import PrivacyPolicy from "../PrivacyPolicy";
+import CodeInput from "../CodeInput";
+import PasswordInput from "../PasswordInput";
 import { SignUpContext } from "../../context/SignUpContext";
+
+type KeyboardInputNames =
+  | "cpf-input"
+  | "name-input"
+  | "phone-input"
+  | "email-input"
+  | "social-reason-input"
+  | "cnpj-input"
+  | "completed-projects-input"
+  | "vgv-input"
+  | "employees-input"
+  | "password-input";
 
 export function InputRegisterDisplayer(
   step: number,
   prevStep: any,
   nextStep: any
 ) {
-  const renderAlertModal = () => {
-    const [value, setValue] = useState("Clear me");
+  const renderRegisterInput = () => {
+    const [verify, setVerify] = useState(0);
+    const [password, setPassword] = useState("");
+
+    const [inputs, setInputs] = useState<Record<KeyboardInputNames, string>>({
+      "cpf-input": "",
+      "name-input": "",
+      "phone-input": "",
+      "email-input": "",
+      "social-reason-input": "",
+      "cnpj-input": "",
+      "completed-projects-input": "",
+      "vgv-input": "",
+      "employees-input": "",
+      "password-input": "",
+    });
+
+    const handleInputChange = (
+      event: React.ChangeEvent<HTMLInputElement> | FormEvent<HTMLInputElement>,
+      inputName: KeyboardInputNames
+    ) => {
+      const { value } = event.currentTarget;
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [inputName]: value,
+      }));
+    };
+
     const { userData, updateUserData } = useContext(SignUpContext);
 
-    console.log(userData, "isdjisdjsid");
+    useEffect(() => {
+      updateUserData({
+        cpf: inputs["cpf-input"],
+        name: inputs["name-input"],
+        phone: inputs["phone-input"],
+        email: inputs["email-input"],
+        socialReason: inputs["social-reason-input"],
+        cnpj: inputs["cnpj-input"],
+        completedProjects: inputs["completed-projects-input"],
+        vgv: inputs["vgv-input"],
+        employees: inputs["employees-input"],
+        password: inputs["password-input"],
+      });
+    }, [step, verify]);
 
-    console.log(value, "LEOEOELEOL");
+    console.log(step, "LIDJDIEJEUJDE");
+    console.log(userData, "USER DATA");
 
     switch (step) {
       case 0:
@@ -37,8 +93,8 @@ export function InputRegisterDisplayer(
               mask="000.000.000-00"
               placeholder="000.000.000-00"
               className="mb-[1.5rem]"
-              value={value}
-              onChange={(event) => setValue(event.currentTarget.value)}
+              value={inputs["cpf-input"]}
+              onChange={(event) => handleInputChange(event, "cpf-input")}
             />
           </RegisterInput>
         );
@@ -58,39 +114,98 @@ export function InputRegisterDisplayer(
               size="md"
               placeholder="Seu nome (como no RG)"
               className="mb-[1.5rem]"
+              value={inputs["name-input"]}
+              onChange={(event) => handleInputChange(event, "name-input")}
             />
           </RegisterInput>
         );
       case 2:
-        return (
-          <RegisterInput
-            icon={Icons.MessageRegisterIcon}
-            inputHeader={"Número de telefone e e-mail"}
-            inputDescription={
-              "Digite seu número de celular e e-mail para que possamos verificar seu acesso."
-            }
-            buttonName={"Verificar"}
-            backAnchorName={"Voltar"}
-            prevStep={prevStep}
-            nextStep={nextStep}
-          >
-            <InputBase
-              radius="xs"
-              size="md"
-              component={IMaskInput}
-              mask="000.000.000-00"
-              placeholder="(00) 00000-0000"
-              className="mb-[1.5rem]"
-            />
-            <InputBase
-              radius="xs"
-              size="md"
-              placeholder="Seu melhor e-mail"
-              className="mb-[1.5rem]"
-              type="email"
-            />
-          </RegisterInput>
-        );
+        switch (verify) {
+          case 0:
+            return (
+              <RegisterInput
+                icon={Icons.MessageRegisterIcon}
+                inputHeader={"Número de telefone e e-mail"}
+                inputDescription={
+                  "Digite seu número de celular e e-mail para que possamos verificar seu acesso."
+                }
+                buttonName={"Verificar"}
+                backAnchorName={"Voltar"}
+                prevStep={prevStep}
+                nextStep={() => setVerify(1)}
+              >
+                <InputBase
+                  radius="xs"
+                  size="md"
+                  component={IMaskInput}
+                  mask="(00) 00000-0000"
+                  placeholder="(00) 00000-0000"
+                  className="mb-[1.5rem]"
+                  value={inputs["phone-input"]}
+                  onChange={(event) => handleInputChange(event, "phone-input")}
+                />
+                <InputBase
+                  radius="xs"
+                  size="md"
+                  placeholder="Seu melhor e-mail"
+                  className="mb-[1.5rem]"
+                  type="email"
+                  value={inputs["email-input"]}
+                  onChange={(event) => handleInputChange(event, "email-input")}
+                />
+              </RegisterInput>
+            );
+          case 1:
+            return (
+              <RegisterInput
+                icon={Icons.MessageRegisterIcon}
+                inputHeader={"Verifique suas contas"}
+                inputDescription={
+                  "Precisamos ter certeza de que você é o proprietário dos dados fornecidos."
+                }
+              >
+                <Verify
+                  setVerify={() => setVerify(2)}
+                  prevStep={prevStep}
+                  nextStep={nextStep}
+                />
+              </RegisterInput>
+            );
+
+          case 2:
+            return (
+              <RegisterInput
+                icon={Icons.MessageRegisterIcon}
+                inputHeader={"Verificação de número de telefone"}
+                inputDescription={
+                  "Enviamos um SMS com o código para o número +55 (11) 99658-0742"
+                }
+                buttonName={"Verificar"}
+                backAnchorName={"Voltar"}
+                prevStep={() => setVerify(1)}
+                nextStep={() => setVerify(1)}
+                verifyComponent
+              >
+                <CodeInput />
+              </RegisterInput>
+            );
+          case 3:
+            return (
+              <RegisterInput
+                icon={Icons.MessageRegisterIcon}
+                inputHeader={"verificação de e-mail"}
+                inputDescription={
+                  "Enviamos um código de verificação para o endereço de e-mail fornecido"
+                }
+                prevStep={() => setVerify(1)}
+                nextStep={() => setVerify(1)}
+                verifyComponent
+              >
+                <Verify />
+              </RegisterInput>
+            );
+        }
+
       case 3:
         return (
           <RegisterInput
@@ -109,32 +224,44 @@ export function InputRegisterDisplayer(
               size="md"
               placeholder="Razao social completa"
               className="mb-[0.75rem]"
+              value={inputs["social-reason-input"]}
+              onChange={(event) =>
+                handleInputChange(event, "social-reason-input")
+              }
             />
             <InputBase
               radius="xs"
               size="md"
-              component={IMaskInput}
-              mask="99.999.999/9999-99"
               placeholder="CNPJ"
               className="mb-[0.75rem]"
+              value={inputs["cnpj-input"]}
+              onChange={(event) => handleInputChange(event, "cnpj-input")}
             />
             <InputBase
               radius="xs"
               size="md"
               placeholder="Quantos empreendimentos já finalizados?"
               className="mb-[0.75rem]"
+              value={inputs["completed-projects-input"]}
+              onChange={(event) =>
+                handleInputChange(event, "completed-projects-input")
+              }
             />
             <InputBase
               radius="xs"
               size="md"
               placeholder="Em reais, qual seu VGV para daqui 5 anos?"
               className="mb-[0.75rem]"
+              value={inputs["vgv-input"]}
+              onChange={(event) => handleInputChange(event, "vgv-input")}
             />
             <InputBase
               radius="xs"
               size="md"
               placeholder="Quantos funcionários?"
               className="mb-[0.75rem]"
+              value={inputs["employees-input"]}
+              onChange={(event) => handleInputChange(event, "employees-input")}
             />
           </RegisterInput>
         );
@@ -151,20 +278,9 @@ export function InputRegisterDisplayer(
             prevStep={prevStep}
             nextStep={nextStep}
           >
-            <InputBase
-              radius="xs"
-              size="md"
-              placeholder="••••••••"
-              className="mb-[1.5rem]"
-              type="password"
-            />
-            <InputBase
-              radius="xs"
-              size="md"
-              placeholder="••••••••"
-              className="mb-[1.5rem]"
-              label="Confirme sua senha"
-              type="password"
+            <PasswordInput
+              password={inputs["password-input"]}
+              handleInputChange={handleInputChange}
             />
           </RegisterInput>
         );
@@ -181,14 +297,7 @@ export function InputRegisterDisplayer(
             prevStep={prevStep}
             nextStep={nextStep}
           >
-            <InputBase
-              radius="xs"
-              size="md"
-              component={IMaskInput}
-              mask="000.000.000-00"
-              placeholder="000.000.000-00"
-              className="mb-[1.5rem]"
-            />
+            <PrivacyPolicy />
           </RegisterInput>
         );
       default:
@@ -196,5 +305,5 @@ export function InputRegisterDisplayer(
     }
   };
 
-  return <div>{renderAlertModal()}</div>;
+  return <div className="mb-[15%]">{renderRegisterInput()}</div>;
 }
