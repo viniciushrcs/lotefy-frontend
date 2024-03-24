@@ -15,7 +15,7 @@ export default function SignUp() {
     setActive((current) => (current > 0 ? current - 1 : current));
   return (
     <div className="grid grid-cols-[1.88fr_1fr] h-screen">
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center ">
         <Image
           component={NextImage}
           src={logo}
@@ -32,7 +32,7 @@ export default function SignUp() {
         <Text className="text-[#0F1728] text-center text-[2rem] font-medium leading-[38px] pb-[5rem]">
           Passos para criar sua conta no Lotefy
         </Text>
-        <StepperComponent active={active} setActive={setActive} />
+        <StepperComponent active={active} />
       </div>
     </div>
   );
