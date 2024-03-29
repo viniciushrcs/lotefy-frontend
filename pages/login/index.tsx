@@ -4,8 +4,74 @@ import logo from "../../public/images/Logo.png";
 import Background from "../../public/images/Section.png";
 import RectangleIcon from "../../public/icons/Rectangle.svg";
 import BackButton from "../../public/icons/BackButton.svg";
+import { FormEvent, useContext, useState } from "react";
+import { LoginService } from "../../services/login";
+import { SignUpContext } from "../../context/SignUpContext";
+
+type KeyboardInputNames = "email-input" | "password-input";
 
 export default function Login() {
+  const [inputs, setInputs] = useState<Record<KeyboardInputNames, string>>({
+    "email-input": "",
+    "password-input": "",
+  });
+
+  const { updateUserData } = useContext(SignUpContext);
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [loginError, setLoginError] = useState<string | null>("");
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement> | FormEvent<HTMLInputElement>,
+    inputName: KeyboardInputNames
+  ) => {
+    const { value } = event.currentTarget;
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [inputName]: value,
+    }));
+
+    if (inputName === "email-input") {
+      setEmailError("");
+    } else if (inputName === "password-input") {
+      setPasswordError("");
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      if (inputs["email-input"].length && inputs["password-input"].length) {
+        const response = await LoginService.login(
+          inputs["email-input"],
+          inputs["password-input"]
+        );
+        updateUserData({
+          accessToken: response.data.access_token,
+        });
+        setLoginError(null);
+        return response;
+      } else return null;
+    } catch (error: any) {
+      setLoginError("Erro ao fazer login");
+    }
+  };
+
+  const verifyFields = () => {
+    setEmailError("");
+    setPasswordError("");
+
+    if (!inputs["email-input"].length) setEmailError("E-mail inválido");
+    if (!inputs["password-input"].length) setPasswordError("Senha inválida");
+  };
+
+  const handleSubmit = () => {
+    verifyFields();
+
+    if (!emailError && !passwordError) {
+      handleLogin();
+    }
+  };
+
   return (
     <div className="grid grid-cols-[1fr_1.32fr] h-screen">
       <div className="flex justify-center items-center">
@@ -40,7 +106,27 @@ export default function Login() {
             radius="xs"
             size="md"
             className="mb-[1.5rem]"
+            type="email"
+            value={inputs["email-input"]}
+            onChange={(event) => handleInputChange(event, "email-input")}
+            error={emailError}
           />
+          <TextInput
+            type="password"
+            placeholder="••••••••"
+            radius="xs"
+            size="md"
+            className="mb-[1.5rem]"
+            value={inputs["password-input"]}
+            onChange={(event) => handleInputChange(event, "password-input")}
+            error={passwordError}
+          />
+          {loginError && (
+            <Text className="text-[#FF624D] text-sm font-normal leading-5 flex justify-center mb-[0.5rem]">
+              {loginError}
+            </Text>
+          )}
+
           <Button
             variant="filled"
             color="#56D963"
@@ -49,6 +135,9 @@ export default function Login() {
             fullWidth
             style={{ "--button-fz": "16px" }}
             className="mb-[2rem]"
+            onClick={() => {
+              handleSubmit();
+            }}
           >
             iniciar
           </Button>
@@ -63,9 +152,9 @@ export default function Login() {
               Crie uma conta
             </Anchor>
           </div>
-          <Text className="absolute text-[#767A86] text-[9px] font-normal leading-5 left-9 bottom-[29px]">
+          {/* <Text className="absolute text-[#767A86] text-[9px] font-normal leading-5 left-9 bottom-[29px]">
             Faça parte do mercado mais rentável do mundo.
-          </Text>
+          </Text> */}
         </div>
       </div>
       <div

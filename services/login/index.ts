@@ -1,11 +1,11 @@
 import { APP_ENVS } from "../../helpers/envs";
-import { HttpMethods, HttpService } from "../http/index";
+import { AnyObject, HttpMethods, HttpService } from "../http/index";
 
 export class LoginService {
   static async login(
     email: string | null,
     password: string | null
-  ): Promise<void> {
+  ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
       baseUrl: APP_ENVS.backendApibaseUrl,
@@ -15,6 +15,8 @@ export class LoginService {
         password: password,
       },
     });
-    if (!response?.Result || error) throw new Error("Fail to login");
+    if (!response || error) throw new Error("Fail to login");
+
+    return response;
   }
 }
