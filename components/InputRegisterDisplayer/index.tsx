@@ -28,8 +28,6 @@ export function InputRegisterDisplayer(
 ) {
   const renderRegisterInput = () => {
     const [verify, setVerify] = useState(0);
-    const [password, setPassword] = useState("");
-
     const [inputs, setInputs] = useState<Record<KeyboardInputNames, string>>({
       "cpf-input": "",
       "name-input": "",
@@ -71,7 +69,6 @@ export function InputRegisterDisplayer(
       });
     }, [step, verify]);
 
-    console.log(step, "LIDJDIEJEUJDE");
     console.log(userData, "USER DATA");
 
     switch (step) {
@@ -120,6 +117,25 @@ export function InputRegisterDisplayer(
           </RegisterInput>
         );
       case 2:
+        return (
+          <RegisterInput
+            icon={Icons.PasswordIcon}
+            inputHeader={"Crie sua senha"}
+            inputDescription={
+              "Esta é a senha que você usará para entrar na área de membros."
+            }
+            buttonName={"Próximo"}
+            backAnchorName={"Voltar"}
+            prevStep={prevStep}
+            nextStep={nextStep}
+          >
+            <PasswordInput
+              password={inputs["password-input"]}
+              handleInputChange={handleInputChange}
+            />
+          </RegisterInput>
+        );
+      case 3:
         switch (verify) {
           case 0:
             return (
@@ -159,7 +175,7 @@ export function InputRegisterDisplayer(
             return (
               <RegisterInput
                 icon={Icons.MessageRegisterIcon}
-                inputHeader={"Verifique suas contas"}
+                inputHeader={"Verifique sua conta"}
                 inputDescription={
                   "Precisamos ter certeza de que você é o proprietário dos dados fornecidos."
                 }
@@ -176,37 +192,18 @@ export function InputRegisterDisplayer(
             return (
               <RegisterInput
                 icon={Icons.MessageRegisterIcon}
-                inputHeader={"Verificação de número de telefone"}
-                inputDescription={
-                  "Enviamos um SMS com o código para o número +55 (11) 99658-0742"
-                }
-                buttonName={"Verificar"}
-                backAnchorName={"Voltar"}
-                prevStep={() => setVerify(1)}
-                nextStep={() => setVerify(1)}
-                verifyComponent
-              >
-                <CodeInput />
-              </RegisterInput>
-            );
-          case 3:
-            return (
-              <RegisterInput
-                icon={Icons.MessageRegisterIcon}
-                inputHeader={"verificação de e-mail"}
+                inputHeader={"Verificação de e-mail"}
                 inputDescription={
                   "Enviamos um código de verificação para o endereço de e-mail fornecido"
                 }
-                prevStep={() => setVerify(1)}
-                nextStep={() => setVerify(1)}
-                verifyComponent
+                backAnchorName={"Voltar"}
               >
-                <Verify />
+                <CodeInput setVerify={() => setVerify(1)} />
               </RegisterInput>
             );
         }
 
-      case 3:
+      case 4:
         return (
           <RegisterInput
             icon={Icons.CompanyIcon}
@@ -262,25 +259,6 @@ export function InputRegisterDisplayer(
               className="mb-[0.75rem]"
               value={inputs["employees-input"]}
               onChange={(event) => handleInputChange(event, "employees-input")}
-            />
-          </RegisterInput>
-        );
-      case 4:
-        return (
-          <RegisterInput
-            icon={Icons.PasswordIcon}
-            inputHeader={"Crie sua senha"}
-            inputDescription={
-              "Esta é a senha que você usará para entrar na área de membros."
-            }
-            buttonName={"Próximo"}
-            backAnchorName={"Voltar"}
-            prevStep={prevStep}
-            nextStep={nextStep}
-          >
-            <PasswordInput
-              password={inputs["password-input"]}
-              handleInputChange={handleInputChange}
             />
           </RegisterInput>
         );

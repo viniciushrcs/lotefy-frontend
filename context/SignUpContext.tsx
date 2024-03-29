@@ -18,7 +18,10 @@ export const SignUpProvider = ({ children }: Props) => {
   const [userData, setUserData] = useState<Record<string, string>>({});
 
   const updateUserData = (newData: Record<string, string>) => {
-    setUserData(newData);
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      ...newData,
+    }));
   };
 
   const contextValue = useMemo<SignUpStore>(

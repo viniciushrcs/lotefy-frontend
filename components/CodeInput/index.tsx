@@ -1,9 +1,14 @@
-import { Text, TextInput } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { Anchor, Button, Text, TextInput } from "@mantine/core";
+import { useContext, useEffect, useRef, useState } from "react";
+import { SignUpService } from "../../services/signUp";
+import { SignUpContext } from "../../context/SignUpContext";
 
-export default function CodeInput(this: any) {
+export default function CodeInput({ setVerify }: any) {
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
   const [codes, setCodes] = useState<Array<string>>(Array(6).fill(""));
+  const [finalCode, setFinalCode] = useState<string>();
+
+  const { userData, updateUserData } = useContext(SignUpContext);
 
   const handleInputChange = (
     index: number,
@@ -33,7 +38,6 @@ export default function CodeInput(this: any) {
     }
 
     const newCodes = [...codes];
-    newCodes[index] = "";
     setCodes(newCodes);
   };
   useEffect(() => {
@@ -44,9 +48,31 @@ export default function CodeInput(this: any) {
 
   useEffect(() => {
     const joinedCode = codes.join("");
-    console.log("Código completo:", joinedCode);
-    // Aqui você pode fazer o que quiser com o código completo, como enviar para um servidor, etc.
+    setFinalCode(joinedCode);
+
+    console.log("Código completo:", joinedCode, joinedCode.length);
   }, [codes]);
+
+  const codeVerify = async () => {
+    try {
+      if (finalCode?.length === 6) {
+        const response = await SignUpService.userVerify(
+          userData.email,
+          finalCode
+        );
+        updateUserData({
+          isVerified: "verified",
+          accessToken: response.data.session.access_token,
+        });
+
+        return response;
+      }
+
+      return null;
+    } catch (error) {
+      throw new Error("Error in sending code to verify account");
+    }
+  };
 
   return (
     <div>
@@ -66,6 +92,25 @@ export default function CodeInput(this: any) {
             />
           ))}
         </form>
+      </div>
+      <Button
+        variant="filled"
+        color="#56D963"
+        radius="xs"
+        size="lg"
+        fullWidth
+        style={{ "--button-fz": "16px" }}
+        className="mb-[2rem] font-light"
+        onClick={() => {
+          codeVerify();
+          setVerify();
+        }}
+      >
+        Verficar
+      </Button>
+      <div className="flex gap-[2.5px] mb-[2rem] justify-center mt-4">
+        <Text>Não recebeu?</Text>
+        <Anchor className="text-[#56D963]">Reenviar código</Anchor>
       </div>
     </div>
   );

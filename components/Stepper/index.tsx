@@ -70,8 +70,21 @@ export default function StepperComponent({ active }: Props) {
           }
         />
         <Stepper.Step
-          label="Número de telefone e e-mail"
-          description="Utilizamos o seu número de telefone e conta de e-mail para validar o seu acesso"
+          label="Crie sua senha"
+          description="Crie sua senha para acessar a plataforma"
+          icon={
+            <Image
+              component={NextImage}
+              src={Icons.PasscodeIcon}
+              alt="Logo"
+              h={20}
+              w={20}
+            />
+          }
+        />
+        <Stepper.Step
+          label="Verificação de conta"
+          description="Utilizamos sua conta de e-mail para validar o seu acesso"
           icon={
             <Image
               component={NextImage}
@@ -89,19 +102,6 @@ export default function StepperComponent({ active }: Props) {
             <Image
               component={NextImage}
               src={Icons.BuildingIcon}
-              alt="Logo"
-              h={20}
-              w={20}
-            />
-          }
-        />
-        <Stepper.Step
-          label="Crie sua senha"
-          description="Crie sua senha para acessar a plataforma"
-          icon={
-            <Image
-              component={NextImage}
-              src={Icons.PasscodeIcon}
               alt="Logo"
               h={20}
               w={20}

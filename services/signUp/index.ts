@@ -1,12 +1,12 @@
 import { APP_ENVS } from "../../helpers/envs";
-import { HttpMethods, HttpService } from "../http/index";
+import { AnyObject, HttpMethods, HttpService } from "../http/index";
 
 export class SignUpService {
   static async signUp(
     email: string | undefined,
     password: string | undefined,
     name: string | undefined
-  ): Promise<void> {
+  ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
       baseUrl: APP_ENVS.backendApibaseUrl,
@@ -18,14 +18,15 @@ export class SignUpService {
       },
     });
 
-    // console.log(response, error, "SIGNUP");
-    if (!response?.Result || error) throw new Error("Fail to signup");
+    if (!response || error) throw new Error("Fail to signup");
+
+    return response;
   }
 
   static async userVerify(
-    email: string | null,
-    token: string | null
-  ): Promise<void> {
+    email: string | undefined,
+    token: string | undefined
+  ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
       baseUrl: APP_ENVS.backendApibaseUrl,
@@ -37,6 +38,8 @@ export class SignUpService {
     });
 
     console.log(response, error, "Verify");
-    if (!response?.Result || error) throw new Error("Fail to signup");
+    if (!response || error) throw new Error("Fail to signup");
+
+    return response;
   }
 }

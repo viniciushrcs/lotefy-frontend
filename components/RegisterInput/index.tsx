@@ -59,14 +59,6 @@ export default function RegisterInput({
             {buttonName}
           </Button>
         )}
-        {verifyComponent && (
-          <div className="flex gap-[2.5px] mb-[2rem]">
-            <Text>Nao recebeu?</Text>
-            <Anchor className="text-[#56D963]">Reenviar código</Anchor>
-            <Text>ou</Text>
-            <Anchor className="text-[#56D963]">Verificar email</Anchor>
-          </div>
-        )}
         {backAnchorName && (
           <div className="flex gap-[0.25rem] justify-center items-center">
             <Image
