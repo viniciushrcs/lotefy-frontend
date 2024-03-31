@@ -2,27 +2,32 @@ import NextImage from "next/image";
 import { Anchor, Button, Divider, Image, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import BackButton from "../../public/icons/BackButton.svg";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
+import { RequestError } from "../../helpers/responseError";
 
 export default function Verify({ setVerify, prevStep, nextStep }: any) {
   const { userData, updateUserData } = useContext(SignUpContext);
 
   const sendEmailVerification = async () => {
     try {
-      if (userData) {
+      if (userData && !userData.userId) {
         const response = await SignUpService.signUp(
           userData.email,
           userData.password,
           userData.name
         );
         console.log(response, "SENDEMAIL");
-        updateUserData({ userId: response?.data.user_id });
-      } else return null;
+        updateUserData({ userId: response?.data?.user_id });
+      }
     } catch (error) {
-      console.error("Error in sendEmailVerification:", error);
-      throw new Error("Error in sending email verification");
+      const requestError = error as RequestError;
+      if (requestError.statusCode === 409) {
+        updateUserData({ error: "E-mail already taken" });
+      } else {
+        updateUserData({ error: "sendEmailVerification error" });
+      }
     }
   };
 

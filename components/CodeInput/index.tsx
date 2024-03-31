@@ -61,7 +61,6 @@ export default function CodeInput({ setVerify }: any) {
         finalCode
       );
 
-      console.log(response, "LWLWOOEIEIEEIEIEI");
       if (!response.data.session.access_token) setCodeError(true);
 
       updateUserData({
@@ -69,18 +68,18 @@ export default function CodeInput({ setVerify }: any) {
         accessToken: response.data.session.access_token,
       });
 
+      setVerify();
+
       return response;
     } catch (error) {
-      throw new Error("Error in sending code to verify account");
+      updateUserData({ verifyCodeError: "codeVerify Error" });
+      setCodeError(true);
     }
   };
 
   const submit = async () => {
-    codeVerify();
-    setVerify();
+    await codeVerify();
   };
-
-  // console.log(finalCode?.length, "AAAAAAA");
 
   return (
     <div>

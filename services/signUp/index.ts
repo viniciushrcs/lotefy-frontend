@@ -1,4 +1,5 @@
 import { APP_ENVS } from "../../helpers/envs";
+import { RequestError } from "../../helpers/responseError";
 import { AnyObject, HttpMethods, HttpService } from "../http/index";
 
 export class SignUpService {
@@ -18,7 +19,12 @@ export class SignUpService {
       },
     });
 
-    if (!response || error) throw new Error("Fail to signup");
+    if (!response || error)
+      throw new RequestError({
+        message: error?.response?.data.message || "No message",
+        code: error?.code || "No code",
+        statusCode: error?.response?.status || 500,
+      });
 
     return response;
   }
@@ -37,8 +43,13 @@ export class SignUpService {
       },
     });
 
-    console.log(response, error, "Verify");
-    if (!response || error) throw new Error("Fail to signup");
+    if (!response || error) {
+      throw new RequestError({
+        message: error?.response?.data.message || "No message",
+        code: error?.code || "No code",
+        statusCode: error?.response?.status || 500,
+      });
+    }
 
     return response;
   }
