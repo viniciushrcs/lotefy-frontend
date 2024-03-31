@@ -391,13 +391,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/canvas-confetti@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@types/canvas-confetti@npm:1.6.4"
-  checksum: 4a821690f0b9cdd81b0d02c0946c5b4e9e80f189e868fd8a159884d5eb9da0bdf0bfc380a61c971cc5d7b9ca2521625d46bcb5e4653988375118f57523ebe5a4
-  languageName: node
-  linkType: hard
-
 "@types/json5@npm:^0.0.29":
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
@@ -974,13 +967,6 @@ __metadata:
   version: 1.0.30001599
   resolution: "caniuse-lite@npm:1.0.30001599"
   checksum: 8b3b9610b5be88533a3c8d0770d6896f7b1a9fee3dbeb7339e4ee119a514c81e5e07a628a5a289a6541ca291ac78a9402f5a99cf6012139e91f379083488a8eb
-  languageName: node
-  linkType: hard
-
-"canvas-confetti@npm:^1.9.2":
-  version: 1.9.2
-  resolution: "canvas-confetti@npm:1.9.2"
-  checksum: 6247eb95bf710522f5822728dc29d74d0747b7ca0a85dfa90fd159f0f405527fbaedbdbb0e6917f6cd1560cf1355286c2c94bd3e89bc2147fb0fcf8e1c64126a
   languageName: node
   linkType: hard
 
@@ -2790,13 +2776,11 @@ __metadata:
   dependencies:
     "@mantine/core": "npm:7.6.1"
     "@mantine/hooks": "npm:7.6.1"
-    "@types/canvas-confetti": "npm:^1.6.4"
     "@types/node": "npm:20.8.10"
     "@types/react": "npm:18.2.35"
     "@types/react-dom": "npm:18.2.14"
     autoprefixer: "npm:^10.4.18"
     axios: "npm:^1.6.8"
-    canvas-confetti: "npm:^1.9.2"
     eslint: "npm:8.53.0"
     eslint-config-next: "npm:14.0.1"
     next: "npm:14.0.1"
