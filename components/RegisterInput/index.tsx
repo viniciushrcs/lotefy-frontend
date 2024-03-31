@@ -11,7 +11,6 @@ interface Props {
   prevStep?: any;
   nextStep?: any;
   children: React.ReactNode;
-  verifyComponent?: boolean;
 }
 
 export default function RegisterInput({
@@ -23,7 +22,6 @@ export default function RegisterInput({
   prevStep,
   nextStep,
   children,
-  verifyComponent,
 }: Props) {
   return (
     <div className="flex justify-center items-center">
@@ -69,11 +67,6 @@ export default function RegisterInput({
               w={20}
             />
             <Anchor
-              // href={
-              //   backAnchorName === "Volte ao login"
-              //     ? "http://localhost:3000/login"
-              //     : undefined
-              // }
               className="text-[#56D963] text-sm font-normal leading-5"
               onClick={prevStep}
             >

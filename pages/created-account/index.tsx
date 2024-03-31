@@ -8,7 +8,7 @@ export default function CreatedAccount() {
   useEffect(() => {
     var duration = 30 * 1000;
     var animationEnd = Date.now() + duration;
-    var defaults = { startVelocity: 10, spread: 360, ticks: 200, zIndex: 0 };
+    var defaults = { startVelocity: 5, spread: 360, ticks: 200, zIndex: 0 };
 
     var vector = confetti.shapeFromPath({
       path: "M7.11328 4.64783L4.14594 19.961L18.0412 23.2311L15.0738 38.5442L28.9691 41.8144L26.0018 57.1275",
@@ -40,14 +40,8 @@ export default function CreatedAccount() {
         shapes: [elipseVector],
         colors: ["#56D863", "#FFE777"],
         particleCount,
-        // Definindo uma origem no topo da tela com variação na posição X
         origin: { x: Math.random(), y: 0 },
-        // Velocidade de queda positiva
-        startVelocity: randomInRange(5, 10),
-        // Direção da queda (para baixo)
-        // tilt: randomInRange(10, 90),
-        // Velocidade de rotação
-        // rotation: randomInRange(0, 360),
+        startVelocity: randomInRange(2, 10),
       });
 
       confetti({
@@ -55,19 +49,13 @@ export default function CreatedAccount() {
         shapes: [vector],
         colors: ["#56D863", "#FFE777"],
         particleCount,
-        // Definindo uma origem no topo da tela com variação na posição X
         origin: { x: Math.random(), y: 0 },
-        // Velocidade de queda positiva
-        startVelocity: randomInRange(5, 10),
-        // Direção da queda (para baixo)
-        // tilt: randomInRange(10, 90),
-        // Velocidade de rotação
-        // rotation: randomInRange(0, 360),
+        startVelocity: randomInRange(2, 10),
       });
     }, 250);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [500]);
 
   return (
     <div className="flex justify-center items-center h-screen">

@@ -67,7 +67,7 @@ export default function PrivacyModal({
           variant="filled"
           color="#56D963"
           radius="xs"
-          size="lg"
+          size="sm"
           fullWidth
           onClick={() => handleButtonClick()}
         >

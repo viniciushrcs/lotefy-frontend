@@ -7,6 +7,7 @@ export default function CodeInput({ setVerify }: any) {
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
   const [codes, setCodes] = useState<Array<string>>(Array(6).fill(""));
   const [finalCode, setFinalCode] = useState<string>();
+  const [codeError, setCodeError] = useState<boolean>(false);
 
   const { userData, updateUserData } = useContext(SignUpContext);
 
@@ -55,24 +56,31 @@ export default function CodeInput({ setVerify }: any) {
 
   const codeVerify = async () => {
     try {
-      if (finalCode?.length === 6) {
-        const response = await SignUpService.userVerify(
-          userData.email,
-          finalCode
-        );
-        updateUserData({
-          isVerified: "verified",
-          accessToken: response.data.session.access_token,
-        });
+      const response = await SignUpService.userVerify(
+        userData.email,
+        finalCode
+      );
 
-        return response;
-      }
+      console.log(response, "LWLWOOEIEIEEIEIEI");
+      if (!response.data.session.access_token) setCodeError(true);
 
-      return null;
+      updateUserData({
+        isVerified: "verified",
+        accessToken: response.data.session.access_token,
+      });
+
+      return response;
     } catch (error) {
       throw new Error("Error in sending code to verify account");
     }
   };
+
+  const submit = async () => {
+    codeVerify();
+    setVerify();
+  };
+
+  // console.log(finalCode?.length, "AAAAAAA");
 
   return (
     <div>
@@ -93,6 +101,11 @@ export default function CodeInput({ setVerify }: any) {
           ))}
         </form>
       </div>
+      {codeError && (
+        <Text className="flex text-[#FF624D] mb-[1rem] justify-center">
+          Código inválido
+        </Text>
+      )}
       <Button
         variant="filled"
         color="#56D963"
@@ -102,8 +115,9 @@ export default function CodeInput({ setVerify }: any) {
         style={{ "--button-fz": "16px" }}
         className="mb-[2rem] font-light"
         onClick={() => {
-          codeVerify();
-          setVerify();
+          (finalCode && finalCode?.length < 6) || !finalCode
+            ? setCodeError(true)
+            : submit();
         }}
       >
         Verficar

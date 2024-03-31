@@ -1,14 +1,22 @@
 import NextImage from "next/image";
-import { Checkbox, Divider, Image, Text } from "@mantine/core";
+import { Anchor, Button, Checkbox, Divider, Image, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import { useDisclosure } from "@mantine/hooks";
 import PrivacyModal from "../PrivacyModal";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function PrivacyPolicy() {
   const [opened, { open, close }] = useDisclosure(false);
   const [firstChecked, setFirstChecked] = useState(false);
   const [secondChecked, setSecondChecked] = useState(false);
+
+  const router = useRouter();
+
+  const handleNextClick = () => {
+    router.push("/created-account");
+  };
+
   return (
     <>
       <div>
@@ -55,6 +63,18 @@ export default function PrivacyPolicy() {
             onChange={(event) => setSecondChecked(event.currentTarget.checked)}
           />
         </div>
+        <Button
+          variant="filled"
+          color="#56D963"
+          radius="xs"
+          size="lg"
+          fullWidth
+          style={{ "--button-fz": "16px" }}
+          className="mb-[2rem] font-light"
+          onClick={handleNextClick}
+        >
+          Próximo
+        </Button>
       </div>
       <PrivacyModal
         opened={opened}

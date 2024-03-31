@@ -2,7 +2,13 @@ import NextImage from "next/image";
 import { Image, TextInput, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 
-export default function PasswordInput({ password, handleInputChange }: any) {
+export default function PasswordInput({
+  password,
+  handleInputChange,
+  confirmPassword,
+  error,
+  confirmPasswordError,
+}: any) {
   const checkPasswordMinimumLength = () => {
     const hasMinimumLength = password.length >= 8;
     return hasMinimumLength;
@@ -26,6 +32,7 @@ export default function PasswordInput({ password, handleInputChange }: any) {
         className="mb-[1.5rem]"
         value={password}
         onChange={(event) => handleInputChange(event, "password-input")}
+        error={error}
       />
       <TextInput
         type="password"
@@ -34,6 +41,9 @@ export default function PasswordInput({ password, handleInputChange }: any) {
         size="md"
         className="mb-[1.5rem]"
         label={"Confirme sua senha"}
+        value={confirmPassword}
+        onChange={(event) => handleInputChange(event, "confirm-password-input")}
+        error={confirmPasswordError}
         styles={{
           label: {
             color: "#0F1728",

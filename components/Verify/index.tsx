@@ -18,12 +18,17 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           userData.name
         );
         console.log(response, "SENDEMAIL");
-        updateUserData({ userId: response.data.user_id });
+        updateUserData({ userId: response?.data.user_id });
       } else return null;
     } catch (error) {
       console.error("Error in sendEmailVerification:", error);
       throw new Error("Error in sending email verification");
     }
+  };
+
+  const submit = async () => {
+    sendEmailVerification();
+    setVerify();
   };
 
   return (
@@ -32,8 +37,7 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
       <div
         className="flex flex-row justify-center items-center gap-5 self-stretch my-5"
         onClick={() => {
-          sendEmailVerification();
-          setVerify();
+          userData.isVerified === "verified" ? {} : submit();
         }}
       >
         <Image
@@ -79,23 +83,23 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           >
             Próximo
           </Button>
-          <div className="flex gap-[0.25rem] justify-center items-center">
-            <Image
-              component={NextImage}
-              src={BackButton}
-              alt="Logo"
-              h={20}
-              w={20}
-            />
-            <Anchor
-              className="text-[#56D963] text-sm font-normal leading-5"
-              onClick={prevStep}
-            >
-              Voltar
-            </Anchor>
-          </div>
         </>
       )}
+      <div className="flex gap-[0.25rem] justify-center items-center">
+        <Image
+          component={NextImage}
+          src={BackButton}
+          alt="Logo"
+          h={20}
+          w={20}
+        />
+        <Anchor
+          className="text-[#56D963] text-sm font-normal leading-5"
+          onClick={prevStep}
+        >
+          Voltar
+        </Anchor>
+      </div>
     </div>
   );
 }
