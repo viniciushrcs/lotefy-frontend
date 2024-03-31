@@ -1,64 +1,91 @@
 import logo from "../../public/images/Logo.png";
 import NextImage from "next/image";
 import { Image, Loader, Text } from "@mantine/core";
-import confetti from "canvas-confetti";
-import { useEffect } from "react";
+import GreenVector from "../../public/icons/green-vector.svg";
+import ElipseVector from "../../public/icons/elipse-vector.svg";
+import CircleVector from "../../public/icons/circle-vector.svg";
+import GreenElipse from "../../public/icons/green-elipse.svg";
+import YellowVector from "../../public/icons/yellow-vector.svg";
+import styles from "../../styles/animations.module.css";
 
 export default function CreatedAccount() {
-  useEffect(() => {
-    var duration = 30 * 1000;
-    var animationEnd = Date.now() + duration;
-    var defaults = { startVelocity: 5, spread: 360, ticks: 200, zIndex: 0 };
-
-    var vector = confetti.shapeFromPath({
-      path: "M7.11328 4.64783L4.14594 19.961L18.0412 23.2311L15.0738 38.5442L28.9691 41.8144L26.0018 57.1275",
-      //@ts-ignore
-      matrix: [1, 0, 0, 1, 0, 0],
-    });
-
-    var elipseVector = confetti.shapeFromPath({
-      path: "M36.6624 27.9693C32.8472 29.352 28.7959 29.6852 24.8597 28.9528C20.9241 28.2204 17.2168 26.4442 14.0541 23.782C10.8913 21.1198 8.36041 17.6453 6.68339 13.6528C5.00607 9.65963 4.2316 5.26358 4.43822 0.842482",
-      //@ts-ignore
-      matrix: [1, 0, 0, 1, 0, 0],
-    });
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min;
-    }
-
-    var interval = setInterval(function () {
-      var timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        clearInterval(interval);
-        return;
-      }
-      var particleCount = 3;
-
-      confetti({
-        ...defaults,
-        shapes: [elipseVector],
-        colors: ["#56D863", "#FFE777"],
-        particleCount,
-        origin: { x: Math.random(), y: 0 },
-        startVelocity: randomInRange(2, 10),
-      });
-
-      confetti({
-        ...defaults,
-        shapes: [vector],
-        colors: ["#56D863", "#FFE777"],
-        particleCount,
-        origin: { x: Math.random(), y: 0 },
-        startVelocity: randomInRange(2, 10),
-      });
-    }, 250);
-
-    return () => clearInterval(interval);
-  }, [500]);
-
   return (
     <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center top-0 absolute gap-[10rem]">
+        <Image
+          component={NextImage}
+          src={GreenVector}
+          alt="green vector"
+          h={50}
+          w={50}
+          className={`${styles["fall-animation"]}`}
+          style={{ "--i": 6 }}
+        />
+        <Image
+          component={NextImage}
+          src={YellowVector}
+          alt="yellow vector"
+          h={50}
+          w={50}
+          style={{ "--i": 4 }}
+          className={`${styles["fall-animation"]}`}
+        />
+        <Image
+          component={NextImage}
+          src={GreenVector}
+          alt="green vector"
+          h={50}
+          w={50}
+          className={`${styles["fall-animation"]}`}
+          style={{ "--i": 3 }}
+        />
+        <Image
+          component={NextImage}
+          src={ElipseVector}
+          alt="elipse vector"
+          h={50}
+          w={50}
+          style={{ "--i": 5 }}
+          className={`${styles["fall-animation"]}`}
+        />
+        <Image
+          component={NextImage}
+          src={YellowVector}
+          alt="yellow vector"
+          h={50}
+          w={50}
+          style={{ "--i": 4 }}
+          className={`${styles["fall-animation"]}`}
+        />
+        <Image
+          component={NextImage}
+          src={GreenVector}
+          alt="green vector"
+          h={50}
+          w={50}
+          className={`${styles["fall-animation"]}`}
+          style={{ "--i": 7 }}
+        />
+        <Image
+          component={NextImage}
+          src={CircleVector}
+          alt="circle vector"
+          h={20}
+          w={20}
+          style={{ "--i": 1 }}
+          className={`${styles["fall-animation"]}`}
+        />
+
+        <Image
+          component={NextImage}
+          src={GreenElipse}
+          alt="green elipse"
+          h={40}
+          w={40}
+          style={{ "--i": 2 }}
+          className={`${styles["fall-animation"]}`}
+        />
+      </div>
       <div className="gap-[2.1rem] flex flex-col justify-center items-center">
         <Text className="text-[3.3rem]">👏</Text>
         <Image component={NextImage} src={logo} alt="Logo" h={56} w={328} />
