@@ -1,21 +1,21 @@
-import RegisterInput from "../RegisterInput";
+import { Anchor, Image, InputBase, TextInput } from "@mantine/core";
 import NextImage from "next/image";
-import * as Icons from "../../public/icons/index";
-import { Anchor, InputBase, TextInput, Image } from "@mantine/core";
-import { IMaskInput } from "react-imask";
 import { FormEvent, useContext, useEffect, useState } from "react";
-import Verify from "../Verify";
-import PrivacyPolicy from "../PrivacyPolicy";
-import CodeInput from "../CodeInput";
-import PasswordInput from "../PasswordInput";
+import { IMaskInput } from "react-imask";
 import { SignUpContext } from "../../context/SignUpContext";
+import { CpfValidator } from "../../helpers/cpfValidator";
 import {
   isCompanyFieldsValid,
   verifyPasswordsFields,
   verifyPhoneAndEmail,
 } from "../../helpers/verifySignUpFields";
-import { CpfValidator } from "../../helpers/cpfValidator";
 import BackButton from "../../public/icons/BackButton.svg";
+import * as Icons from "../../public/icons/index";
+import CodeInput from "../CodeInput";
+import PasswordInput from "../PasswordInput";
+import PrivacyPolicy from "../PrivacyPolicy";
+import RegisterInput from "../RegisterInput";
+import Verify from "../Verify";
 
 type KeyboardInputNames =
   | "cpf-input"
@@ -35,37 +35,52 @@ export function InputRegisterDisplayer(
   prevStep: any,
   nextStep: any
 ) {
+  const { updateUserData, userData } = useContext(SignUpContext);
+  const [verify, setVerify] = useState(0);
+  const [inputs, setInputs] = useState<Record<KeyboardInputNames, string>>({
+    "cpf-input": "",
+    "name-input": "",
+    "phone-input": "",
+    "email-input": "",
+    "social-reason-input": "",
+    "cnpj-input": "",
+    "completed-projects-input": "",
+    "vgv-input": "",
+    "employees-input": "",
+    "password-input": "",
+    "confirm-password-input": "",
+  });
+
+  const [error, setError] = useState<Record<KeyboardInputNames, string>>({
+    "cpf-input": "",
+    "name-input": "",
+    "phone-input": "",
+    "email-input": "",
+    "social-reason-input": "",
+    "cnpj-input": "",
+    "completed-projects-input": "",
+    "vgv-input": "",
+    "employees-input": "",
+    "password-input": "",
+    "confirm-password-input": "",
+  });
+
+  useEffect(() => {
+    updateUserData({
+      cpf: inputs["cpf-input"],
+      name: inputs["name-input"],
+      phone: inputs["phone-input"],
+      email: inputs["email-input"],
+      socialReason: inputs["social-reason-input"],
+      cnpj: inputs["cnpj-input"],
+      completedProjects: inputs["completed-projects-input"],
+      vgv: inputs["vgv-input"],
+      employees: inputs["employees-input"],
+      password: inputs["password-input"],
+    });
+  }, [step, verify, inputs, updateUserData]);
+
   const renderRegisterInput = () => {
-    const { updateUserData, userData } = useContext(SignUpContext);
-    const [verify, setVerify] = useState(0);
-    const [inputs, setInputs] = useState<Record<KeyboardInputNames, string>>({
-      "cpf-input": "",
-      "name-input": "",
-      "phone-input": "",
-      "email-input": "",
-      "social-reason-input": "",
-      "cnpj-input": "",
-      "completed-projects-input": "",
-      "vgv-input": "",
-      "employees-input": "",
-      "password-input": "",
-      "confirm-password-input": "",
-    });
-
-    const [error, setError] = useState<Record<KeyboardInputNames, string>>({
-      "cpf-input": "",
-      "name-input": "",
-      "phone-input": "",
-      "email-input": "",
-      "social-reason-input": "",
-      "cnpj-input": "",
-      "completed-projects-input": "",
-      "vgv-input": "",
-      "employees-input": "",
-      "password-input": "",
-      "confirm-password-input": "",
-    });
-
     const handleInputChange = (
       event: React.ChangeEvent<HTMLInputElement> | FormEvent<HTMLInputElement>,
       inputName: KeyboardInputNames
@@ -80,23 +95,7 @@ export function InputRegisterDisplayer(
         [inputName]: "",
       }));
     };
-
-    console.log(userData, "LELELELEELLE");
-    useEffect(() => {
-      updateUserData({
-        cpf: inputs["cpf-input"],
-        name: inputs["name-input"],
-        phone: inputs["phone-input"],
-        email: inputs["email-input"],
-        socialReason: inputs["social-reason-input"],
-        cnpj: inputs["cnpj-input"],
-        completedProjects: inputs["completed-projects-input"],
-        vgv: inputs["vgv-input"],
-        employees: inputs["employees-input"],
-        password: inputs["password-input"],
-      });
-    }, [step, verify]);
-
+    
     switch (step) {
       case 0:
         return (
