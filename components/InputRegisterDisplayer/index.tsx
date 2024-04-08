@@ -16,6 +16,7 @@ import PasswordInput from "../PasswordInput";
 import PrivacyPolicy from "../PrivacyPolicy";
 import RegisterInput from "../RegisterInput";
 import Verify from "../Verify";
+import { APP_ENVS } from "../../helpers/envs";
 
 type KeyboardInputNames =
   | "cpf-input"
@@ -78,7 +79,8 @@ export function InputRegisterDisplayer(
       employees: inputs["employees-input"],
       password: inputs["password-input"],
     });
-  }, [step, verify, inputs, updateUserData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, verify]);
 
   const renderRegisterInput = () => {
     const handleInputChange = (
@@ -95,7 +97,7 @@ export function InputRegisterDisplayer(
         [inputName]: "",
       }));
     };
-    
+
     switch (step) {
       case 0:
         return (
@@ -137,7 +139,7 @@ export function InputRegisterDisplayer(
                 w={20}
               />
               <Anchor
-                href={"http://localhost:3000/login"}
+                href={`${APP_ENVS.lotefyBaseUrl}/login`}
                 className="text-[#56D963] text-sm font-normal leading-5"
               >
                 Volte ao login

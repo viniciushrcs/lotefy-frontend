@@ -7,6 +7,7 @@ import BackButton from "../../public/icons/BackButton.svg";
 import { FormEvent, useContext, useState } from "react";
 import { LoginService } from "../../services/login";
 import { SignUpContext } from "../../context/SignUpContext";
+import { APP_ENVS } from "../../helpers/envs";
 
 type KeyboardInputNames = "email-input" | "password-input";
 
@@ -146,15 +147,12 @@ export default function Login() {
               Ainda não tem cadastro?
             </Text>
             <Anchor
-              href="http://localhost:3000/signup"
+              href={`${APP_ENVS.lotefyBaseUrl}/signup`}
               className="text-[#56D963] text-sm font-normal leading-5"
             >
               Crie uma conta
             </Anchor>
           </div>
-          {/* <Text className="absolute text-[#767A86] text-[9px] font-normal leading-5 left-9 bottom-[29px]">
-            Faça parte do mercado mais rentável do mundo.
-          </Text> */}
         </div>
       </div>
       <div

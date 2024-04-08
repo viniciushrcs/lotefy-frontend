@@ -1,3 +1,4 @@
 export const APP_ENVS = {
   backendApibaseUrl: process.env.BACKEND_API_BASE_URL || "",
+  lotefyBaseUrl: process.env.LOTEFY_BASE_URL || "",
 };
