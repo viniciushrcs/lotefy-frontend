@@ -50,8 +50,6 @@ export default function CodeInput({ setVerify }: any) {
   useEffect(() => {
     const joinedCode = codes.join("");
     setFinalCode(joinedCode);
-
-    console.log("Código completo:", joinedCode, joinedCode.length);
   }, [codes]);
 
   const codeVerify = async () => {

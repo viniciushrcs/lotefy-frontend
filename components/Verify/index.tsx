@@ -18,7 +18,6 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           userData.password,
           userData.name
         );
-        console.log(response, "SENDEMAIL");
         updateUserData({ userId: response?.data?.user_id });
       }
     } catch (error) {
