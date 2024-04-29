@@ -29,15 +29,16 @@ export function Header() {
             h={25}
             w={170}
             className="ml-[1rem]"
+            priority
           />
           <Group className="flex" visibleFrom="sm">
-            <div className="flex gap-2 items-center cursor-pointer hover:bg-gray-100 hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
+            <div className="flex gap-2 items-center cursor-pointer hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
               <div className="items-center flex p-2 bg-[#56D963] rounded-xl text-[#FFF]">
                 <IconUserFilled style={{ height: 18 }} />
               </div>
               <Text>Perfil</Text>
             </div>
-            <div className="flex gap-2 items-center cursor-pointer hover:bg-gray-100 hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
+            <div className="flex gap-2 items-center cursor-pointer hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
               <div className="items-center flex p-2 bg-[#56D963] rounded-xl text-[#FFF]">
                 <IconSettingsFilled style={{ height: 18 }} />
               </div>

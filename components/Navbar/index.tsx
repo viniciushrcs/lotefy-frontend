@@ -1,25 +1,55 @@
 import { useState } from "react";
-import { Group } from "@mantine/core";
+import { Group, Stack, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconHomeFilled, IconFileFilled } from "@tabler/icons-react";
+
+interface NavbarLinkProps {
+  icon: React.ElementType;
+  label: string;
+  active?: boolean;
+  onClick?(): void;
+}
 
 const data = [
   { link: "", label: "Empreendimentos", icon: IconHomeFilled },
   { link: "", label: "Portal da transparência", icon: IconFileFilled },
 ];
 
-export function LeftNavbar() {
-  const [active, setActive] = useState("Empreendimentos");
+function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+  return (
+    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+      <UnstyledButton
+        onClick={onClick}
+        className={`w-[50px] h-[50px] rounded-md flex items-center justify-center hover:bg-[#D7F5DA] 
+          ${
+            active
+              ? "rounded-[15px] bg-[#56D963] text-[#FFF]"
+              : "text-[#56D963]"
+          }`}
+        data-active={active || undefined}
+      >
+        <Icon className="w-5 h-5" stroke={1.5} />
+      </UnstyledButton>
+    </Tooltip>
+  );
+}
 
-  const links = data.map((item) => (
+export function Navbar({
+  active,
+  setActive,
+}: {
+  active: string;
+  setActive: (arg: string) => void;
+}) {
+  const links = data.map((item, index) => (
     <a
-      className={`flex items-center p-2 rounded-sm text-[#A0AEC0] h-[50px] mb-3 no-underline ${
+      key={index}
+      className={`flex items-center p-2 rounded-[14px] text-[#A0AEC0] h-[50px] mb-3 no-underline ${
         item.label === active
           ? "shadow-[0px_3.5px_5.5px_0px_rgba(0,0,0,0.06)] rounded-[15px] bg-[#FFF] text-[16px]"
-          : "hover:bg-gray-100 hover:text-gray-800 hover:rounded-[15px] text-[14px]"
+          : "hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px]"
       }`}
       data-active={item.label === active || undefined}
       href={item.link}
-      key={item.label}
       onClick={(event) => {
         event.preventDefault();
         setActive(item.label);
@@ -38,11 +68,35 @@ export function LeftNavbar() {
     </a>
   ));
 
+  const linksResponsive = data.map((item, index) => (
+    <NavbarLink
+      key={index}
+      icon={item.icon}
+      label={item.label}
+      active={item.label === active}
+      onClick={() => setActive(item.label)}
+    />
+  ));
+
   return (
-    <Group>
-      <nav className="h-[100vh] w-[300px] p-4 flex flex-col border-r border-gray-300 bg-[#F8F9FA]">
-        <div className="flex flex-col flex-1">{links}</div>
-      </nav>
-    </Group>
+    <>
+      <Group visibleFrom="sm" className="h-screen">
+        <nav className="h-[100vh] w-[300px] p-4 flex flex-col border-r border-gray-300 bg-[#F8F9FA]">
+          <div className="flex flex-col flex-1">{links}</div>
+        </nav>
+      </Group>
+      <Group hiddenFrom="sm" className="h-screen">
+        <nav
+          className="w-[80px] h-[100vh] p-4 flex flex-col"
+          style={{ borderRight: "solid 1px lightgray" }}
+        >
+          <div className="flex-1">
+            <Stack justify="center" gap={0}>
+              {linksResponsive}
+            </Stack>
+          </div>
+        </nav>
+      </Group>
+    </>
   );
 }
