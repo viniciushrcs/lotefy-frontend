@@ -1,7 +1,7 @@
 import { Navbar } from "../../components/Navbar";
 import { Header } from "../../components/Header";
 import { Card } from "../../components/Card";
-import { Group, SimpleGrid, Text } from "@mantine/core";
+import { SimpleGrid, Text } from "@mantine/core";
 import { useState } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
 
@@ -9,7 +9,7 @@ export default function Dashboard() {
   const [active, setActive] = useState("Empreendimentos");
 
   //whether have business or not.
-  const data: any[] = [1, 2, 3];
+  const data: any[] = [];
 
   const switchContent = () => {
     switch (active) {
