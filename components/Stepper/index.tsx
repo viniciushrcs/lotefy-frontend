@@ -49,9 +49,10 @@ export default function StepperComponent({ active, data }: Props) {
           />
         }
       >
-        {data.map((e) => {
+        {data.map((e, index) => {
           return (
             <Stepper.Step
+              key={index}
               label={e.label}
               description={e.description}
               icon={
