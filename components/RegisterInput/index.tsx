@@ -51,6 +51,7 @@ export default function RegisterInput({
         {children}
         {buttonName && (
           <Button
+            type="submit"
             variant="filled"
             color="#56D963"
             radius="xs"
