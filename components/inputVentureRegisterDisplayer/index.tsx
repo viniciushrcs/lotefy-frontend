@@ -12,9 +12,11 @@ import {
   TextInput,
   Button,
   Input,
+  FileInput,
+  rem,
 } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useForm } from "@mantine/form";
+import { useContext, useEffect, useState } from "react";
 import { IMaskInput } from "react-imask";
 import { SignUpContext } from "../../context/SignUpContext";
 import BackButton from "../../public/icons/BackButton.svg";
@@ -27,15 +29,24 @@ import {
   verifySecondPropertyDataFields,
 } from "../../helpers/verifyVentureRegistrationFields";
 import { useRouter } from "next/navigation";
+import {
+  propertyFormConfig,
+  speFormConfig,
+  ventureFormConfig,
+} from "../../helpers/forms";
+import { IconFileCv } from "@tabler/icons-react";
 
 export function InputVentureRegisterDisplayer(
   step: number,
   prevStep: any,
   nextStep: any
 ) {
-  // const [speAddressStateValue, setSpeAddressStateValue] = useState<
-  //   string | null
-  // >();
+  const icon = (
+    <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
+  );
+  const [speAddressStateValue, setSpeAddressStateValue] = useState<
+    string | null
+  >();
   // const [propertyAddressStateValue, setPropertyAddressStateValue] = useState<
   //   string | null
   // >();
@@ -43,10 +54,13 @@ export function InputVentureRegisterDisplayer(
   //   string | null
   // >();
   const [constituedSpeValue, setConstituedSpeValue] = useState("yes");
-  // const [paidInToSpeValue, setPaidInToSpeValue] = useState("yes");
+  const [paidInToSpeValue, setPaidInToSpeValue] = useState("yes");
   const { updateUserData, userData } = useContext(SignUpContext);
 
   // const router = useRouter();
+  const form = useForm(ventureFormConfig(constituedSpeValue));
+  const speForm = useForm(speFormConfig());
+  const propertyForm = useForm(propertyFormConfig());
 
   useEffect(() => {
     updateUserData({
@@ -58,23 +72,23 @@ export function InputVentureRegisterDisplayer(
       speStatus: form.getValues().speStatus,
       speCnae: form.getValues().speCnae,
       speOpenDate: form.getValues().speOpenDate,
-      // paidInToSpe: paidInToSpeValue,
-      // speAddressType: inputs["spe-address-type-input"],
-      // speAddress: inputs["spe-address-input"],
-      // speAddressNumber: inputs["spe-address-number-input"],
-      // speAddressComplement: inputs["spe-address-complement-input"],
-      // speAddressDistrict: inputs["spe-address-district-input"],
-      // speAddressCity: inputs["spe-address-city-input"],
-      // speAddressState: speAddressStateValue || "",
-      // speAddressZipcode: inputs["spe-address-zipcode-input"],
-      // propertyZipcode: inputs["property-address-zipcode-input"],
-      // propertyAddress: inputs["property-address-input"],
-      // propertyAddressNumber: inputs["property-address-number-input"],
-      // propertyAddressComplement: inputs["property-address-complement-input"],
-      // propertyAddressDistrict: inputs["property-address-district-input"],
-      // propertyAddressCity: inputs["property-address-city-input"],
-      // propertyAddressState: propertyAddressStateValue || "",
-      // propertyRegistration: inputs["property-registration"],
+      paidInToSpe: paidInToSpeValue,
+      speAddressType: speForm.getValues().speAddressType,
+      speAddress: speForm.getValues().speAddress,
+      speAddressComplement: speForm.getValues().speAddressComplement,
+      speAddressDistrict: speForm.getValues().speAddressDistrict,
+      speAddressCity: speForm.getValues().speAddressCity,
+      speAddressState: speForm.getValues().speAddressState,
+      speAddressZipcode: speForm.getValues().speAddressZipcode,
+      propertyZipcode: propertyForm.getValues().propertyZipcode,
+      propertyAddress: propertyForm.getValues().propertyAddress,
+      propertyAddressNumber: propertyForm.getValues().propertyAddressNumber,
+      propertyAddressComplement:
+        propertyForm.getValues().propertyAddressComplement,
+      propertyAddressDistrict: propertyForm.getValues().propertyAddressDistrict,
+      propertyAddressCity: propertyForm.getValues().propertyAddressCity,
+      propertyAddressState: propertyForm.getValues().propertyAddressState,
+      propertyRegistration: propertyForm.getValues().propertyRegistration,
       // ownerName: inputs["owner-name"],
       // ownerCpf: inputs["owner-cpf"],
       // ownerRg: inputs["owner-rg"],
@@ -96,42 +110,18 @@ export function InputVentureRegisterDisplayer(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  const form = useForm({
-    mode: "uncontrolled",
-    initialValues: {
-      ventureName: "",
-      speCnpj: "",
-      speSocialReason: "",
-      speFantasyName: "",
-      speStatus: "",
-      speCnae: "",
-      speOpenDate: "",
-    },
-
-    validate: {
-      ventureName: isNotEmpty("Campo inválido"),
-      speCnpj: (value) =>
-        value.length >= 14 || constituedSpeValue === "no"
-          ? null
-          : "CNPJ inválido",
-      speSocialReason: (value) =>
-        value.length || constituedSpeValue === "no" ? null : "Campo inválido",
-      speStatus: (value) =>
-        value.length || constituedSpeValue === "no" ? null : "Campo inválido",
-      speOpenDate: (value) =>
-        value.length === 10 || constituedSpeValue === "no"
-          ? null
-          : "Data de abertura inválida",
-    },
-  });
-
   const renderRegisterInput = () => {
     switch (step) {
       case 0:
         return (
           <form
             onSubmit={form.onSubmit(() => {
-              nextStep();
+              if (constituedSpeValue === "no") {
+                nextStep();
+                nextStep();
+              } else {
+                nextStep();
+              }
             })}
           >
             <RegisterInput
@@ -157,7 +147,7 @@ export function InputVentureRegisterDisplayer(
                   size="md"
                 />
                 <Group
-                  className={`flex items-center justify-center gap-[0] ${
+                  className={`flex items-center justify-center gap-[5px] ${
                     constituedSpeValue === "no" && "mb-[2.35rem]"
                   }`}
                 >
@@ -260,266 +250,225 @@ export function InputVentureRegisterDisplayer(
             </div>
           </form>
         );
+
       case 1:
         return (
           <div className="mb-[45%]">
-            <RegisterInput
-              icon={Icons.FileIcon}
-              inputHeader={"Dados da SPE"}
-              inputDescription={"Preencha os dados da SPE"}
-              buttonName={"Próximo"}
-              isGrid
-              prevStep={prevStep}
-              backAnchorName={"Voltar"}
-              nextStep={() => {}}
+            <form
+              onSubmit={speForm.onSubmit(() => {
+                nextStep();
+              })}
             >
-              <></>
-              {/* 
-              <SimpleGrid
-                cols={{ base: 1, sm: 2, lg: 2 }}
-                spacing={{ base: 15, sm: "xs" }}
-                verticalSpacing={{ base: "xs", sm: "xs" }}
+              <RegisterInput
+                icon={Icons.FileIcon}
+                inputHeader={"Dados da SPE"}
+                inputDescription={"Preencha os dados da SPE"}
+                buttonName={"Próximo"}
+                isGrid
+                prevStep={prevStep}
+                backAnchorName={"Voltar"}
               >
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Tipo de logradouro"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-type-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-type-input")
-                  }
-                  error={error["spe-address-type-input"]}
-                />
-                <Group className="flex items-center justify-center gap-[0]">
-                  <Text className="text-[#101828] text-base font-medium leading-6">
-                    O imóvel é integralizado na SPE?
-                  </Text>
-                  <Radio.Group
-                    value={paidInToSpeValue}
-                    onChange={setPaidInToSpeValue}
-                  >
-                    <Group mt="xs" style={{ marginBottom: "10px" }}>
-                      <Radio color="#56D963" value="yes" label="Sim" />
-                      <Radio color="#56D963" value="no" label="Não" />
-                    </Group>
-                  </Radio.Group>
-                </Group>
+                <SimpleGrid
+                  cols={{ base: 1, sm: 2, lg: 2 }}
+                  spacing={{ base: 15, sm: "xs" }}
+                  verticalSpacing={{ base: "xs", sm: "xs" }}
+                >
+                  <InputBase
+                    withAsterisk
+                    label="Tipo de logradouro"
+                    key={speForm.key("speAddressType")}
+                    {...speForm.getInputProps("speAddressType")}
+                    size="md"
+                    radius="xs"
+                    placeholder="Tipo de logradouro"
+                  />
+                  <Group className="flex items-center justify-center gap-[0]">
+                    <Text className="text-[#101828] text-base font-medium leading-6">
+                      O imóvel é integralizado na SPE?
+                    </Text>
+                    <Radio.Group
+                      value={paidInToSpeValue}
+                      onChange={setPaidInToSpeValue}
+                    >
+                      <Group mt="xs" style={{ marginBottom: "10px" }}>
+                        <Radio color="#56D963" value="yes" label="Sim" />
+                        <Radio color="#56D963" value="no" label="Não" />
+                      </Group>
+                    </Radio.Group>
+                  </Group>
 
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Logradouro"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-input")
-                  }
-                  error={error["spe-address-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Número"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-number-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-number-input")
-                  }
-                  error={error["spe-address-number-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Complemento"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-complement-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-complement-input")
-                  }
-                  error={error["spe-address-complement-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Bairro"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-district-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-district-input")
-                  }
-                  error={error["spe-address-district-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Município"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-city-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-city-input")
-                  }
-                  error={error["spe-address-city-input"]}
-                />
-                <Select
-                  value={speAddressStateValue}
-                  radius="xs"
-                  size="md"
-                  placeholder="Estado"
-                  className="mb-[0.75rem]"
-                  data={countryStates.map((state) => state.uf)}
-                  onChange={(event) => setSpeAddressStateValue(event)}
-                  error={
-                    !speAddressStateValue
-                      ? error["spe-address-state-input"]
-                      : ""
-                  }
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CEP"
-                  component={IMaskInput}
-                  mask="00000-000"
-                  className="mb-[0.75rem]"
-                  value={inputs["spe-address-zipcode-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "spe-address-zipcode-input")
-                  }
-                  error={error["spe-address-zipcode-input"]}
-                />
-              </SimpleGrid>*/}
-            </RegisterInput>
+                  <InputBase
+                    withAsterisk
+                    label="Logradouro"
+                    radius="xs"
+                    size="md"
+                    placeholder="Logradouro"
+                    key={speForm.key("speAddress")}
+                    {...speForm.getInputProps("speAddress")}
+                  />
+                  <InputBase
+                    withAsterisk
+                    label="Número"
+                    radius="xs"
+                    size="md"
+                    placeholder="Número"
+                    key={speForm.key("speAddressNumber")}
+                    {...speForm.getInputProps("speAddressNumber")}
+                  />
+                  <InputBase
+                    label="Complemento"
+                    radius="xs"
+                    size="md"
+                    placeholder="Complemento"
+                    key={speForm.key("speAddressComplement")}
+                    {...speForm.getInputProps("speAddressComplement")}
+                  />
+                  <InputBase
+                    withAsterisk
+                    label="Bairro"
+                    radius="xs"
+                    size="md"
+                    placeholder="Bairro"
+                    key={speForm.key("speAddressDistrict")}
+                    {...speForm.getInputProps("speAddressDistrict")}
+                  />
+                  <InputBase
+                    withAsterisk
+                    label="Município"
+                    radius="xs"
+                    size="md"
+                    placeholder="Município"
+                    key={speForm.key("speAddressCity")}
+                    {...speForm.getInputProps("speAddressCity")}
+                  />
+                  <Select
+                    withAsterisk
+                    label="Estado"
+                    // value={speAddressStateValue}
+                    radius="xs"
+                    size="md"
+                    placeholder="Estado"
+                    key={speForm.key("speAddressState")}
+                    {...speForm.getInputProps("speAddressState")}
+                    data={countryStates.map((state) => state.uf)}
+                  />
+                  <InputBase
+                    withAsterisk
+                    label="CEP"
+                    radius="xs"
+                    size="md"
+                    placeholder="00000-000"
+                    component={IMaskInput}
+                    mask="00000-000"
+                    className="mb-[0.75rem]"
+                    key={speForm.key("speAddressZipcode")}
+                    {...speForm.getInputProps("speAddressZipcode")}
+                  />
+                  <FileInput
+                    withAsterisk
+                    size="md"
+                    leftSection={icon}
+                    label="Adicione seu contrato social"
+                    placeholder="contrato social da SPE"
+                    leftSectionPointerEvents="none"
+                  />
+                </SimpleGrid>
+              </RegisterInput>
+            </form>
           </div>
         );
       case 2:
         return (
           <div className="mb-[45%]">
-            {/* <RegisterInput
-              icon={Icons.Home}
-              inputHeader={"Dados do imóvel"}
-              inputDescription={"Preencha alguns dados sobre o imóvel"}
-              buttonName={"Próximo"}
-              backAnchorName={"Voltar"}
-              prevStep={prevStep}
-              isGrid
-              nextStep={() => {
-                verifyPropertyDataFields(
-                  inputs,
-                  setError,
-                  propertyAddressStateValue
-                ) === null
-                  ? nextStep()
-                  : verifyPropertyDataFields(
-                      inputs,
-                      setError,
-                      propertyAddressStateValue
-                    );
-              }}
+            <form
+              onSubmit={propertyForm.onSubmit(() => {
+                nextStep();
+              })}
             >
-              <SimpleGrid
-                cols={{ base: 1, sm: 2, lg: 2 }}
-                spacing={{ base: 15, sm: "xs" }}
-                verticalSpacing={{ base: "xs", sm: "xs" }}
+              <RegisterInput
+                icon={Icons.Home}
+                inputHeader={"Dados do imóvel"}
+                inputDescription={"Preencha alguns dados sobre o imóvel"}
+                buttonName={"Próximo"}
+                backAnchorName={"Voltar"}
+                prevStep={prevStep}
+                isGrid
               >
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CEP"
-                  component={IMaskInput}
-                  mask="00000-000"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-zipcode-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-address-zipcode-input")
-                  }
-                  error={error["property-address-zipcode-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Logradouro"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-address-input")
-                  }
-                  error={error["property-address-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Número"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-number-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-address-number-input")
-                  }
-                  error={error["property-address-number-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Complemento"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-complement-input"]}
-                  onChange={(event) =>
-                    handleInputChange(
-                      event,
-                      "property-address-complement-input"
-                    )
-                  }
-                  error={error["property-address-complement-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Bairro"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-district-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-address-district-input")
-                  }
-                  error={error["property-address-district-input"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Município"
-                  className="mb-[0.75rem]"
-                  value={inputs["property-address-city-input"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-address-city-input")
-                  }
-                  error={error["property-address-city-input"]}
-                />
-                <Select
-                  value={propertyAddressStateValue}
-                  radius="xs"
-                  size="md"
-                  placeholder="Estado"
-                  className="mb-[0.75rem]"
-                  data={countryStates.map((state) => state.uf)}
-                  onChange={(event) => setPropertyAddressStateValue(event)}
-                  error={
-                    !propertyAddressStateValue
-                      ? error["property-address-state-input"]
-                      : ""
-                  }
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Matrícula do imóvel"
-                  className="mb-[1.5rem]"
-                  value={inputs["property-registration"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "property-registration")
-                  }
-                  error={error["property-registration"]}
-                />
-              </SimpleGrid>
-            </RegisterInput> */}
+                <SimpleGrid
+                  cols={{ base: 1, sm: 2, lg: 2 }}
+                  spacing={{ base: 15, sm: "xs" }}
+                  verticalSpacing={{ base: "xs", sm: "xs" }}
+                >
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="CEP"
+                    component={IMaskInput}
+                    mask="00000-000"
+                    key={propertyForm.key("propertyZipcode")}
+                    {...propertyForm.getInputProps("propertyZipcode")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Logradouro"
+                    className="mb-[0.75rem]"
+                    key={propertyForm.key("propertyAddress")}
+                    {...propertyForm.getInputProps("propertyAddress")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Número"
+                    className="mb-[0.75rem]"
+                    key={propertyForm.key("propertyAddressNumber")}
+                    {...propertyForm.getInputProps("propertyAddressNumber")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Complemento"
+                    className="mb-[0.75rem]"
+                    key={propertyForm.key("propertyAddressComplement")}
+                    {...propertyForm.getInputProps("propertyAddressComplement")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Bairro"
+                    className="mb-[0.75rem]"
+                    key={propertyForm.key("propertyAddressDistrict")}
+                    {...propertyForm.getInputProps("propertyAddressDistrict")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Município"
+                    className="mb-[0.75rem]"
+                    key={propertyForm.key("propertyAddressCity")}
+                    {...propertyForm.getInputProps("propertyAddressCity")}
+                  />
+                  <Select
+                    // value={propertyAddressStateValue}
+                    radius="xs"
+                    size="md"
+                    placeholder="Estado"
+                    className="mb-[0.75rem]"
+                    data={countryStates.map((state) => state.uf)}
+                    key={propertyForm.key("propertyAddressState")}
+                    {...propertyForm.getInputProps("propertyAddressState")}
+                  />
+                  <InputBase
+                    radius="xs"
+                    size="md"
+                    placeholder="Matrícula do imóvel"
+                    className="mb-[1.5rem]"
+                    key={propertyForm.key("propertyRegistration")}
+                    {...propertyForm.getInputProps("propertyRegistration")}
+                  />
+                </SimpleGrid>
+              </RegisterInput>
+            </form>
           </div>
         );
       case 3:
