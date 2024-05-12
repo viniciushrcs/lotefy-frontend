@@ -4,9 +4,9 @@ import { AnyObject, HttpMethods, HttpService } from "../http/index";
 
 export class SignUpService {
   static async signUp(
-    email: string | undefined,
-    password: string | undefined,
-    name: string | undefined
+    email: string | undefined | any[],
+    password: string | undefined | any[],
+    name: string | undefined | any[]
   ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
@@ -30,7 +30,7 @@ export class SignUpService {
   }
 
   static async userVerify(
-    email: string | undefined,
+    email: string | undefined | any[],
     token: string | undefined
   ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
