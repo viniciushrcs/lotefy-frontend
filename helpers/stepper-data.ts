@@ -62,4 +62,10 @@ export const ventureStepperData = [
       "Preencha alguns dados de sócios ou participantes do empreendimento.",
     icon: Icons.Social,
   },
+  {
+    label: "Diligência documental e viabilidade do projeto",
+    description:
+      "Precisamos que envie alguns documentos do empreendimento para a viabilidade do projeto",
+    icon: Icons.Documents,
+  },
 ];

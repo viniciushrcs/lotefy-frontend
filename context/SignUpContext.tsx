@@ -4,20 +4,20 @@ type Props = {
   children: React.ReactNode;
 };
 
-interface SignUpStore {
-  userData: Record<string, string | undefined>;
-  updateUserData: (_newUserData: Record<string, string>) => void;
-}
-
 export const SignUpContext = createContext<SignUpStore>({
   userData: {},
   updateUserData: () => {},
 });
 
-export const SignUpProvider = ({ children }: Props) => {
-  const [userData, setUserData] = useState<Record<string, string>>({});
+interface SignUpStore {
+  userData: Record<string, string | any[] | undefined>;
+  updateUserData: (_newUserData: Record<string, string | any[]>) => void;
+}
 
-  const updateUserData = (newData: Record<string, string>) => {
+export const SignUpProvider = ({ children }: Props) => {
+  const [userData, setUserData] = useState<Record<string, string | any[]>>({});
+
+  const updateUserData = (newData: Record<string, string | any[]>) => {
     setUserData((prevUserData) => ({
       ...prevUserData,
       ...newData,

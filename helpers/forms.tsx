@@ -1,35 +1,13 @@
 import { isNotEmpty, UseFormInput } from "@mantine/form";
-
-interface VentureFormValues {
-  ventureName: string;
-  speCnpj: string;
-  speSocialReason: string;
-  speFantasyName: string;
-  speStatus: string;
-  speCnae: string;
-  speOpenDate: string;
-}
-interface SpeFormValues {
-  speAddressType: string;
-  speAddress: string;
-  speAddressNumber: string;
-  speAddressComplement: string;
-  speAddressDistrict: string;
-  speAddressCity: string;
-  speAddressState: string;
-  speAddressZipcode: string;
-}
-
-interface PropertyFormValues {
-  propertyZipcode: string;
-  propertyAddress: string;
-  propertyAddressNumber: string;
-  propertyAddressComplement: string;
-  propertyAddressDistrict: string;
-  propertyAddressCity: string;
-  propertyAddressState: string;
-  propertyRegistration: string;
-}
+import {
+  DocumentaryDiligenceFormValues,
+  OwnerFormValues,
+  PartnerFormValues,
+  PropertyFormValues,
+  SpeFormValues,
+  VentureFormValues,
+} from "./interfaces/forms";
+import { randomId } from "@mantine/hooks";
 
 export const ventureFormConfig = (
   constituedSpeValue: string
@@ -108,3 +86,161 @@ export const propertyFormConfig = (): UseFormInput<PropertyFormValues> => ({
     propertyRegistration: isNotEmpty("Campo inválido"),
   },
 });
+
+export const ownerFormConfig = (
+  intermediaryValue: string
+): UseFormInput<OwnerFormValues> => ({
+  mode: "uncontrolled",
+  initialValues: {
+    ownerName: "",
+    ownerCpf: "",
+    ownerRg: "",
+    ownerCnpj: "",
+    ownerCompleteAddress: "",
+    negotiationStatus: "",
+    brokerName: "",
+    brokerCpf: "",
+    brokerCreci: "",
+    realEstateName: "",
+  },
+  validate: {
+    ownerName: isNotEmpty("Campo inválido"),
+    ownerCpf: (value) => (value.length === 14 ? null : "CPF inválido"),
+    ownerRg: isNotEmpty("Campo inválido"),
+    ownerCnpj: (value) => (value.length >= 14 ? null : "CNPJ inválido"),
+    ownerCompleteAddress: isNotEmpty("Campo inválido"),
+    negotiationStatus: isNotEmpty("Campo inválido"),
+    brokerName: (value) => {
+      if (intermediaryValue === "broker")
+        value.length ? null : "Campo inválido";
+      return null;
+    },
+    brokerCpf: (value) => {
+      if (intermediaryValue === "broker")
+        value.length === 14 ? null : "CPF inválido";
+      return null;
+    },
+    brokerCreci: (value) => {
+      if (intermediaryValue === "broker")
+        value.length ? null : "CRECI inválido";
+      return null;
+    },
+    realEstateName: (value) => {
+      if (intermediaryValue === "realEstate")
+        !value.length ? "Campo inválido" : null;
+      return null;
+    },
+  },
+});
+
+export const partnerFormConfig = (
+  partnerType: string
+): UseFormInput<PartnerFormValues> => ({
+  mode: "uncontrolled",
+  initialValues: {
+    partner: [
+      {
+        name: "",
+        cpf: "",
+        cnpj: "",
+        percentages: "",
+        function: "",
+        counterpart: "",
+        key: randomId(),
+      },
+    ],
+    participants: [
+      {
+        name: "",
+        cpf: "",
+        cnpj: "",
+        function: "",
+        counterpart: "",
+        key: randomId(),
+      },
+    ],
+  },
+  validate: {
+    partner: {
+      name: (value) => {
+        if (partnerType === "partner") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      cpf: (value) => {
+        if (partnerType === "partner") {
+          if (value.length === 14) return null;
+          return "CPF inválido";
+        } else return null;
+      },
+      cnpj: (value) => {
+        if (partnerType === "partner") {
+          if (value.length === 18) return null;
+          return "CNPJ inválido";
+        } else return null;
+      },
+      percentages: (value) => {
+        if (partnerType === "partner") {
+          if (value) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      function: (value) => {
+        if (partnerType === "partner") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      counterpart: (value) => {
+        if (partnerType === "partner") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+    },
+    participants: {
+      name: (value) => {
+        if (partnerType === "participant") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      cpf: (value) => {
+        if (partnerType === "participant") {
+          if (value.length === 14) return null;
+          return "CPF inválido";
+        } else return null;
+      },
+      cnpj: (value) => {
+        if (partnerType === "participant") {
+          if (value.length === 18) return null;
+          return "CNPJ inválido";
+        } else return null;
+      },
+      function: (value) => {
+        if (partnerType === "participant") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      counterpart: (value) => {
+        if (partnerType === "participant") {
+          if (value.length) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+    },
+  },
+});
+
+export const documentaryDiligenceFormConfi =
+  (): UseFormInput<DocumentaryDiligenceFormValues> => ({
+    mode: "uncontrolled",
+    initialValues: {
+      ventureStatus: "",
+    },
+    validate: {
+      ventureStatus: isNotEmpty("Campo inválido"),
+    },
+  });

@@ -10,8 +10,6 @@ import {
   Select,
   Loader,
   TextInput,
-  Button,
-  Input,
   FileInput,
   rem,
 } from "@mantine/core";
@@ -24,17 +22,17 @@ import * as Icons from "../../public/icons/index";
 import RegisterInput from "../RegisterInput";
 import { APP_ENVS } from "../../helpers/envs";
 import { countryStates } from "../../helpers/states";
-import {
-  verifyPropertyDataFields,
-  verifySecondPropertyDataFields,
-} from "../../helpers/verifyVentureRegistrationFields";
 import { useRouter } from "next/navigation";
 import {
+  documentaryDiligenceFormConfi,
+  ownerFormConfig,
+  partnerFormConfig,
   propertyFormConfig,
   speFormConfig,
   ventureFormConfig,
 } from "../../helpers/forms";
 import { IconFileCv } from "@tabler/icons-react";
+import { NestedArray } from "./NestedArray";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -44,23 +42,20 @@ export function InputVentureRegisterDisplayer(
   const icon = (
     <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
   );
-  const [speAddressStateValue, setSpeAddressStateValue] = useState<
-    string | null
-  >();
-  // const [propertyAddressStateValue, setPropertyAddressStateValue] = useState<
-  //   string | null
-  // >();
-  // const [negociationStatusValue, setNegociationStatusValue] = useState<
-  //   string | null
-  // >();
-  const [constituedSpeValue, setConstituedSpeValue] = useState("yes");
-  const [paidInToSpeValue, setPaidInToSpeValue] = useState("yes");
-  const { updateUserData, userData } = useContext(SignUpContext);
 
-  // const router = useRouter();
+  const [constituedSpeValue, setConstituedSpeValue] = useState("yes");
+  const [intermediaryValue, setIntermediaryValue] = useState("broker");
+  const [paidInToSpeValue, setPaidInToSpeValue] = useState("yes");
+  const [partnerType, setPartnerType] = useState("partner");
+  const { updateUserData } = useContext(SignUpContext);
+
+  const router = useRouter();
   const form = useForm(ventureFormConfig(constituedSpeValue));
   const speForm = useForm(speFormConfig());
   const propertyForm = useForm(propertyFormConfig());
+  const ownerForm = useForm(ownerFormConfig(intermediaryValue));
+  const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfi());
+  const partnerForm = useForm(partnerFormConfig(partnerType));
 
   useEffect(() => {
     updateUserData({
@@ -89,23 +84,19 @@ export function InputVentureRegisterDisplayer(
       propertyAddressCity: propertyForm.getValues().propertyAddressCity,
       propertyAddressState: propertyForm.getValues().propertyAddressState,
       propertyRegistration: propertyForm.getValues().propertyRegistration,
-      // ownerName: inputs["owner-name"],
-      // ownerCpf: inputs["owner-cpf"],
-      // ownerRg: inputs["owner-rg"],
-      // ownerCnpj: inputs["owner-cnpj"],
-      // ownerCompleteAddress: inputs["owner-complete-address"],
-      // brokerName: inputs["broker-name"],
-      // brokerCpf: inputs["broker-cpf"],
-      // brokerCreci: inputs["broker-creci"],
-      // realEstateName: inputs["real-estate-name"],
-      // negotiationStatus: negociationStatusValue || "",
-      // partnerCompleteName: inputs["partner-complete-name"],
-      // partnerCpf: inputs["partner-cpf"],
-      // partnerRg: inputs["partner-rg"],
-      // partnerCnpj: inputs["partner-cnpj"],
-      // partnerRole: inputs["partner-role"],
-      // counterpartFromThePartner: inputs["counterpart-from-the-partner"],
-      // partnerPercentage: inputs["partner-percentage"],
+      ownerName: ownerForm.getValues().ownerName,
+      ownerCpf: ownerForm.getValues().ownerCpf,
+      ownerRg: ownerForm.getValues().ownerRg,
+      ownerCnpj: ownerForm.getValues().ownerCnpj,
+      ownerCompleteAddress: ownerForm.getValues().ownerCompleteAddress,
+      brokerName: ownerForm.getValues().brokerName,
+      brokerCpf: ownerForm.getValues().brokerCpf,
+      brokerCreci: ownerForm.getValues().brokerCreci,
+      realEstateName: ownerForm.getValues().realEstateName,
+      negotiationStatus: ownerForm.getValues().negotiationStatus,
+      partner: partnerForm.getValues().partner,
+      participants: partnerForm.getValues().participants,
+      ventureStatus: documentaryDiligenceForm.getValues().ventureStatus,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
@@ -344,7 +335,6 @@ export function InputVentureRegisterDisplayer(
                   <Select
                     withAsterisk
                     label="Estado"
-                    // value={speAddressStateValue}
                     radius="xs"
                     size="md"
                     placeholder="Estado"
@@ -391,7 +381,14 @@ export function InputVentureRegisterDisplayer(
                 inputDescription={"Preencha alguns dados sobre o imóvel"}
                 buttonName={"Próximo"}
                 backAnchorName={"Voltar"}
-                prevStep={prevStep}
+                prevStep={() => {
+                  if (constituedSpeValue === "no") {
+                    prevStep();
+                    prevStep();
+                  } else {
+                    prevStep();
+                  }
+                }}
                 isGrid
               >
                 <SimpleGrid
@@ -400,15 +397,17 @@ export function InputVentureRegisterDisplayer(
                   verticalSpacing={{ base: "xs", sm: "xs" }}
                 >
                   <InputBase
+                    label="CEP"
                     radius="xs"
                     size="md"
-                    placeholder="CEP"
+                    placeholder="00000-000"
                     component={IMaskInput}
                     mask="00000-000"
                     key={propertyForm.key("propertyZipcode")}
                     {...propertyForm.getInputProps("propertyZipcode")}
                   />
                   <InputBase
+                    label="Logradouro"
                     radius="xs"
                     size="md"
                     placeholder="Logradouro"
@@ -417,6 +416,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddress")}
                   />
                   <InputBase
+                    label="Número"
                     radius="xs"
                     size="md"
                     placeholder="Número"
@@ -425,6 +425,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddressNumber")}
                   />
                   <InputBase
+                    label="Complemento"
                     radius="xs"
                     size="md"
                     placeholder="Complemento"
@@ -433,6 +434,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddressComplement")}
                   />
                   <InputBase
+                    label="Bairro"
                     radius="xs"
                     size="md"
                     placeholder="Bairro"
@@ -441,6 +443,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddressDistrict")}
                   />
                   <InputBase
+                    label="Município"
                     radius="xs"
                     size="md"
                     placeholder="Município"
@@ -449,7 +452,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddressCity")}
                   />
                   <Select
-                    // value={propertyAddressStateValue}
+                    label="Estado"
                     radius="xs"
                     size="md"
                     placeholder="Estado"
@@ -459,6 +462,7 @@ export function InputVentureRegisterDisplayer(
                     {...propertyForm.getInputProps("propertyAddressState")}
                   />
                   <InputBase
+                    label="Matrícula do imóvel"
                     radius="xs"
                     size="md"
                     placeholder="Matrícula do imóvel"
@@ -474,253 +478,265 @@ export function InputVentureRegisterDisplayer(
       case 3:
         return (
           <div className="mb-[57%]">
-            {/* <RegisterInput
-              icon={Icons.Id}
-              inputHeader={"Dados do imóvel: proprietário, corretor e situação"}
-              inputDescription={"Preencha mais alguns dados sobre o imóvel"}
-              isGrid
-              buttonName={"Próximo"}
-              backAnchorName={"Voltar"}
-              prevStep={prevStep}
-              nextStep={() => {
-                verifySecondPropertyDataFields(
-                  inputs,
-                  setError,
-                  negociationStatusValue
-                ) === null
-                  ? nextStep()
-                  : verifySecondPropertyDataFields(
-                      inputs,
-                      setError,
-                      negociationStatusValue
-                    );
-              }}
+            <form
+              onSubmit={ownerForm.onSubmit(() => {
+                nextStep();
+              })}
             >
-              <SimpleGrid
-                cols={{ base: 1, sm: 2, lg: 2 }}
-                spacing={{ base: 15, sm: "xs" }}
-                verticalSpacing={{ base: "xs", sm: "xs" }}
+              <RegisterInput
+                icon={Icons.Id}
+                inputHeader={
+                  "Dados do imóvel: proprietário, corretor e situação"
+                }
+                inputDescription={"Preencha mais alguns dados sobre o imóvel"}
+                isGrid
+                buttonName={"Próximo"}
+                backAnchorName={"Voltar"}
+                prevStep={prevStep}
               >
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Nome completo do proprietário"
-                  className="mb-[0.75rem]"
-                  value={inputs["owner-name"]}
-                  onChange={(event) => handleInputChange(event, "owner-name")}
-                  error={error["owner-name"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CPF do proprietário"
-                  component={IMaskInput}
-                  mask="000.000.000-00"
-                  className="mb-[0.75rem]"
-                  value={inputs["owner-cpf"]}
-                  onChange={(event) => handleInputChange(event, "owner-cpf")}
-                  error={error["owner-cpf"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="RG do proprietário"
-                  className="mb-[0.75rem]"
-                  value={inputs["owner-rg"]}
-                  onChange={(event) => handleInputChange(event, "owner-rg")}
-                  error={error["owner-rg"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CNPJ do proprietário"
-                  component={IMaskInput}
-                  mask="00.000.000/0000-00"
-                  className="mb-[0.75rem]"
-                  value={inputs["owner-cnpj"]}
-                  onChange={(event) => handleInputChange(event, "owner-cnpj")}
-                  error={error["owner-cnpj"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Endereço completo do proprietário"
-                  className="mb-[0.75rem]"
-                  value={inputs["owner-complete-address"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "owner-complete-address")
-                  }
-                  error={error["owner-complete-address"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Nome do corretor"
-                  className="mb-[0.75rem]"
-                  value={inputs["broker-name"]}
-                  onChange={(event) => handleInputChange(event, "broker-name")}
-                  error={error["broker-name"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CPF do corretor"
-                  component={IMaskInput}
-                  mask="000.000.000-00"
-                  className="mb-[0.75rem]"
-                  value={inputs["broker-cpf"]}
-                  onChange={(event) => handleInputChange(event, "broker-cpf")}
-                  error={error["broker-cpf"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CRECI do corretor"
-                  className="mb-[0.75rem]"
-                  value={inputs["broker-creci"]}
-                  onChange={(event) => handleInputChange(event, "broker-creci")}
-                  error={error["broker-creci"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Nome da imobiliária"
-                  className="mb-[0.75rem]"
-                  value={inputs["real-estate-name"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "real-estate-name")
-                  }
-                  error={error["real-estate-name"]}
-                />
-                <Select
-                  value={negociationStatusValue}
-                  size="md"
-                  placeholder="Status da negociação"
-                  className="mb-[0.75rem]"
-                  data={[
-                    "Em estudo",
-                    "Em negociação",
-                    "Proposta feita",
-                    "Proposta aceita",
-                    "Minuta em discussão",
-                    "Assinado em resolutivas",
-                    "Resolutivas superadas",
-                    "Escriturado",
-                    "Stand-by",
-                    "Descartado/Arquivado",
-                  ]}
-                  error={
-                    !negociationStatusValue ? error["negotiation-status"] : ""
-                  }
-                  onChange={(event) => setNegociationStatusValue(event)}
-                />
-              </SimpleGrid>
-            </RegisterInput> */}
+                <SimpleGrid
+                  cols={{ base: 1, sm: 2, lg: 2 }}
+                  spacing={{ base: 15, sm: "xs" }}
+                  verticalSpacing={{ base: "xs", sm: "xs" }}
+                >
+                  <InputBase
+                    label="Nome completo do proprietário"
+                    radius="xs"
+                    size="md"
+                    placeholder="Nome completo do proprietário"
+                    key={ownerForm.key("ownerName")}
+                    {...ownerForm.getInputProps("ownerName")}
+                  />
+                  <InputBase
+                    label="CPF do proprietário"
+                    radius="xs"
+                    size="md"
+                    placeholder="000.000.000-00"
+                    component={IMaskInput}
+                    mask="000.000.000-00"
+                    key={ownerForm.key("ownerCpf")}
+                    {...ownerForm.getInputProps("ownerCpf")}
+                  />
+                  <InputBase
+                    label="RG do proprietário"
+                    radius="xs"
+                    size="md"
+                    placeholder="RG do proprietário"
+                    key={ownerForm.key("ownerRg")}
+                    {...ownerForm.getInputProps("ownerRg")}
+                  />
+                  <InputBase
+                    label="CNPJ do proprietário"
+                    radius="xs"
+                    size="md"
+                    placeholder="00.000.000/0000-00"
+                    component={IMaskInput}
+                    mask="00.000.000/0000-00"
+                    key={ownerForm.key("ownerCnpj")}
+                    {...ownerForm.getInputProps("ownerCnpj")}
+                  />
+                  <InputBase
+                    label="Endereço completo"
+                    radius="xs"
+                    size="md"
+                    placeholder="Endereço completo do proprietário"
+                    key={ownerForm.key("ownerCompleteAddress")}
+                    {...ownerForm.getInputProps("ownerCompleteAddress")}
+                  />
+                  <Select
+                    label="Status da negociação"
+                    size="md"
+                    placeholder="Status da negociação"
+                    data={[
+                      "Em estudo",
+                      "Em negociação",
+                      "Proposta feita",
+                      "Proposta aceita",
+                      "Minuta em discussão",
+                      "Assinado em resolutivas",
+                      "Resolutivas superadas",
+                      "Escriturado",
+                      "Stand-by",
+                      "Descartado/Arquivado",
+                    ]}
+                    key={ownerForm.key("negotiationStatus")}
+                    {...ownerForm.getInputProps("negotiationStatus")}
+                  />
+
+                  <Group
+                    className={"flex items-center justify-center gap-[5px]"}
+                  >
+                    <Text className="text-[#101828] text-base font-medium leading-6">
+                      Corretor ou imobiliária?
+                    </Text>
+                    <Radio.Group
+                      value={intermediaryValue}
+                      onChange={setIntermediaryValue}
+                    >
+                      <Group mt="xs" style={{ marginBottom: "10px" }}>
+                        <Radio
+                          color="#56D963"
+                          value="broker"
+                          label="Corretor"
+                        />
+                        <Radio
+                          color="#56D963"
+                          value="realEstate"
+                          label="Imobiliária"
+                        />
+                      </Group>
+                    </Radio.Group>
+                  </Group>
+                  {intermediaryValue === "broker" ? (
+                    <>
+                      <InputBase
+                        label="Nome do corretor"
+                        radius="xs"
+                        size="md"
+                        placeholder="Nome do corretor"
+                        key={ownerForm.key("brokerName")}
+                        {...ownerForm.getInputProps("brokerName")}
+                      />
+                      <InputBase
+                        radius="xs"
+                        size="md"
+                        label="CPF do corretor"
+                        placeholder="000.000.000-00"
+                        component={IMaskInput}
+                        mask="000.000.000-00"
+                        key={ownerForm.key("brokerCpf")}
+                        {...ownerForm.getInputProps("brokerCpf")}
+                      />
+                      <InputBase
+                        className="mb-[0.75rem]"
+                        radius="xs"
+                        size="md"
+                        label="CRECI do corretor"
+                        placeholder="CRECI do corretor"
+                        key={ownerForm.key("brokerCreci")}
+                        {...ownerForm.getInputProps("brokerCreci")}
+                      />
+                    </>
+                  ) : (
+                    <InputBase
+                      className="mb-[0.75rem]"
+                      label="Nome da imobiliária"
+                      radius="xs"
+                      size="md"
+                      placeholder="Nome da imobiliária"
+                      key={ownerForm.key("realEstateName")}
+                      {...ownerForm.getInputProps("realEstateName")}
+                    />
+                  )}
+                </SimpleGrid>
+              </RegisterInput>
+            </form>
           </div>
         );
 
       case 4:
         return (
           <div className="mb-[45%]">
-            {/* <RegisterInput
-              icon={Icons.Social}
-              inputHeader={"Dados de sócios ou participantes"}
-              inputDescription={
-                "Preencha alguns dados de sócios ou participantes do empreendimento."
-              }
-              isGrid
-              buttonName={"Cadastrar"}
-              backAnchorName={"Voltar"}
-              prevStep={prevStep}
-              nextStep={() => {
+            <form
+              onSubmit={partnerForm.onSubmit(() => {
+                nextStep();
+              })}
+            >
+              <RegisterInput
+                icon={Icons.Social}
+                inputHeader={"Dados de sócios ou participantes"}
+                inputDescription={
+                  "Preencha alguns dados de sócios ou participantes do empreendimento."
+                }
+                isGrid
+                buttonName={"Próximo"}
+                backAnchorName={"Voltar"}
+                prevStep={prevStep}
+              >
+                <Group mt="xs" style={{ marginBottom: "10px" }}>
+                  <Text size="md" fw={700}>
+                    Adicionar sócio ou participante?
+                  </Text>
+                  <Radio.Group value={partnerType} onChange={setPartnerType}>
+                    <Group>
+                      <Radio color="#56D963" value="partner" label="Sócio" />
+                      <Radio
+                        color="#56D963"
+                        value="participant"
+                        label="Participante"
+                      />
+                    </Group>
+                  </Radio.Group>
+                </Group>
+
+                <NestedArray
+                  partnerType={partnerType}
+                  partnerForm={partnerForm}
+                />
+              </RegisterInput>
+            </form>
+          </div>
+        );
+      case 5:
+        return (
+          <div className="mb-[45%]">
+            <form
+              onSubmit={documentaryDiligenceForm.onSubmit(() => {
                 nextStep();
                 setTimeout(() => {
                   router.push("/dashboard", { scroll: false });
                 }, 4000);
-              }}
+              })}
             >
-              <SimpleGrid
-                cols={{ base: 1, sm: 2, lg: 2 }}
-                spacing={{ base: 15, sm: "xs" }}
-                verticalSpacing={{ base: "xs", sm: "xs" }}
+              <RegisterInput
+                icon={Icons.FileIcon}
+                inputHeader={"Diligência documental e viabilidade do projeto"}
+                inputDescription={
+                  "Precisamos que envie alguns documentos do empreendimento para a viabilidade do projeto"
+                }
+                buttonName={"Cadastrar"}
+                isGrid
+                prevStep={prevStep}
+                backAnchorName={"Voltar"}
               >
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Nome completo do(a) sócio(a)"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-complete-name"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "partner-complete-name")
-                  }
-                  error={error["partner-complete-name"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CPF do(a) sócio(a)"
-                  component={IMaskInput}
-                  mask="000.000.000-00"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-cpf"]}
-                  onChange={(event) => handleInputChange(event, "partner-cpf")}
-                  error={error["partner-cpf"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="RG do(a) sócio(a)"
-                  component={IMaskInput}
-                  mask="00000-000"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-rg"]}
-                  onChange={(event) => handleInputChange(event, "partner-rg")}
-                  error={error["partner-rg"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="CNPJ do(a) sócio(a)"
-                  component={IMaskInput}
-                  mask="00.000.000/0000-00"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-cnpj"]}
-                  onChange={(event) => handleInputChange(event, "partner-cnpj")}
-                  error={error["partner-cnpj"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Função do(a) sócio(a)"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-role"]}
-                  onChange={(event) => handleInputChange(event, "partner-role")}
-                  error={error["partner-role"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Contra partida do(a) sócio(a)"
-                  className="mb-[0.75rem]"
-                  value={inputs["counterpart-from-the-partner"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "counterpart-from-the-partner")
-                  }
-                  error={error["counterpart-from-the-partner"]}
-                />
-                <InputBase
-                  radius="xs"
-                  size="md"
-                  placeholder="Porcentagem do(a) sócio(a)"
-                  className="mb-[0.75rem]"
-                  value={inputs["partner-percentage"]}
-                  onChange={(event) =>
-                    handleInputChange(event, "partner-percentage")
-                  }
-                  error={error["partner-percentage"]}
-                />
-              </SimpleGrid>
-            </RegisterInput> */}
+                <SimpleGrid
+                  cols={{ base: 1, sm: 2, lg: 2 }}
+                  spacing={{ base: 15, sm: "xs" }}
+                  verticalSpacing={{ base: "xs", sm: "xs" }}
+                >
+                  <Select
+                    label="Status do empreendimento"
+                    size="md"
+                    className="mb-[0.75rem]"
+                    placeholder="Status do empreendimento"
+                    data={[
+                      "Prospecção (terreno não comprado)",
+                      "Terreno comprado",
+                      "Protocolado na prefeitura",
+                      "Projeto aprovado",
+                      "Registro de incorporação",
+                      "Lançado",
+                      "Obra em andamento",
+                      "Obra concluída",
+                      "Habita-se",
+                      "Repase concluído",
+                      "SPE encerrada",
+                    ]}
+                    key={documentaryDiligenceForm.key("ventureStatus")}
+                    {...documentaryDiligenceForm.getInputProps("ventureStatus")}
+                  />
+                  <FileInput
+                    className="mb-[0.75rem]"
+                    withAsterisk
+                    size="md"
+                    leftSection={icon}
+                    label="Adicione um documento"
+                    placeholder="Documento"
+                    leftSectionPointerEvents="none"
+                  />
+                </SimpleGrid>
+              </RegisterInput>
+            </form>
           </div>
         );
       default:
