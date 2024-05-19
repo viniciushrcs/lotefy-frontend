@@ -233,7 +233,7 @@ export function InputVentureRegisterDisplayer(
                 w={20}
               />
               <Anchor
-                href={`${APP_ENVS.lotefyBaseUrl}/dashboard`}
+                href={"/dashboard"}
                 className="text-[#56D963] text-sm font-normal leading-5"
               >
                 Volte ao dashboard

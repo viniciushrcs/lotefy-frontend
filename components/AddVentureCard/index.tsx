@@ -12,7 +12,7 @@ export function AddVentureCard() {
       <Text className="text-[22px]">Cadastrar empreendimento</Text>
       <Text c="dimmed">Você não possui empreendimentos cadastrados</Text>
       <div>
-        <Link href="http://localhost:3000/venture-registration">
+        <Link href="/venture-registration">
           <Button
             leftSection={<IconSquareRoundedPlusFilled size={20} />}
             variant="filled"

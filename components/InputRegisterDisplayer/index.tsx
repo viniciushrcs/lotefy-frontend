@@ -139,7 +139,7 @@ export function InputRegisterDisplayer(
                 w={20}
               />
               <Anchor
-                href={`${APP_ENVS.lotefyBaseUrl}/login`}
+                href={"/login"}
                 className="text-[#56D963] text-sm font-normal leading-5"
               >
                 Volte ao login
