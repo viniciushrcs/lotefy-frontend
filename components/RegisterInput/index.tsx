@@ -11,6 +11,7 @@ interface Props {
   prevStep?: any;
   nextStep?: any;
   children: React.ReactNode;
+  isGrid?: boolean;
 }
 
 export default function RegisterInput({
@@ -22,10 +23,15 @@ export default function RegisterInput({
   prevStep,
   nextStep,
   children,
+  isGrid,
 }: Props) {
   return (
     <div className="flex justify-center items-center">
-      <div className="max-h-[22.8rem] max-w-[22rem] w-[22rem] h-[22.8rem] ">
+      <div
+        className={`max-h-[22.8rem] max-w-[40rem] ${
+          isGrid ? "w-[32rem]" : "w-[22rem]"
+        } h-[22.8rem]`}
+      >
         <div className="flex justify-center items-center flex-col text-center">
           <Image
             component={NextImage}
@@ -45,6 +51,7 @@ export default function RegisterInput({
         {children}
         {buttonName && (
           <Button
+            type="submit"
             variant="filled"
             color="#56D963"
             radius="xs"

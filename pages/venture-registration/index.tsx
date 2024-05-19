@@ -4,10 +4,10 @@ import StepperComponent from "../../components/Stepper";
 import logo from "../../public/images/Logo.png";
 import NextImage from "next/image";
 import { Image } from "@mantine/core";
-import { InputRegisterDisplayer } from "../../components/InputRegisterDisplayer";
-import { signupstepperData } from "../../helpers/stepper-data";
+import { ventureStepperData } from "../../helpers/stepper-data";
+import { InputVentureRegisterDisplayer } from "../../components/inputVentureRegisterDisplayer";
 
-export default function SignUp() {
+export default function VentureRegistration() {
   const [active, setActive] = useState(0);
 
   const nextStep = () =>
@@ -27,13 +27,13 @@ export default function SignUp() {
           left={34}
           top={35}
         />
-        {InputRegisterDisplayer(active, prevStep, nextStep)}
+        {InputVentureRegisterDisplayer(active, prevStep, nextStep)}
       </div>
       <div className="p-12">
         <Text className="text-[#0F1728] text-center text-[2rem] font-medium leading-[38px] pb-[5rem]">
-          Passos para criar sua conta no Lotefy
+          Passos para cadastrar um empreendimento
         </Text>
-        <StepperComponent active={active} data={signupstepperData} />
+        <StepperComponent active={active} data={ventureStepperData} />
       </div>
     </div>
   );

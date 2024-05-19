@@ -20,3 +20,9 @@ export * as CheckIcon from "./check-icon.svg";
 export * as CheckIconGreen from "./check-icon-green.svg";
 export * as CheckIconRed from "./check-icon-red.svg";
 export * as BrazilFlag from "./brazil-flag.svg";
+
+export * as FileSearch from "./file-search.svg";
+export * as Home from "./home.svg";
+export * as Id from "./id.svg";
+export * as Social from "./social.svg";
+export * as Documents from "./files.svg";
