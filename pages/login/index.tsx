@@ -7,7 +7,7 @@ import BackButton from "../../public/icons/BackButton.svg";
 import { FormEvent, useContext, useState } from "react";
 import { LoginService } from "../../services/login";
 import { SignUpContext } from "../../context/SignUpContext";
-import { APP_ENVS } from "../../helpers/envs";
+import { useRouter } from "next/router";
 
 type KeyboardInputNames = "email-input" | "password-input";
 
@@ -21,6 +21,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [loginError, setLoginError] = useState<string | null>("");
+  const router = useRouter();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement> | FormEvent<HTMLInputElement>,
@@ -47,9 +48,11 @@ export default function Login() {
           inputs["password-input"]
         );
         updateUserData({
-          accessToken: response.data.access_token,
+          accessToken: response.data.accessToken,
         });
         setLoginError(null);
+        localStorage.setItem("bearer token", response.data.accessToken);
+        router.push("/dashboard");
         return response;
       } else return null;
     } catch (error: any) {

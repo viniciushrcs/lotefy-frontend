@@ -2,7 +2,7 @@ import NextImage from "next/image";
 import { Anchor, Button, Divider, Image, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import BackButton from "../../public/icons/BackButton.svg";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
 import { RequestError } from "../../helpers/responseError";

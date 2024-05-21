@@ -20,7 +20,6 @@ import { SignUpContext } from "../../context/SignUpContext";
 import BackButton from "../../public/icons/BackButton.svg";
 import * as Icons from "../../public/icons/index";
 import RegisterInput from "../RegisterInput";
-import { APP_ENVS } from "../../helpers/envs";
 import { countryStates } from "../../helpers/states";
 import { useRouter } from "next/navigation";
 import {
@@ -33,6 +32,7 @@ import {
 } from "../../helpers/forms";
 import { IconFileCv } from "@tabler/icons-react";
 import { NestedArray } from "./NestedArray";
+import { Enterprise } from "../../services/enterprise/indext";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -47,7 +47,7 @@ export function InputVentureRegisterDisplayer(
   const [intermediaryValue, setIntermediaryValue] = useState("broker");
   const [paidInToSpeValue, setPaidInToSpeValue] = useState("yes");
   const [partnerType, setPartnerType] = useState("partner");
-  const { updateUserData } = useContext(SignUpContext);
+  const { updateUserData, userData } = useContext(SignUpContext);
 
   const router = useRouter();
   const form = useForm(ventureFormConfig(constituedSpeValue));
@@ -100,6 +100,27 @@ export function InputVentureRegisterDisplayer(
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
+
+  const handleSubmit = async () => {
+    await Enterprise.addEnterprise(
+      userData.ventureName?.toString(),
+      userData.userPjId?.toString(),
+      userData.vgv?.toString(),
+      userData.constitutedSpe?.toString(),
+      userData.paidInToSpe?.toString(),
+      userData.negotiationStatus?.toString(),
+      userData.propertyZipcode?.toString(),
+      userData.propertyAddress?.toString(),
+      userData.propertyAddressNumber?.toString(),
+      userData.propertyAddressDistrict?.toString(),
+      userData.propertyAddressComplement?.toString(),
+      userData.propertyRegistration?.toString()
+    );
+
+    setTimeout(() => {
+      router.push("/dashboard", { scroll: false });
+    }, 4000);
+  };
 
   const renderRegisterInput = () => {
     switch (step) {
@@ -683,9 +704,7 @@ export function InputVentureRegisterDisplayer(
             <form
               onSubmit={documentaryDiligenceForm.onSubmit(() => {
                 nextStep();
-                setTimeout(() => {
-                  router.push("/dashboard", { scroll: false });
-                }, 4000);
+                handleSubmit();
               })}
             >
               <RegisterInput
