@@ -1,6 +1,7 @@
 import { isNotEmpty, UseFormInput } from "@mantine/form";
 import {
   DocumentaryDiligenceFormValues,
+  MediatorFormValues,
   OwnerFormValues,
   PartnerFormValues,
   PropertyFormValues,
@@ -87,50 +88,47 @@ export const propertyFormConfig = (): UseFormInput<PropertyFormValues> => ({
   },
 });
 
-export const ownerFormConfig = (
-  intermediaryValue: string
-): UseFormInput<OwnerFormValues> => ({
+export const ownerFormConfig = (): UseFormInput<OwnerFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
+    ownerType: "",
     ownerName: "",
     ownerCpf: "",
     ownerRg: "",
     ownerCnpj: "",
-    ownerCompleteAddress: "",
-    negotiationStatus: "",
-    brokerName: "",
-    brokerCpf: "",
-    brokerCreci: "",
-    realEstateName: "",
+    ownerSocialReason: "",
+    ownerCnae: "",
+    ownerPjCreatedAt: "",
+    ownerZipcode: "",
+    ownerAddress: "",
+    ownerAddressNumber: "",
+    ownerAddressComplement: "",
+    ownerAddressDistrict: "",
+    ownerAddressCity: "",
+    ownerAddressState: "",
   },
   validate: {
     ownerName: isNotEmpty("Campo inválido"),
     ownerCpf: (value) => (value.length === 14 ? null : "CPF inválido"),
     ownerRg: isNotEmpty("Campo inválido"),
-    ownerCnpj: (value) => (value.length >= 14 ? null : "CNPJ inválido"),
-    ownerCompleteAddress: isNotEmpty("Campo inválido"),
-    negotiationStatus: isNotEmpty("Campo inválido"),
-    brokerName: (value) => {
-      if (intermediaryValue === "broker")
-        value.length ? null : "Campo inválido";
-      return null;
-    },
-    brokerCpf: (value) => {
-      if (intermediaryValue === "broker")
-        value.length === 14 ? null : "CPF inválido";
-      return null;
-    },
-    brokerCreci: (value) => {
-      if (intermediaryValue === "broker")
-        value.length ? null : "CRECI inválido";
-      return null;
-    },
-    realEstateName: (value) => {
-      if (intermediaryValue === "realEstate")
-        !value.length ? "Campo inválido" : null;
-      return null;
-    },
+    // ownerCnpj: (value) => (value.length >= 14 ? null : "CNPJ inválido"),
   },
+});
+
+export const mediatorFormConfig = (): UseFormInput<MediatorFormValues> => ({
+  mode: "uncontrolled",
+  initialValues: {
+    negotiationStatus: "",
+    brokerName: "",
+    brokerCpf: "",
+    brokerRg: "",
+    brokerCreci: "",
+    realEstateName: "",
+    realEstateCnpj: "",
+    realEstateSocialReason: "",
+    realEstateCnae: "",
+  },
+  validate: {},
 });
 
 export const partnerFormConfig = (

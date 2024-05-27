@@ -52,7 +52,12 @@ export const ventureStepperData = [
     icon: Icons.Home,
   },
   {
-    label: "Dados do imóvel: proprietário, corretor e situação",
+    label: "Dados do proprietário do imóvel",
+    description: "Preencha alguns dados do proprietário do imóvel",
+    icon: Icons.Id,
+  },
+  {
+    label: "Dados do imóvel: corretor e situação",
     description: "Preencha mais alguns dados do imóvel de cadastro",
     icon: Icons.Id,
   },
