@@ -88,7 +88,7 @@ export const propertyFormConfig = (): UseFormInput<PropertyFormValues> => ({
   },
 });
 
-export const ownerFormConfig = (): UseFormInput<OwnerFormValues> => ({
+export const ownerFormConfig = (ownerType:string): UseFormInput<OwnerFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
     ownerType: "",
@@ -108,14 +108,58 @@ export const ownerFormConfig = (): UseFormInput<OwnerFormValues> => ({
     ownerAddressState: "",
   },
   validate: {
-    ownerName: isNotEmpty("Campo inválido"),
-    ownerCpf: (value) => (value.length === 14 ? null : "CPF inválido"),
-    ownerRg: isNotEmpty("Campo inválido"),
-    // ownerCnpj: (value) => (value.length >= 14 ? null : "CNPJ inválido"),
+    ownerName: (value) => {
+      if(ownerType === 'fisicalPerson') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    ownerCpf: (value) =>{
+      if(ownerType === 'fisicalPerson') {
+       if(value.length === 14 )return null ;
+        return "CPF inválido"
+      } else return null
+    },
+    ownerRg: (value) => {
+      if(ownerType === 'fisicalPerson') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    ownerCnpj:(value) => {
+      if (ownerType === "legalPerson") {
+        if (value.length === 18) return null;
+        return "CNPJ inválido";
+      } else return null;
+    },
+    ownerSocialReason: (value) => {
+      if(ownerType === 'legalPerson') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    ownerCnae: (value) => {
+      if(ownerType === 'legalPerson') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    ownerPjCreatedAt:(value) => {
+      if (ownerType === "legalPerson") {
+        if (value.length === 10) return null;
+        return "CNPJ inválido";
+      } else return null;
+    },
+    ownerZipcode: isNotEmpty("Campo inválido"),
+    ownerAddress: isNotEmpty("Campo inválido"),
+    ownerAddressNumber: isNotEmpty("Campo inválido"),
+    ownerAddressDistrict: isNotEmpty("Campo inválido"),
+    ownerAddressCity: isNotEmpty("Campo inválido"),
+    ownerAddressState: isNotEmpty("Campo inválido"),
   },
 });
 
-export const mediatorFormConfig = (): UseFormInput<MediatorFormValues> => ({
+export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<MediatorFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
     negotiationStatus: "",
@@ -128,7 +172,56 @@ export const mediatorFormConfig = (): UseFormInput<MediatorFormValues> => ({
     realEstateSocialReason: "",
     realEstateCnae: "",
   },
-  validate: {},
+  validate: {
+    brokerName: (value) => {
+      if(intermediaryValue === 'broker') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    brokerCpf: (value) =>{
+      if(intermediaryValue === 'broker') {
+       if(value.length === 14 )return null ;
+        return "CPF inválido"
+      } else return null
+    },
+    brokerRg: (value) => {
+      if(intermediaryValue === 'broker') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    brokerCreci: (value) => {
+      if(intermediaryValue === 'broker') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    realEstateName: (value) => {
+      if(intermediaryValue === 'realEstate') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    realEstateCnpj: (value) => {
+      if (intermediaryValue === "realEstate") {
+        if (value.length === 18) return null;
+        return "CNPJ inválido";
+      } else return null;
+    },
+    realEstateSocialReason: (value) => {
+      if(intermediaryValue === 'realEstate') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    realEstateCnae: (value) => {
+      if(intermediaryValue === 'realEstate') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+  },
 });
 
 export const partnerFormConfig = (

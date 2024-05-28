@@ -29,4 +29,14 @@ export interface CreateEnterpriseDto {
   ownerPjCreatedAt?: Date;
   ownerCpf?: string;
   ownerRg?: string;
+  intermediary?: string;
+  brokerName?: string;
+  brokerCpf?: string;
+  brokerRg?: string;
+  brokerCreci?: string;
+  realEstateCnpj?: string;
+  realEstateSocialReason?: string;
+  realEstateCnae?: string;
+  realEstateName?: string;
+  ventureStatus:string;
 }

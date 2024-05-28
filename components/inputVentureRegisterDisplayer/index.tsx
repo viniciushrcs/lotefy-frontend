@@ -58,8 +58,8 @@ export function InputVentureRegisterDisplayer(
   const form = useForm(ventureFormConfig(constituedSpeValue));
   const speForm = useForm(speFormConfig());
   const propertyForm = useForm(propertyFormConfig());
-  const ownerForm = useForm(ownerFormConfig());
-  const mediatorForm = useForm(mediatorFormConfig());
+  const ownerForm = useForm(ownerFormConfig(ownerType));
+  const mediatorForm = useForm(mediatorFormConfig(intermediaryValue));
   const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfi());
   const partnerForm = useForm(partnerFormConfig(partnerType));
 
@@ -98,6 +98,7 @@ export function InputVentureRegisterDisplayer(
       ownerSocialReason: ownerForm.getValues().ownerSocialReason,
       ownerPjCreatedAt: ownerForm.getValues().ownerPjCreatedAt,
       ownerCnae: ownerForm.getValues().ownerCnae,
+      intermediary: intermediaryValue,
       brokerName: mediatorForm.getValues().brokerName,
       brokerCpf: mediatorForm.getValues().brokerCpf,
       brokerRg: mediatorForm.getValues().brokerRg,
@@ -147,6 +148,17 @@ export function InputVentureRegisterDisplayer(
         Regex.formatDate(userData.ownerPjCreatedAt?.toString()) || "",
       ownerCpf: userData.ownerCpf?.toString() || "",
       ownerRg: userData.ownerRg?.toString() || "",
+      intermediary: userData.intermediary?.toString() || '',
+      brokerName:userData.brokerName?.toString() || '',
+      brokerCpf: userData.brokerCpf?.toString() || '',
+      brokerRg: userData.brokerRg?.toString() || '',
+      brokerCreci: userData.brokerCreci?.toString() || '',
+      realEstateCnpj: userData.realEstateCnpj?.toString() || '',
+      realEstateSocialReason: userData.realEstateSocialReason?.toString() || '',
+      realEstateCnae: userData.realEstateCnae?.toString() || '',
+      realEstateName: userData.realEstateName?.toString() || '',
+      ventureStatus: userData.ventureStatus?.toString() || '',
+
     };
 
     await Enterprise.createEnterprise(createEnterpriseDto);
