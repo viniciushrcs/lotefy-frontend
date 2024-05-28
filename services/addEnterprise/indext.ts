@@ -1,13 +1,14 @@
 import { APP_ENVS } from "../../helpers/envs";
 import { RequestError } from "../../helpers/responseError";
 import { AnyObject, HttpMethods, HttpService } from "../http";
+import { CreateEnterpriseDto } from "./interface";
 
 export class Enterprise {
   static async addEnterprise(
     nome: string | undefined,
     pj_id: string | undefined,
     vgv: string | undefined,
-    spe_constituida: string | undefined,
+    spe_constituida: boolean | undefined,
     imovel_integralizado: string | undefined,
     imovel_status_negociacao: string | undefined,
     spe_pj_id?: string | undefined
@@ -103,5 +104,22 @@ export class Enterprise {
       });
 
     return response;
+  }
+
+  static async createEnterprise(dto: CreateEnterpriseDto): Promise<any> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.POST,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/enterprise/create`,
+      body: dto,
+    });
+
+    if (!response || error) {
+      throw new RequestError({
+        message: error?.response?.data.message || "No message",
+        code: error?.code || "No code",
+        statusCode: error?.response?.status || 500,
+      });
+    }
   }
 }

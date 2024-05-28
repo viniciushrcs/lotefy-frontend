@@ -36,6 +36,7 @@ import { NestedArray } from "./NestedArray";
 import { Enterprise } from "../../services/addEnterprise/indext";
 import { User } from "../../services/user";
 import { Regex } from "../../helpers/regex";
+import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -66,7 +67,7 @@ export function InputVentureRegisterDisplayer(
     updateUserData({
       ventureName: form.getValues().ventureName,
       constitutedSpe: constituedSpeValue,
-      speCnpj: form.getValues().speCnpj,
+      speCnpj: Regex.cleanCNPJ(form.getValues().speCnpj),
       speSocialReason: form.getValues().speSocialReason,
       speFantasyName: form.getValues().speFantasyName,
       speStatus: form.getValues().speStatus,
@@ -93,7 +94,7 @@ export function InputVentureRegisterDisplayer(
       ownerName: ownerForm.getValues().ownerName,
       ownerCpf: ownerForm.getValues().ownerCpf,
       ownerRg: ownerForm.getValues().ownerRg,
-      ownerCnpj: ownerForm.getValues().ownerCnpj,
+      ownerCnpj: Regex.cleanCNPJ(ownerForm.getValues().ownerCnpj),
       ownerSocialReason: ownerForm.getValues().ownerSocialReason,
       ownerPjCreatedAt: ownerForm.getValues().ownerPjCreatedAt,
       ownerCnae: ownerForm.getValues().ownerCnae,
@@ -114,99 +115,41 @@ export function InputVentureRegisterDisplayer(
   }, [step]);
 
   const handleSubmit = async () => {
-    if (userData.constitutedSpe?.toString() === "yes") {
-      console.log(userData.speOpenDate, "DATEEEE");
+    const createEnterpriseDto: CreateEnterpriseDto = {
+      constitutedSpe: userData.constitutedSpe === "yes" ? true : false,
+      ownerType: userData.ownerType?.toString() || "",
+      ventureName: userData.ventureName?.toString() || "",
+      vgv: userData.vgv?.toString() || "",
+      paidInToSpe: userData.paidInToSpe === "yes",
+      negotiationStatus: userData.negotiationStatus?.toString() || "",
+      propertyRegistration: userData.propertyRegistration?.toString() || "",
+      propertyAddress: userData.propertyAddress?.toString() || "",
+      propertyAddressNumber: userData.propertyAddressNumber?.toString() || "",
+      propertyAddressDistrict:
+        userData.propertyAddressDistrict?.toString() || "",
+      propertyAddressCity: userData.propertyAddressCity?.toString() || "",
+      propertyAddressState: userData.propertyAddressState?.toString() || "",
+      speCnpj: userData.speCnpj?.toString() || "",
+      speSocialReason: userData.speSocialReason?.toString() || "",
+      speCnae: userData.speCnae?.toString() || "",
+      speFantasyName: userData.speFantasyName?.toString() || "",
+      speOpenDate: Regex.formatDate(userData.speOpenDate?.toString()) || "",
+      speAddress: userData.speAddress?.toString() || "",
+      speAddressNumber: userData.speAddressNumber?.toString() || "",
+      speAddressDistrict: userData.speAddressDistrict?.toString() || "",
+      speAddressComplement: userData.speAddressComplement?.toString() || "",
+      speAddressCity: userData.speAddressCity?.toString() || "",
+      speAddressState: userData.speAddressState?.toString() || "",
+      ownerCnpj: userData.ownerCnpj?.toString() || "",
+      ownerSocialReason: userData.ownerSocialReason?.toString() || "",
+      ownerCnae: userData.ownerCnae?.toString() || "",
+      ownerPjCreatedAt:
+        Regex.formatDate(userData.ownerPjCreatedAt?.toString()) || "",
+      ownerCpf: userData.ownerCpf?.toString() || "",
+      ownerRg: userData.ownerRg?.toString() || "",
+    };
 
-      const createSpePjData = await User.userPjData(
-        userData.speCnpj?.toString(),
-        userData.speSocialReason?.toString(),
-        userData.speCnae?.toString(),
-        Regex.formatDate(userData.speOpenDate?.toString()),
-        null,
-        null,
-        userData.speFantasyName?.toString()
-      );
-
-      console.log(createSpePjData, "CREATE SPE PJ DATA");
-      await Enterprise.addAddress(
-        userData.speAddressCity?.toString(),
-        userData.speAddressNumber?.toString(),
-        userData.speAddressDistrict?.toString(),
-        userData.speAddress?.toString(),
-        userData.speAddressState?.toString(),
-        null,
-        createSpePjData.data.pj_id,
-        null,
-        userData.speAddressComplement?.toString()
-      );
-    }
-
-    let createOwner;
-    if (ownerType === "legalPerson") {
-      createOwner = await User.userPjData(
-        Regex.cleanCNPJ(userData.ownerCnpj?.toString()),
-        userData.ownerSocialReason?.toString(),
-        userData.ownerCnae?.toString(),
-        Regex.formatDate(userData.ownerPjCreatedAt?.toString()),
-        null,
-        null,
-        null
-      );
-      const createPropertyData = await Enterprise.addProperty(
-        userData.propertyRegistration?.toString(),
-        createOwner.data.pj_id,
-        "PJ",
-        null, //IMOBILIARIA VER
-        null //CORRETOR ID
-      );
-
-      await Enterprise.addAddress(
-        userData.propertyAddressCity?.toString(),
-        userData.propertyAddressNumber?.toString(),
-        userData.propertyAddressDistrict?.toString(),
-        userData.propertyAddress?.toString(),
-        userData.propertyAddressState?.toString(),
-        createPropertyData.data.imovel_id,
-        null,
-        null,
-        userData.propertyAddressComplement?.toString()
-      );
-    } else {
-      createOwner = await User.userPfData(
-        userData.ownerCpf?.toString(),
-        userData.ownerRg?.toString()
-      );
-
-      const createPropertyData = await Enterprise.addProperty(
-        userData.propertyRegistration?.toString(),
-        createOwner.data.pf_id,
-        "PF",
-        null, //IMOBILIARIA VER
-        null //CORRETOR ID
-      );
-
-      await Enterprise.addAddress(
-        userData.propertyAddressCity?.toString(),
-        userData.propertyAddressNumber?.toString(),
-        userData.propertyAddressDistrict?.toString(),
-        userData.propertyAddress?.toString(),
-        userData.propertyAddressState?.toString(),
-        createPropertyData.data.imovel_id,
-        null,
-        null,
-        userData.propertyAddressComplement?.toString()
-      );
-    }
-
-    await Enterprise.addEnterprise(
-      userData.ventureName?.toString(),
-      userData.userPjId?.toString(),
-      userData.vgv?.toString(),
-      userData.constitutedSpe?.toString(),
-      userData.paidInToSpe?.toString(),
-      userData.negotiationStatus?.toString(),
-      userData.propertyZipcode?.toString()
-    );
+    await Enterprise.createEnterprise(createEnterpriseDto);
 
     router.push("/dashboard", { scroll: false });
 
