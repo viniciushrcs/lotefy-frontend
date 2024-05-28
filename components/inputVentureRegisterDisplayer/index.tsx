@@ -92,7 +92,7 @@ export function InputVentureRegisterDisplayer(
       propertyRegistration: propertyForm.getValues().propertyRegistration,
       ownerType: ownerType,
       ownerName: ownerForm.getValues().ownerName,
-      ownerCpf: ownerForm.getValues().ownerCpf,
+      ownerCpf: Regex.cleanCPF(ownerForm.getValues().ownerCpf),
       ownerRg: ownerForm.getValues().ownerRg,
       ownerCnpj: Regex.cleanCNPJ(ownerForm.getValues().ownerCnpj),
       ownerSocialReason: ownerForm.getValues().ownerSocialReason,
@@ -100,13 +100,14 @@ export function InputVentureRegisterDisplayer(
       ownerCnae: ownerForm.getValues().ownerCnae,
       intermediary: intermediaryValue,
       brokerName: mediatorForm.getValues().brokerName,
-      brokerCpf: mediatorForm.getValues().brokerCpf,
+      brokerCpf: Regex.cleanCPF(mediatorForm.getValues().brokerCpf),
       brokerRg: mediatorForm.getValues().brokerRg,
       brokerCreci: mediatorForm.getValues().brokerCreci,
-      realEstateCnpj: mediatorForm.getValues().realEstateCnpj,
+      realEstateCnpj: Regex.cleanCNPJ(mediatorForm.getValues().realEstateCnpj),
       realEstateSocialReason: mediatorForm.getValues().realEstateSocialReason,
       realEstateCnae: mediatorForm.getValues().realEstateCnae,
       realEstateName: mediatorForm.getValues().realEstateName,
+      realEstateCreatedAt: mediatorForm.getValues().realEstateCreatedAt,
       negotiationStatus: mediatorForm.getValues().negotiationStatus,
       partner: partnerForm.getValues().partner,
       participants: partnerForm.getValues().participants,
@@ -116,6 +117,7 @@ export function InputVentureRegisterDisplayer(
   }, [step]);
 
   const handleSubmit = async () => {
+
     const createEnterpriseDto: CreateEnterpriseDto = {
       constitutedSpe: userData.constitutedSpe === "yes" ? true : false,
       ownerType: userData.ownerType?.toString() || "",
@@ -157,17 +159,18 @@ export function InputVentureRegisterDisplayer(
       realEstateSocialReason: userData.realEstateSocialReason?.toString() || '',
       realEstateCnae: userData.realEstateCnae?.toString() || '',
       realEstateName: userData.realEstateName?.toString() || '',
+      realEstateCreatedAt:Regex.formatDate(userData.realEstateCreatedAt?.toString()) || '',
       ventureStatus: userData.ventureStatus?.toString() || '',
 
     };
+    try{
+      await Enterprise.createEnterprise(createEnterpriseDto);
 
-    await Enterprise.createEnterprise(createEnterpriseDto);
-
-    router.push("/dashboard", { scroll: false });
-
-    // setTimeout(() => {
-    //   router.push("/dashboard", { scroll: false });
-    // }, 4000);
+      router.push("/dashboard", { scroll: false });
+    }catch(error){
+      console.error("Erro ao criar o empreendimento:", error);
+    }
+    
   };
 
   const renderRegisterInput = () => {
@@ -861,12 +864,21 @@ export function InputVentureRegisterDisplayer(
                         size="md"
                       />
                       <InputBase
-                        className="mb-[0.75rem]"
                         label="CNAE principal"
                         placeholder="CNAE"
                         key={mediatorForm.key("realEstateCnae")}
                         {...mediatorForm.getInputProps("realEstateCnae")}
                         size="md"
+                      />
+                      <InputBase
+                        label="Data de abertura"
+                        className="mb-[0.75rem]"
+                        placeholder="00/00/0000"
+                        key={mediatorForm.key("realEstateCreatedAt")}
+                        {...mediatorForm.getInputProps("realEstateCreatedAt")}
+                        size="md"
+                        component={IMaskInput}
+                        mask="00/00/0000"
                       />
                     </>
                   )}

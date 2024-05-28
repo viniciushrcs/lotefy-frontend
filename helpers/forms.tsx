@@ -171,6 +171,7 @@ export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<Medi
     realEstateCnpj: "",
     realEstateSocialReason: "",
     realEstateCnae: "",
+    realEstateCreatedAt: ""
   },
   validate: {
     brokerName: (value) => {
@@ -210,6 +211,12 @@ export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<Medi
       } else return null;
     },
     realEstateSocialReason: (value) => {
+      if(intermediaryValue === 'realEstate') {
+        if (value.length) return null;
+        return "Campo inválido";
+      } else return null
+    },
+    realEstateCreatedAt:(value) => {
       if(intermediaryValue === 'realEstate') {
         if (value.length) return null;
         return "Campo inválido";

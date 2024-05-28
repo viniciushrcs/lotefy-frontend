@@ -59,6 +59,7 @@ export interface MediatorFormValues {
   realEstateCnpj: string;
   realEstateSocialReason: string;
   realEstateCnae: string;
+  realEstateCreatedAt: string;
 }
 
 export interface PartnerFormValues {

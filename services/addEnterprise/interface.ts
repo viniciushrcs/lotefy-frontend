@@ -38,5 +38,6 @@ export interface CreateEnterpriseDto {
   realEstateSocialReason?: string;
   realEstateCnae?: string;
   realEstateName?: string;
+  realEstateCreatedAt?: Date;
   ventureStatus:string;
 }
