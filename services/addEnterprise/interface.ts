@@ -41,4 +41,6 @@ export interface CreateEnterpriseDto {
   realEstateCreatedAt?: Date;
   ventureStatus: string;
   userId: string;
+  pjPartner: any[];
+  pfPartner: any[];
 }

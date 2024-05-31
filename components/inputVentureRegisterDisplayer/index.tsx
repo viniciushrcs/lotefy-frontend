@@ -50,7 +50,7 @@ export function InputVentureRegisterDisplayer(
   const [constituedSpeValue, setConstituedSpeValue] = useState("yes");
   const [intermediaryValue, setIntermediaryValue] = useState("broker");
   const [paidInToSpeValue, setPaidInToSpeValue] = useState("no");
-  const [partnerType, setPartnerType] = useState("partner");
+  const [partnerType, setPartnerType] = useState("pjPartner");
   const [ownerType, setOwnerType] = useState("fisicalPerson");
   const { updateUserData, userData } = useContext(SignUpContext);
 
@@ -109,8 +109,8 @@ export function InputVentureRegisterDisplayer(
       realEstateName: mediatorForm.getValues().realEstateName,
       realEstateCreatedAt: mediatorForm.getValues().realEstateCreatedAt,
       negotiationStatus: mediatorForm.getValues().negotiationStatus,
-      partner: partnerForm.getValues().partner,
-      participants: partnerForm.getValues().participants,
+      pjPartner: partnerForm.getValues().pjPartner,
+      pfPartner: partnerForm.getValues().pfPartner,
       ventureStatus: documentaryDiligenceForm.getValues().ventureStatus,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,6 +162,8 @@ export function InputVentureRegisterDisplayer(
         Regex.formatDate(userData.realEstateCreatedAt?.toString()) || "",
       ventureStatus: userData.ventureStatus?.toString() || "",
       userId: userData.userId?.toString() || "",
+      pjPartner: userData.pjPartner as any[],
+      pfPartner: userData.pfPartner as any[],
     };
     try {
       await Enterprise.createEnterprise(createEnterpriseDto);
@@ -897,9 +899,9 @@ export function InputVentureRegisterDisplayer(
             >
               <RegisterInput
                 icon={Icons.Social}
-                inputHeader={"Dados de sócios ou participantes"}
+                inputHeader={"Dados de sócios"}
                 inputDescription={
-                  "Preencha alguns dados de sócios ou participantes do empreendimento."
+                  "Preencha alguns dados de sócios do empreendimento."
                 }
                 isGrid
                 buttonName={"Próximo"}
@@ -908,15 +910,19 @@ export function InputVentureRegisterDisplayer(
               >
                 <Group mt="xs" style={{ marginBottom: "10px" }}>
                   <Text size="md" fw={700}>
-                    Adicionar sócio ou participante?
+                    Escolha o tipo de sócio:
                   </Text>
                   <Radio.Group value={partnerType} onChange={setPartnerType}>
                     <Group>
-                      <Radio color="#56D963" value="partner" label="Sócio" />
                       <Radio
                         color="#56D963"
-                        value="participant"
-                        label="Participante"
+                        value="pjPartner"
+                        label="Pessoa jurídica"
+                      />
+                      <Radio
+                        color="#56D963"
+                        value="pfPartner"
+                        label="Pessoa física"
                       />
                     </Group>
                   </Radio.Group>

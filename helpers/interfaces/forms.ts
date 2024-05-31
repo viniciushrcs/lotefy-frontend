@@ -63,8 +63,8 @@ export interface MediatorFormValues {
 }
 
 export interface PartnerFormValues {
-  partner: AnyObject[];
-  participants: AnyObject[];
+  pjPartner: AnyObject[];
+  pfPartner: AnyObject[];
 }
 
 export interface DocumentaryDiligenceFormValues {

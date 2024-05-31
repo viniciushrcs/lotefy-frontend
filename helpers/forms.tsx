@@ -88,7 +88,9 @@ export const propertyFormConfig = (): UseFormInput<PropertyFormValues> => ({
   },
 });
 
-export const ownerFormConfig = (ownerType:string): UseFormInput<OwnerFormValues> => ({
+export const ownerFormConfig = (
+  ownerType: string
+): UseFormInput<OwnerFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
     ownerType: "",
@@ -109,42 +111,42 @@ export const ownerFormConfig = (ownerType:string): UseFormInput<OwnerFormValues>
   },
   validate: {
     ownerName: (value) => {
-      if(ownerType === 'fisicalPerson') {
+      if (ownerType === "fisicalPerson") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
-    ownerCpf: (value) =>{
-      if(ownerType === 'fisicalPerson') {
-       if(value.length === 14 )return null ;
-        return "CPF inválido"
-      } else return null
+    ownerCpf: (value) => {
+      if (ownerType === "fisicalPerson") {
+        if (value.length === 14) return null;
+        return "CPF inválido";
+      } else return null;
     },
     ownerRg: (value) => {
-      if(ownerType === 'fisicalPerson') {
+      if (ownerType === "fisicalPerson") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
-    ownerCnpj:(value) => {
+    ownerCnpj: (value) => {
       if (ownerType === "legalPerson") {
         if (value.length === 18) return null;
         return "CNPJ inválido";
       } else return null;
     },
     ownerSocialReason: (value) => {
-      if(ownerType === 'legalPerson') {
+      if (ownerType === "legalPerson") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
     ownerCnae: (value) => {
-      if(ownerType === 'legalPerson') {
+      if (ownerType === "legalPerson") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
-    ownerPjCreatedAt:(value) => {
+    ownerPjCreatedAt: (value) => {
       if (ownerType === "legalPerson") {
         if (value.length === 10) return null;
         return "CNPJ inválido";
@@ -159,7 +161,9 @@ export const ownerFormConfig = (ownerType:string): UseFormInput<OwnerFormValues>
   },
 });
 
-export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<MediatorFormValues> => ({
+export const mediatorFormConfig = (
+  intermediaryValue: string
+): UseFormInput<MediatorFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
     negotiationStatus: "",
@@ -171,38 +175,38 @@ export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<Medi
     realEstateCnpj: "",
     realEstateSocialReason: "",
     realEstateCnae: "",
-    realEstateCreatedAt: ""
+    realEstateCreatedAt: "",
   },
   validate: {
     brokerName: (value) => {
-      if(intermediaryValue === 'broker') {
+      if (intermediaryValue === "broker") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
-    brokerCpf: (value) =>{
-      if(intermediaryValue === 'broker') {
-       if(value.length === 14 )return null ;
-        return "CPF inválido"
-      } else return null
+    brokerCpf: (value) => {
+      if (intermediaryValue === "broker") {
+        if (value.length === 14) return null;
+        return "CPF inválido";
+      } else return null;
     },
     brokerRg: (value) => {
-      if(intermediaryValue === 'broker') {
+      if (intermediaryValue === "broker") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
     brokerCreci: (value) => {
-      if(intermediaryValue === 'broker') {
+      if (intermediaryValue === "broker") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
     realEstateName: (value) => {
-      if(intermediaryValue === 'realEstate') {
+      if (intermediaryValue === "realEstate") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
     realEstateCnpj: (value) => {
       if (intermediaryValue === "realEstate") {
@@ -211,22 +215,22 @@ export const mediatorFormConfig = (intermediaryValue: string): UseFormInput<Medi
       } else return null;
     },
     realEstateSocialReason: (value) => {
-      if(intermediaryValue === 'realEstate') {
+      if (intermediaryValue === "realEstate") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
-    realEstateCreatedAt:(value) => {
-      if(intermediaryValue === 'realEstate') {
+    realEstateCreatedAt: (value) => {
+      if (intermediaryValue === "realEstate") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
     realEstateCnae: (value) => {
-      if(intermediaryValue === 'realEstate') {
+      if (intermediaryValue === "realEstate") {
         if (value.length) return null;
         return "Campo inválido";
-      } else return null
+      } else return null;
     },
   },
 });
@@ -236,95 +240,76 @@ export const partnerFormConfig = (
 ): UseFormInput<PartnerFormValues> => ({
   mode: "uncontrolled",
   initialValues: {
-    partner: [
-      {
-        name: "",
-        cpf: "",
-        cnpj: "",
-        percentages: "",
-        function: "",
-        counterpart: "",
-        key: randomId(),
-      },
-    ],
-    participants: [
-      {
-        name: "",
-        cpf: "",
-        cnpj: "",
-        function: "",
-        counterpart: "",
-        key: randomId(),
-      },
-    ],
+    pjPartner: [],
+    pfPartner: [],
   },
   validate: {
-    partner: {
+    pjPartner: {
       name: (value) => {
-        if (partnerType === "partner") {
+        if (partnerType === "pjPartner") {
           if (value.length) return null;
           return "Campo inválido";
         } else return null;
       },
-      cpf: (value) => {
-        if (partnerType === "partner") {
-          if (value.length === 14) return null;
-          return "CPF inválido";
-        } else return null;
-      },
       cnpj: (value) => {
-        if (partnerType === "partner") {
+        if (partnerType === "pjPartner") {
           if (value.length === 18) return null;
           return "CNPJ inválido";
         } else return null;
       },
-      percentages: (value) => {
-        if (partnerType === "partner") {
+      participation: (value) => {
+        if (partnerType === "pjPartner") {
           if (value) return null;
           return "Campo inválido";
         } else return null;
       },
-      function: (value) => {
-        if (partnerType === "partner") {
-          if (value.length) return null;
+      socialReason: (value) => {
+        if (partnerType === "pjPartner") {
+          if (value) return null;
           return "Campo inválido";
         } else return null;
       },
-      counterpart: (value) => {
-        if (partnerType === "partner") {
-          if (value.length) return null;
+      cnae: (value) => {
+        if (partnerType === "pjPartner") {
+          if (value) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      createdAt: (value) => {
+        if (partnerType === "pjPartner") {
+          if (value) return null;
           return "Campo inválido";
         } else return null;
       },
     },
-    participants: {
+    pfPartner: {
       name: (value) => {
-        if (partnerType === "participant") {
+        if (partnerType === "pfPartner") {
           if (value.length) return null;
           return "Campo inválido";
         } else return null;
       },
       cpf: (value) => {
-        if (partnerType === "participant") {
+        if (partnerType === "pfPartner") {
           if (value.length === 14) return null;
           return "CPF inválido";
         } else return null;
       },
-      cnpj: (value) => {
-        if (partnerType === "participant") {
-          if (value.length === 18) return null;
-          return "CNPJ inválido";
-        } else return null;
-      },
       function: (value) => {
-        if (partnerType === "participant") {
+        if (partnerType === "pfPartner") {
           if (value.length) return null;
           return "Campo inválido";
         } else return null;
       },
-      counterpart: (value) => {
-        if (partnerType === "participant") {
-          if (value.length) return null;
+      rg: (value) => {
+        if (partnerType === "pfPartner") {
+          if (value) return null;
+          return "Campo inválido";
+        } else return null;
+      },
+      participation: (value) => {
+        if (partnerType === "pfPartner") {
+          if (value) return null;
           return "Campo inválido";
         } else return null;
       },

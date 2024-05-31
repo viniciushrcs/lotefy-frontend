@@ -62,9 +62,8 @@ export const ventureStepperData = [
     icon: Icons.Id,
   },
   {
-    label: "Dados de sócios ou participantes",
-    description:
-      "Preencha alguns dados de sócios ou participantes do empreendimento.",
+    label: "Dados de sócios",
+    description: "Preencha alguns dados de sócios do empreendimento.",
     icon: Icons.Social,
   },
   {
