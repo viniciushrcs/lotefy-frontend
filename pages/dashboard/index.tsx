@@ -2,14 +2,40 @@ import { Navbar } from "../../components/Navbar";
 import { Header } from "../../components/Header";
 import { Card } from "../../components/Card";
 import { SimpleGrid, Text } from "@mantine/core";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
+import { useRouter } from "next/router";
+import { User } from "../../services/user";
+import { SignUpContext } from "../../context/SignUpContext";
+import { Enterprise } from "../../services/addEnterprise/indext";
+import { AnyObject } from "../../services/http";
 
 export default function Dashboard() {
   const [active, setActive] = useState("Empreendimentos");
+  const { updateUserData, userData } = useContext(SignUpContext);
+  const [venture, setVentures] = useState<AnyObject[]>([]);
+  const router = useRouter();
 
-  //whether have business or not.
-  const data: any[] = [];
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("bearerToken");
+      if (!token) {
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const response = await User.userInfo(token);
+        updateUserData({ userId: response.data.id });
+        const enterprises = await Enterprise.getEnterprises(response.data.id);
+        setVentures(enterprises.data);
+      } catch (error) {
+        router.replace("/login");
+      }
+    };
+
+    fetchUserData();
+  }, [router]);
 
   const switchContent = () => {
     switch (active) {
@@ -24,8 +50,13 @@ export default function Dashboard() {
               spacing={{ base: 10, sm: "xl" }}
               verticalSpacing={{ base: "md", sm: "xl" }}
             >
-              {data.length ? (
-                data.map((_, index) => <Card key={index} />)
+              {venture.length ? (
+                <>
+                  {venture.map((item, index) => (
+                    <Card ventureData={item} key={item.id || index} />
+                  ))}
+                  <AddVentureCard />
+                </>
               ) : (
                 <AddVentureCard />
               )}

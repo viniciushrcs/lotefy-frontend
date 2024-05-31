@@ -6,7 +6,7 @@ import { CreateEnterpriseDto } from "./interface";
 export class Enterprise {
   static async addEnterprise(
     nome: string | undefined,
-    pj_id: string | undefined,
+    user_id: string | undefined,
     vgv: string | undefined,
     spe_constituida: boolean | undefined,
     imovel_integralizado: string | undefined,
@@ -19,7 +19,7 @@ export class Enterprise {
       url: `/enterprise/create-enterprise`,
       body: {
         nome,
-        pj_id,
+        user_id,
         spe_pj_id,
         vgv,
         spe_constituida,
@@ -121,5 +121,25 @@ export class Enterprise {
         statusCode: error?.response?.status || 500,
       });
     }
+  }
+
+  static async getEnterprises(userId: string): Promise<any> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/enterprise/get-by-id`,
+      params: {
+        userId,
+      },
+    });
+
+    if (!response || error) {
+      throw new RequestError({
+        message: error?.response?.data.message || "No message",
+        code: error?.code || "No code",
+        statusCode: error?.response?.status || 500,
+      });
+    }
+    return response;
   }
 }

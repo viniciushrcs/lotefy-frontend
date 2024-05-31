@@ -7,8 +7,25 @@ import CircleVector from "../../public/icons/circle-vector.svg";
 import GreenElipse from "../../public/icons/green-elipse.svg";
 import YellowVector from "../../public/icons/yellow-vector.svg";
 import styles from "../../styles/animations.module.css";
+import { useContext, useEffect } from "react";
+import { SignUpContext } from "../../context/SignUpContext";
+import { useRouter } from "next/router";
 
 export default function CreatedAccount() {
+  const { userData } = useContext(SignUpContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userData.accessToken) {
+      localStorage.setItem("bearerToken", userData.accessToken.toString());
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 7000);
+    } else {
+      router.push("/login");
+    }
+  }, [userData]);
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex justify-center top-0 absolute gap-[10rem]">

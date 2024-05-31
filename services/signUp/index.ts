@@ -57,10 +57,11 @@ export class SignUpService {
   static async createPjData(
     userId: string | undefined,
     cnpj: string | undefined,
-    razao_social: string | undefined,
-    funcionarios: string | undefined,
+    socialReason: string | undefined,
+    employees: string | undefined,
     email: string | undefined,
-    cnae?: string | undefined
+    createdAt: Date | undefined,
+    cnae?: string | undefined | null
   ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
@@ -69,9 +70,10 @@ export class SignUpService {
       body: {
         pjData: {
           cnpj,
-          razao_social,
-          funcionarios,
+          socialReason,
+          employees,
           email,
+          createdAt,
           cnae,
         },
         userId,

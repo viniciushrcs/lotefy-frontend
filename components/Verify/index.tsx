@@ -18,7 +18,7 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           userData.password,
           userData.name
         );
-        updateUserData({ userId: response?.data?.user_id });
+        updateUserData({ userId: response.data.data.user_id });
       }
     } catch (error) {
       const requestError = error as RequestError;

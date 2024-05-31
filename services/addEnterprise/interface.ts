@@ -39,5 +39,6 @@ export interface CreateEnterpriseDto {
   realEstateCnae?: string;
   realEstateName?: string;
   realEstateCreatedAt?: Date;
-  ventureStatus:string;
+  ventureStatus: string;
+  userId: string;
 }

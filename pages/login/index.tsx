@@ -51,7 +51,7 @@ export default function Login() {
           accessToken: response.data.accessToken,
         });
         setLoginError(null);
-        localStorage.setItem("bearer token", response.data.accessToken);
+        localStorage.setItem("bearerToken", response.data.accessToken);
         router.push("/dashboard");
         return response;
       } else return null;

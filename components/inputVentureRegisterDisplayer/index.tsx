@@ -117,7 +117,6 @@ export function InputVentureRegisterDisplayer(
   }, [step]);
 
   const handleSubmit = async () => {
-
     const createEnterpriseDto: CreateEnterpriseDto = {
       constitutedSpe: userData.constitutedSpe === "yes" ? true : false,
       ownerType: userData.ownerType?.toString() || "",
@@ -150,27 +149,27 @@ export function InputVentureRegisterDisplayer(
         Regex.formatDate(userData.ownerPjCreatedAt?.toString()) || "",
       ownerCpf: userData.ownerCpf?.toString() || "",
       ownerRg: userData.ownerRg?.toString() || "",
-      intermediary: userData.intermediary?.toString() || '',
-      brokerName:userData.brokerName?.toString() || '',
-      brokerCpf: userData.brokerCpf?.toString() || '',
-      brokerRg: userData.brokerRg?.toString() || '',
-      brokerCreci: userData.brokerCreci?.toString() || '',
-      realEstateCnpj: userData.realEstateCnpj?.toString() || '',
-      realEstateSocialReason: userData.realEstateSocialReason?.toString() || '',
-      realEstateCnae: userData.realEstateCnae?.toString() || '',
-      realEstateName: userData.realEstateName?.toString() || '',
-      realEstateCreatedAt:Regex.formatDate(userData.realEstateCreatedAt?.toString()) || '',
-      ventureStatus: userData.ventureStatus?.toString() || '',
-
+      intermediary: userData.intermediary?.toString() || "",
+      brokerName: userData.brokerName?.toString() || "",
+      brokerCpf: userData.brokerCpf?.toString() || "",
+      brokerRg: userData.brokerRg?.toString() || "",
+      brokerCreci: userData.brokerCreci?.toString() || "",
+      realEstateCnpj: userData.realEstateCnpj?.toString() || "",
+      realEstateSocialReason: userData.realEstateSocialReason?.toString() || "",
+      realEstateCnae: userData.realEstateCnae?.toString() || "",
+      realEstateName: userData.realEstateName?.toString() || "",
+      realEstateCreatedAt:
+        Regex.formatDate(userData.realEstateCreatedAt?.toString()) || "",
+      ventureStatus: userData.ventureStatus?.toString() || "",
+      userId: userData.userId?.toString() || "",
     };
-    try{
+    try {
       await Enterprise.createEnterprise(createEnterpriseDto);
 
       router.push("/dashboard", { scroll: false });
-    }catch(error){
+    } catch (error) {
       console.error("Erro ao criar o empreendimento:", error);
     }
-    
   };
 
   const renderRegisterInput = () => {

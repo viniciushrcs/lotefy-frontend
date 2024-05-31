@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
+import { Regex } from "../../helpers/regex";
 
 export default function PrivacyPolicy() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -22,7 +23,9 @@ export default function PrivacyPolicy() {
       userData.cnpj?.toString(),
       userData.socialReason?.toString(),
       userData.employees?.toString(),
-      userData.email?.toString()
+      userData.email?.toString(),
+      Regex.formatDate(userData.createdAt?.toString()),
+      userData.userCnae?.toString()
     );
 
     updateUserData({ userPjId: response.data.pj_id });
