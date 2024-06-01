@@ -3,17 +3,33 @@ import { Anchor, Button, Checkbox, Divider, Image, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import { useDisclosure } from "@mantine/hooks";
 import PrivacyModal from "../PrivacyModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
+import { SignUpContext } from "../../context/SignUpContext";
+import { SignUpService } from "../../services/signUp";
+import { Regex } from "../../helpers/regex";
 
 export default function PrivacyPolicy() {
   const [opened, { open, close }] = useDisclosure(false);
   const [firstChecked, setFirstChecked] = useState(false);
   const [secondChecked, setSecondChecked] = useState(false);
+  const { updateUserData, userData } = useContext(SignUpContext);
 
   const router = useRouter();
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
+    const response = await SignUpService.createPjData(
+      userData.userId?.toString(),
+      userData.cnpj?.toString(),
+      userData.socialReason?.toString(),
+      userData.employees?.toString(),
+      userData.email?.toString(),
+      Regex.formatDate(userData.createdAt?.toString()),
+      userData.userCnae?.toString()
+    );
+
+    updateUserData({ userPjId: response.data.pj_id });
+
     router.push("/created-account");
   };
 

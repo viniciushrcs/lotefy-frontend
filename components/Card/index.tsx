@@ -1,6 +1,7 @@
 import { Paper, Text } from "@mantine/core";
+import { AnyObject } from "../../services/http";
 
-export function Card() {
+export function Card({ ventureData }: { ventureData: AnyObject }) {
   return (
     <Paper
       withBorder
@@ -9,14 +10,10 @@ export function Card() {
       style={{ borderLeft: "solid 4px #56D963" }}
     >
       <Text size="xl" fw={500} mt="md">
-        Theming documentation
+        {ventureData.nome}
       </Text>
       <Text size="sm" mt="sm" c="dimmed">
-        Extend default theme with any amount of additional colors, replace
-        shadows, radius, spacing, fonts and many other properties to match your
-        design requirements. Mantine theme is just an object, you can subscribe
-        to it in any part of application via context and use it to build your
-        own components.
+        Clique para saber mais.
       </Text>
     </Paper>
   );

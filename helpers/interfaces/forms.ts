@@ -32,21 +32,39 @@ export interface PropertyFormValues {
 }
 
 export interface OwnerFormValues {
+  ownerType: string;
   ownerName: string;
   ownerCpf: string;
   ownerRg: string;
   ownerCnpj: string;
-  ownerCompleteAddress: string;
+  ownerSocialReason: string;
+  ownerCnae: string;
+  ownerZipcode: string;
+  ownerAddress: string;
+  ownerAddressNumber: string;
+  ownerAddressComplement: string;
+  ownerAddressDistrict: string;
+  ownerAddressCity: string;
+  ownerAddressState: string;
+  ownerPjCreatedAt: string;
+}
+
+export interface MediatorFormValues {
   negotiationStatus: string;
   brokerName: string;
   brokerCpf: string;
+  brokerRg: string;
   brokerCreci: string;
   realEstateName: string;
+  realEstateCnpj: string;
+  realEstateSocialReason: string;
+  realEstateCnae: string;
+  realEstateCreatedAt: string;
 }
 
 export interface PartnerFormValues {
-  partner: AnyObject[];
-  participants: AnyObject[];
+  pjPartner: AnyObject[];
+  pfPartner: AnyObject[];
 }
 
 export interface DocumentaryDiligenceFormValues {

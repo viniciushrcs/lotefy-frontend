@@ -5,7 +5,7 @@ type KeyboardInputNames =
   | "email-input"
   | "social-reason-input"
   | "cnpj-input"
-  | "completed-projects-input"
+  | "user-cnae"
   | "vgv-input"
   | "employees-input"
   | "password-input"
@@ -80,10 +80,10 @@ export const isCompanyFieldsValid = (
       ...prevInputs,
       "cnpj-input": "Campo inválido",
     }));
-  } else if (!inputs["completed-projects-input"].length) {
+  } else if (!inputs["user-cnae"].length) {
     setError((prevInputs: any) => ({
       ...prevInputs,
-      "completed-projects-input": "Campo inválido",
+      "user-cnae": "Campo inválido",
     }));
   } else if (!inputs["vgv-input"].length) {
     setError((prevInputs: any) => ({

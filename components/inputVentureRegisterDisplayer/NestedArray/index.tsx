@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function NestedArray({ partnerType, partnerForm }: Props) {
-  const fields = partnerForm.getValues().partner.map((item, index) => (
+  const pjFields = partnerForm.getValues().pjPartner.map((item, index) => (
     <Group key={item.key} mt="xs" className="flex items-center flex-nowrap">
       <SimpleGrid
         cols={{ base: 1, sm: 2, lg: 3 }}
@@ -34,25 +34,16 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
           placeholder="Nome completo"
           withAsterisk
           style={{ flex: 1 }}
-          key={partnerForm.key(`partner.${index}.name`)}
-          {...partnerForm.getInputProps(`partner.${index}.name`)}
+          key={partnerForm.key(`pjPartner.${index}.name`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.name`)}
         />
         <NumberInput
           min={0}
           max={100}
           withAsterisk
-          placeholder="Porcentagem"
-          key={partnerForm.key(`partner.${index}.percentages`)}
-          {...partnerForm.getInputProps(`partner.${index}.percentages`)}
-        />
-        <InputBase
-          radius="xs"
-          size="sm"
-          placeholder="CPF"
-          component={IMaskInput}
-          mask="000.000.000-00"
-          key={partnerForm.key(`partner.${index}.cpf`)}
-          {...partnerForm.getInputProps(`partner.${index}.cpf`)}
+          placeholder="Participação"
+          key={partnerForm.key(`pjPartner.${index}.participation`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.participation`)}
         />
         <InputBase
           radius="xs"
@@ -60,134 +51,137 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
           placeholder="CNPJ"
           component={IMaskInput}
           mask="00.000.000/0000-00"
-          key={partnerForm.key(`partner.${index}.cnpj`)}
-          {...partnerForm.getInputProps(`partner.${index}.cnpj`)}
+          key={partnerForm.key(`pjPartner.${index}.cnpj`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.cnpj`)}
         />
         <InputBase
-          placeholder="Função"
-          key={partnerForm.key(`partner.${index}.function`)}
-          {...partnerForm.getInputProps(`partner.${index}.function`)}
+          placeholder="Razão social"
+          key={partnerForm.key(`pjPartner.${index}.socialReason`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.socialReason`)}
           className="w-[100%]"
           size="sm"
         />
         <InputBase
-          placeholder="Contrapartida"
-          key={partnerForm.key(`partner.${index}.counterpart`)}
-          {...partnerForm.getInputProps(`partner.${index}.counterpart`)}
+          placeholder="CNAE"
+          key={partnerForm.key(`pjPartner.${index}.cnae`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.cnae`)}
           className="w-[100%]"
           size="sm"
+        />
+        <InputBase
+          placeholder="Data de abertura"
+          key={partnerForm.key(`pjPartner.${index}.createdAt`)}
+          {...partnerForm.getInputProps(`pjPartner.${index}.createdAt`)}
+          size="md"
+          component={IMaskInput}
+          mask="00/00/0000"
         />
       </SimpleGrid>
       <ActionIcon
         color="red"
-        onClick={() => partnerForm.removeListItem("partner", index)}
+        onClick={() => partnerForm.removeListItem("pjPartner", index)}
       >
         <IconTrash size="1rem" />
       </ActionIcon>
     </Group>
   ));
 
-  const participantFields = partnerForm
-    .getValues()
-    .participants.map((item, index) => (
-      <Group key={item.key} mt="xs" className="flex items-center flex-nowrap">
-        <SimpleGrid
-          cols={{ base: 1, sm: 2, lg: 3 }}
-          spacing={{ base: 15, sm: "xs" }}
-          verticalSpacing={{ base: "xs", sm: "xs" }}
-        >
-          <InputBase
-            placeholder="Nome completo"
-            withAsterisk
-            style={{ flex: 1 }}
-            key={partnerForm.key(`participants.${index}.name`)}
-            {...partnerForm.getInputProps(`participants.${index}.name`)}
-          />
-          <InputBase
-            radius="xs"
-            size="sm"
-            placeholder="CPF"
-            component={IMaskInput}
-            mask="000.000.000-00"
-            key={partnerForm.key(`participants.${index}.cpf`)}
-            {...partnerForm.getInputProps(`participants.${index}.cpf`)}
-          />
-          <InputBase
-            radius="xs"
-            size="sm"
-            placeholder="CNPJ"
-            component={IMaskInput}
-            mask="00.000.000/0000-00"
-            key={partnerForm.key(`participants.${index}.cnpj`)}
-            {...partnerForm.getInputProps(`participants.${index}.cnpj`)}
-          />
-          <InputBase
-            placeholder="Função"
-            key={partnerForm.key(`participants.${index}.function`)}
-            {...partnerForm.getInputProps(`participants.${index}.function`)}
-            className="w-[100%]"
-            size="sm"
-          />
-          <InputBase
-            placeholder="Contrapartida"
-            key={partnerForm.key(`participants.${index}.counterpart`)}
-            {...partnerForm.getInputProps(`participants.${index}.counterpart`)}
-            className="w-[100%]"
-            size="sm"
-          />
-        </SimpleGrid>
-        <ActionIcon
-          color="red"
-          onClick={() => partnerForm.removeListItem("participants", index)}
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-    ));
+  const pfFields = partnerForm.getValues().pfPartner.map((item, index) => (
+    <Group key={item.key} mt="xs" className="flex items-center flex-nowrap">
+      <SimpleGrid
+        cols={{ base: 1, sm: 2, lg: 3 }}
+        spacing={{ base: 15, sm: "xs" }}
+        verticalSpacing={{ base: "xs", sm: "xs" }}
+      >
+        <InputBase
+          placeholder="Nome completo"
+          withAsterisk
+          style={{ flex: 1 }}
+          key={partnerForm.key(`pfPartner.${index}.name`)}
+          {...partnerForm.getInputProps(`pfPartner.${index}.name`)}
+        />
+        <InputBase
+          radius="xs"
+          size="sm"
+          placeholder="CPF"
+          component={IMaskInput}
+          mask="000.000.000-00"
+          key={partnerForm.key(`pfPartner.${index}.cpf`)}
+          {...partnerForm.getInputProps(`pfPartner.${index}.cpf`)}
+        />
+        <InputBase
+          placeholder="RG"
+          key={partnerForm.key(`pfPartner.${index}.rg`)}
+          {...partnerForm.getInputProps(`pfPartner.${index}.rg`)}
+          className="w-[100%]"
+          size="sm"
+        />
+        <NumberInput
+          min={0}
+          max={100}
+          withAsterisk
+          placeholder="Participação"
+          key={partnerForm.key(`pfPartner.${index}.participation`)}
+          {...partnerForm.getInputProps(`pfPartner.${index}.participation`)}
+        />
+        <InputBase
+          placeholder="Função"
+          key={partnerForm.key(`pfPartner.${index}.function`)}
+          {...partnerForm.getInputProps(`pfPartner.${index}.function`)}
+          className="w-[100%]"
+          size="sm"
+        />
+      </SimpleGrid>
+      <ActionIcon
+        color="red"
+        onClick={() => partnerForm.removeListItem("pfPartner", index)}
+      >
+        <IconTrash size="1rem" />
+      </ActionIcon>
+    </Group>
+  ));
 
   return (
     <Box maw={500} mx="auto">
-      {fields.length === 0 && partnerType === "partner" && (
+      {pjFields.length === 0 && partnerType === "pjPartner" && (
         <Text c="dimmed" ta="center">
           Nenhum Sócio
         </Text>
       )}
-      {participantFields.length === 0 && partnerType === "participant" && (
+      {pfFields.length === 0 && partnerType === "pfPartner" && (
         <Text c="dimmed" ta="center">
-          Nenhum participante
+          Nenhum Sócio
         </Text>
       )}
 
-      {partnerType === "partner" ? fields : participantFields}
+      {partnerType === "pjPartner" ? pjFields : pfFields}
 
       <Group justify="center" mt="md" className="mb-[2rem]">
         <Button
           color="black"
           radius="sm"
           onClick={() => {
-            partnerType === "partner"
-              ? partnerForm.insertListItem("partner", {
+            partnerType === "pjPartner"
+              ? partnerForm.insertListItem("pjPartner", {
                   name: "",
-                  cpf: "",
                   cnpj: "",
-                  percentages: "",
-                  function: "",
-                  counterpart: "",
+                  participation: "",
+                  socialReason: "",
+                  cnae: "",
+                  createdAt: "",
                   key: randomId(),
                 })
-              : partnerForm.insertListItem("participants", {
+              : partnerForm.insertListItem("pfPartner", {
                   name: "",
                   cpf: "",
-                  cnpj: "",
+                  rg: "",
                   function: "",
-                  counterpart: "",
+                  participation: "",
                   key: randomId(),
                 });
           }}
         >
-          {partnerType === "partner"
-            ? "Adicionar Sócio"
-            : "Adicionar participante"}
+          Adicionar sócio
         </Button>
       </Group>
     </Box>

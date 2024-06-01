@@ -25,11 +25,12 @@ type KeyboardInputNames =
   | "email-input"
   | "social-reason-input"
   | "cnpj-input"
-  | "completed-projects-input"
+  | "user-cnae"
   | "vgv-input"
   | "employees-input"
   | "password-input"
-  | "confirm-password-input";
+  | "confirm-password-input"
+  | "createdat-user-input";
 
 export function InputRegisterDisplayer(
   step: number,
@@ -45,11 +46,12 @@ export function InputRegisterDisplayer(
     "email-input": "",
     "social-reason-input": "",
     "cnpj-input": "",
-    "completed-projects-input": "",
+    "user-cnae": "",
     "vgv-input": "",
     "employees-input": "",
     "password-input": "",
     "confirm-password-input": "",
+    "createdat-user-input": "",
   });
 
   const [error, setError] = useState<Record<KeyboardInputNames, string>>({
@@ -59,11 +61,12 @@ export function InputRegisterDisplayer(
     "email-input": "",
     "social-reason-input": "",
     "cnpj-input": "",
-    "completed-projects-input": "",
+    "user-cnae": "",
     "vgv-input": "",
     "employees-input": "",
     "password-input": "",
     "confirm-password-input": "",
+    "createdat-user-input": "",
   });
 
   useEffect(() => {
@@ -74,10 +77,11 @@ export function InputRegisterDisplayer(
       email: inputs["email-input"],
       socialReason: inputs["social-reason-input"],
       cnpj: inputs["cnpj-input"],
-      completedProjects: inputs["completed-projects-input"],
+      userCnae: inputs["user-cnae"],
       vgv: inputs["vgv-input"],
       employees: inputs["employees-input"],
       password: inputs["password-input"],
+      createdAt: inputs["createdat-user-input"],
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, verify]);
@@ -317,13 +321,11 @@ export function InputRegisterDisplayer(
             <InputBase
               radius="xs"
               size="md"
-              placeholder="Quantos empreendimentos já finalizados?"
+              placeholder="CNAE"
               className="mb-[0.75rem]"
-              value={inputs["completed-projects-input"]}
-              onChange={(event) =>
-                handleInputChange(event, "completed-projects-input")
-              }
-              error={error["completed-projects-input"]}
+              value={inputs["user-cnae"]}
+              onChange={(event) => handleInputChange(event, "user-cnae")}
+              error={error["user-cnae"]}
             />
             <InputBase
               radius="xs"
@@ -342,6 +344,18 @@ export function InputRegisterDisplayer(
               value={inputs["employees-input"]}
               onChange={(event) => handleInputChange(event, "employees-input")}
               error={error["employees-input"]}
+            />
+            <InputBase
+              className="mb-[0.75rem]"
+              placeholder="Data de abertura"
+              value={inputs["createdat-user-input"]}
+              onChange={(event) =>
+                handleInputChange(event, "createdat-user-input")
+              }
+              size="md"
+              component={IMaskInput}
+              mask="00/00/0000"
+              error={error["createdat-user-input"]}
             />
           </RegisterInput>
         );
