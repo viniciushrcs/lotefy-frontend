@@ -8,7 +8,6 @@ import {
   SpeFormValues,
   VentureFormValues,
 } from "./interfaces/forms";
-import { randomId } from "@mantine/hooks";
 
 export const ventureFormConfig = (
   constituedSpeValue: string
@@ -52,6 +51,7 @@ export const speFormConfig = (): UseFormInput<SpeFormValues> => ({
     speAddressCity: "",
     speAddressState: "",
     speAddressZipcode: "",
+    speUploadFile: null,
   },
   validate: {
     speAddressState: isNotEmpty("Campo inválido"),
@@ -62,6 +62,7 @@ export const speFormConfig = (): UseFormInput<SpeFormValues> => ({
     speAddressCity: isNotEmpty("Campo inválido"),
     speAddressZipcode: (value) =>
       value.length === 9 ? null : "Campo inválido",
+    speUploadFile: isNotEmpty("Campo inválido"),
   },
 });
 
@@ -317,13 +318,15 @@ export const partnerFormConfig = (
   },
 });
 
-export const documentaryDiligenceFormConfi =
+export const documentaryDiligenceFormConfig =
   (): UseFormInput<DocumentaryDiligenceFormValues> => ({
     mode: "uncontrolled",
     initialValues: {
       ventureStatus: "",
+      diligenceDocument: null,
     },
     validate: {
       ventureStatus: isNotEmpty("Campo inválido"),
+      diligenceDocument: isNotEmpty("Campo inválido"),
     },
   });

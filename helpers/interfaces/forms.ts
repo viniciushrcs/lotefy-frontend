@@ -18,6 +18,7 @@ export interface SpeFormValues {
   speAddressCity: string;
   speAddressState: string;
   speAddressZipcode: string;
+  speUploadFile: File | null;
 }
 
 export interface PropertyFormValues {
@@ -69,4 +70,5 @@ export interface PartnerFormValues {
 
 export interface DocumentaryDiligenceFormValues {
   ventureStatus: string;
+  diligenceDocument: File | null;
 }

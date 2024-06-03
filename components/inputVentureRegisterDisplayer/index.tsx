@@ -23,7 +23,7 @@ import RegisterInput from "../RegisterInput";
 import { countryStates } from "../../helpers/states";
 import { useRouter } from "next/navigation";
 import {
-  documentaryDiligenceFormConfi,
+  documentaryDiligenceFormConfig,
   mediatorFormConfig,
   ownerFormConfig,
   partnerFormConfig,
@@ -34,9 +34,9 @@ import {
 import { IconFileCv } from "@tabler/icons-react";
 import { NestedArray } from "./NestedArray";
 import { Enterprise } from "../../services/addEnterprise/indext";
-import { User } from "../../services/user";
 import { Regex } from "../../helpers/regex";
 import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
+import { Files } from "../../services/file/file";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -53,6 +53,7 @@ export function InputVentureRegisterDisplayer(
   const [partnerType, setPartnerType] = useState("pjPartner");
   const [ownerType, setOwnerType] = useState("fisicalPerson");
   const { updateUserData, userData } = useContext(SignUpContext);
+  const filesArray: File[] = [];
 
   const router = useRouter();
   const form = useForm(ventureFormConfig(constituedSpeValue));
@@ -60,7 +61,7 @@ export function InputVentureRegisterDisplayer(
   const propertyForm = useForm(propertyFormConfig());
   const ownerForm = useForm(ownerFormConfig(ownerType));
   const mediatorForm = useForm(mediatorFormConfig(intermediaryValue));
-  const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfi());
+  const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfig());
   const partnerForm = useForm(partnerFormConfig(partnerType));
 
   useEffect(() => {
@@ -81,6 +82,7 @@ export function InputVentureRegisterDisplayer(
       speAddressCity: speForm.getValues().speAddressCity,
       speAddressState: speForm.getValues().speAddressState,
       speAddressZipcode: speForm.getValues().speAddressZipcode,
+      speUploadFile: speForm.getValues().speUploadFile,
       propertyZipcode: propertyForm.getValues().propertyZipcode,
       propertyAddress: propertyForm.getValues().propertyAddress,
       propertyAddressNumber: propertyForm.getValues().propertyAddressNumber,
@@ -112,6 +114,7 @@ export function InputVentureRegisterDisplayer(
       pjPartner: partnerForm.getValues().pjPartner,
       pfPartner: partnerForm.getValues().pfPartner,
       ventureStatus: documentaryDiligenceForm.getValues().ventureStatus,
+      diligenceDocument: documentaryDiligenceForm.getValues().diligenceDocument,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
@@ -164,8 +167,25 @@ export function InputVentureRegisterDisplayer(
       userId: userData.userId?.toString() || "",
       pjPartner: userData.pjPartner as any[],
       pfPartner: userData.pfPartner as any[],
+      speUploadFile: userData.speUploadFile as File,
+      diligenceDocument: userData.diligenceDocument as File,
     };
     try {
+      console.log(userData, "LOOOEOEEIIE");
+      console.log(createEnterpriseDto, "343545553");
+      filesArray.push(
+        createEnterpriseDto.speUploadFile,
+        createEnterpriseDto.diligenceDocument
+      );
+      console.log(
+        filesArray,
+        "asasasas",
+        userData.userId?.toString(),
+        "AAAAAAA"
+      );
+      filesArray.map(async (file: File) => {
+        await Files.uploadFile(userData.userId?.toString(), file);
+      });
       await Enterprise.createEnterprise(createEnterpriseDto);
 
       router.push("/dashboard", { scroll: false });
@@ -434,6 +454,10 @@ export function InputVentureRegisterDisplayer(
                     label="Adicione seu contrato social"
                     placeholder="contrato social da SPE"
                     leftSectionPointerEvents="none"
+                    accept="image/png,image/jpeg,application/pdf"
+                    clearable
+                    key={speForm.key("speUploadFile")}
+                    {...speForm.getInputProps("speUploadFile")}
                   />
                 </SimpleGrid>
               </RegisterInput>
@@ -990,6 +1014,12 @@ export function InputVentureRegisterDisplayer(
                     label="Adicione um documento"
                     placeholder="Documento"
                     leftSectionPointerEvents="none"
+                    accept="image/png,image/jpeg,application/pdf"
+                    clearable
+                    key={documentaryDiligenceForm.key("diligenceDocument")}
+                    {...documentaryDiligenceForm.getInputProps(
+                      "diligenceDocument"
+                    )}
                   />
                 </SimpleGrid>
               </RegisterInput>
