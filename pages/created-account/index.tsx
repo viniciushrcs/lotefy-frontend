@@ -24,7 +24,7 @@ export default function CreatedAccount() {
     } else {
       router.push("/login");
     }
-  }, [userData]);
+  }, [userData, router]);
 
   return (
     <div className="flex justify-center items-center h-screen">

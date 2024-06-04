@@ -29,7 +29,7 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
       };
 
       fetchUserData();
-    }, [router]);
+    });
 
     return <WrappedComponent {...props} />;
   };
