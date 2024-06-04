@@ -168,15 +168,22 @@ export function InputVentureRegisterDisplayer(
       pjPartner: userData.pjPartner as any[],
       pfPartner: userData.pfPartner as any[],
       speUploadFile: userData.speUploadFile as File,
-      diligenceDocument: documentaryDiligenceForm.getValues()
-        .diligenceDocument as File,
+      diligenceDocument: documentaryDiligenceForm.getValues().diligenceDocument as File,
     };
 
     try {
-      filesArray.push(
-        createEnterpriseDto.speUploadFile,
-        createEnterpriseDto.diligenceDocument
-      );
+
+      const fileProperties: (keyof Partial<CreateEnterpriseDto>)[] = [
+        'speUploadFile',
+        'diligenceDocument',
+      ];
+
+    fileProperties.forEach(property => {
+        const file = createEnterpriseDto[property];
+        if (file instanceof File) {
+            filesArray.push(file);
+        }
+    });
 
       filesArray.map(async (file: File) => {
         await Files.uploadFile(userData.userId?.toString(), file);

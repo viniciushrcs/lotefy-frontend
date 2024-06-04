@@ -43,6 +43,6 @@ export interface CreateEnterpriseDto {
   userId: string;
   pjPartner: any[];
   pfPartner: any[];
-  speUploadFile: File;
-  diligenceDocument: File;
+  speUploadFile?: File;
+  diligenceDocument?: File;
 }
