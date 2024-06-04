@@ -163,26 +163,21 @@ export function InputVentureRegisterDisplayer(
       realEstateName: userData.realEstateName?.toString() || "",
       realEstateCreatedAt:
         Regex.formatDate(userData.realEstateCreatedAt?.toString()) || "",
-      ventureStatus: userData.ventureStatus?.toString() || "",
+      ventureStatus: documentaryDiligenceForm.getValues().ventureStatus || "",
       userId: userData.userId?.toString() || "",
       pjPartner: userData.pjPartner as any[],
       pfPartner: userData.pfPartner as any[],
       speUploadFile: userData.speUploadFile as File,
-      diligenceDocument: userData.diligenceDocument as File,
+      diligenceDocument: documentaryDiligenceForm.getValues()
+        .diligenceDocument as File,
     };
+
     try {
-      console.log(userData, "LOOOEOEEIIE");
-      console.log(createEnterpriseDto, "343545553");
       filesArray.push(
         createEnterpriseDto.speUploadFile,
         createEnterpriseDto.diligenceDocument
       );
-      console.log(
-        filesArray,
-        "asasasas",
-        userData.userId?.toString(),
-        "AAAAAAA"
-      );
+
       filesArray.map(async (file: File) => {
         await Files.uploadFile(userData.userId?.toString(), file);
       });
