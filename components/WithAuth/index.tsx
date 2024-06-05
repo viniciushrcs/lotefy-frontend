@@ -29,7 +29,8 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
       };
 
       fetchUserData();
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[router]);
 
     return <WrappedComponent {...props} />;
   };
