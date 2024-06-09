@@ -23,7 +23,7 @@ import RegisterInput from "../RegisterInput";
 import { countryStates } from "../../helpers/states";
 import { useRouter } from "next/navigation";
 import {
-  documentaryDiligenceFormConfi,
+  documentaryDiligenceFormConfig,
   mediatorFormConfig,
   ownerFormConfig,
   partnerFormConfig,
@@ -34,9 +34,10 @@ import {
 import { IconFileCv } from "@tabler/icons-react";
 import { NestedArray } from "./NestedArray";
 import { Enterprise } from "../../services/addEnterprise/indext";
-import { User } from "../../services/user";
 import { Regex } from "../../helpers/regex";
 import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
+import { Files } from "../../services/file/file";
+import { ValueComponent } from "../ValueComponent";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -53,6 +54,7 @@ export function InputVentureRegisterDisplayer(
   const [partnerType, setPartnerType] = useState("pjPartner");
   const [ownerType, setOwnerType] = useState("fisicalPerson");
   const { updateUserData, userData } = useContext(SignUpContext);
+  const filesArray: File[] = [];
 
   const router = useRouter();
   const form = useForm(ventureFormConfig(constituedSpeValue));
@@ -60,7 +62,7 @@ export function InputVentureRegisterDisplayer(
   const propertyForm = useForm(propertyFormConfig());
   const ownerForm = useForm(ownerFormConfig(ownerType));
   const mediatorForm = useForm(mediatorFormConfig(intermediaryValue));
-  const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfi());
+  const documentaryDiligenceForm = useForm(documentaryDiligenceFormConfig());
   const partnerForm = useForm(partnerFormConfig(partnerType));
 
   useEffect(() => {
@@ -81,6 +83,7 @@ export function InputVentureRegisterDisplayer(
       speAddressCity: speForm.getValues().speAddressCity,
       speAddressState: speForm.getValues().speAddressState,
       speAddressZipcode: speForm.getValues().speAddressZipcode,
+      speUploadFile: speForm.getValues().speUploadFile,
       propertyZipcode: propertyForm.getValues().propertyZipcode,
       propertyAddress: propertyForm.getValues().propertyAddress,
       propertyAddressNumber: propertyForm.getValues().propertyAddressNumber,
@@ -91,7 +94,6 @@ export function InputVentureRegisterDisplayer(
       propertyAddressState: propertyForm.getValues().propertyAddressState,
       propertyRegistration: propertyForm.getValues().propertyRegistration,
       ownerType: ownerType,
-      ownerName: ownerForm.getValues().ownerName,
       ownerCpf: Regex.cleanCPF(ownerForm.getValues().ownerCpf),
       ownerRg: ownerForm.getValues().ownerRg,
       ownerCnpj: Regex.cleanCNPJ(ownerForm.getValues().ownerCnpj),
@@ -99,9 +101,7 @@ export function InputVentureRegisterDisplayer(
       ownerPjCreatedAt: ownerForm.getValues().ownerPjCreatedAt,
       ownerCnae: ownerForm.getValues().ownerCnae,
       intermediary: intermediaryValue,
-      brokerName: mediatorForm.getValues().brokerName,
       brokerCpf: Regex.cleanCPF(mediatorForm.getValues().brokerCpf),
-      brokerRg: mediatorForm.getValues().brokerRg,
       brokerCreci: mediatorForm.getValues().brokerCreci,
       realEstateCnpj: Regex.cleanCNPJ(mediatorForm.getValues().realEstateCnpj),
       realEstateSocialReason: mediatorForm.getValues().realEstateSocialReason,
@@ -112,6 +112,7 @@ export function InputVentureRegisterDisplayer(
       pjPartner: partnerForm.getValues().pjPartner,
       pfPartner: partnerForm.getValues().pfPartner,
       ventureStatus: documentaryDiligenceForm.getValues().ventureStatus,
+      diligenceDocument: documentaryDiligenceForm.getValues().diligenceDocument,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
@@ -150,9 +151,7 @@ export function InputVentureRegisterDisplayer(
       ownerCpf: userData.ownerCpf?.toString() || "",
       ownerRg: userData.ownerRg?.toString() || "",
       intermediary: userData.intermediary?.toString() || "",
-      brokerName: userData.brokerName?.toString() || "",
       brokerCpf: userData.brokerCpf?.toString() || "",
-      brokerRg: userData.brokerRg?.toString() || "",
       brokerCreci: userData.brokerCreci?.toString() || "",
       realEstateCnpj: userData.realEstateCnpj?.toString() || "",
       realEstateSocialReason: userData.realEstateSocialReason?.toString() || "",
@@ -160,12 +159,55 @@ export function InputVentureRegisterDisplayer(
       realEstateName: userData.realEstateName?.toString() || "",
       realEstateCreatedAt:
         Regex.formatDate(userData.realEstateCreatedAt?.toString()) || "",
-      ventureStatus: userData.ventureStatus?.toString() || "",
+      ventureStatus: documentaryDiligenceForm.getValues().ventureStatus || "",
       userId: userData.userId?.toString() || "",
       pjPartner: userData.pjPartner as any[],
       pfPartner: userData.pfPartner as any[],
+      speUploadFile: userData.speUploadFile as File,
+      diligenceDocument:
+        documentaryDiligenceForm.getValues().diligenceDocument || undefined,
     };
+
     try {
+      const fileProperties: (keyof CreateEnterpriseDto)[] = [
+        "speUploadFile",
+        "diligenceDocument",
+      ];
+
+      const bucketMapping: Partial<Record<keyof CreateEnterpriseDto, string>> =
+        {
+          speUploadFile: "PJ",
+          diligenceDocument: "Empreendimentos",
+        };
+
+      const filesArray: { file: File; bucket: string }[] = [];
+
+      fileProperties.forEach((property) => {
+        const fileOrFiles = createEnterpriseDto[property];
+
+        if (Array.isArray(fileOrFiles)) {
+          fileOrFiles.forEach((file) => {
+            if (file instanceof File) {
+              filesArray.push({
+                file,
+                bucket: bucketMapping[property] as string,
+              });
+            }
+          });
+        } else if (fileOrFiles instanceof File) {
+          filesArray.push({
+            file: fileOrFiles,
+            bucket: bucketMapping[property] as string,
+          });
+        }
+      });
+
+      await Promise.all(
+        filesArray.map(async ({ file, bucket }) => {
+          await Files.uploadFile(userData.userId?.toString(), file, bucket);
+        })
+      );
+
       await Enterprise.createEnterprise(createEnterpriseDto);
 
       router.push("/dashboard", { scroll: false });
@@ -434,6 +476,10 @@ export function InputVentureRegisterDisplayer(
                     label="Adicione seu contrato social"
                     placeholder="contrato social da SPE"
                     leftSectionPointerEvents="none"
+                    accept="image/png,image/jpeg,application/pdf"
+                    clearable
+                    key={speForm.key("speUploadFile")}
+                    {...speForm.getInputProps("speUploadFile")}
                   />
                 </SimpleGrid>
               </RegisterInput>
@@ -593,14 +639,6 @@ export function InputVentureRegisterDisplayer(
                 >
                   {ownerType === "fisicalPerson" ? (
                     <>
-                      <InputBase
-                        label="Nome completo do proprietário"
-                        radius="xs"
-                        size="md"
-                        placeholder="Nome completo do proprietário"
-                        key={ownerForm.key("ownerName")}
-                        {...ownerForm.getInputProps("ownerName")}
-                      />
                       <InputBase
                         label="CPF do proprietário"
                         radius="xs"
@@ -799,14 +837,6 @@ export function InputVentureRegisterDisplayer(
                   {intermediaryValue === "broker" ? (
                     <>
                       <InputBase
-                        label="Nome do corretor"
-                        radius="xs"
-                        size="md"
-                        placeholder="Nome do corretor"
-                        key={mediatorForm.key("brokerName")}
-                        {...mediatorForm.getInputProps("brokerName")}
-                      />
-                      <InputBase
                         radius="xs"
                         size="md"
                         label="CPF do corretor"
@@ -815,14 +845,6 @@ export function InputVentureRegisterDisplayer(
                         mask="000.000.000-00"
                         key={mediatorForm.key("brokerCpf")}
                         {...mediatorForm.getInputProps("brokerCpf")}
-                      />
-                      <InputBase
-                        label="RG do corretor"
-                        radius="xs"
-                        size="md"
-                        placeholder="RG do corretor"
-                        key={mediatorForm.key("brokerRg")}
-                        {...mediatorForm.getInputProps("brokerRg")}
                       />
                       <InputBase
                         className="mb-[0.75rem]"
@@ -990,6 +1012,14 @@ export function InputVentureRegisterDisplayer(
                     label="Adicione um documento"
                     placeholder="Documento"
                     leftSectionPointerEvents="none"
+                    accept="image/png,image/jpeg,application/pdf"
+                    clearable
+                    multiple
+                    key={documentaryDiligenceForm.key("diligenceDocument")}
+                    {...documentaryDiligenceForm.getInputProps(
+                      "diligenceDocument"
+                    )}
+                    valueComponent={ValueComponent}
                   />
                 </SimpleGrid>
               </RegisterInput>

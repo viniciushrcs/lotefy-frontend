@@ -8,7 +8,6 @@ import {
   SpeFormValues,
   VentureFormValues,
 } from "./interfaces/forms";
-import { randomId } from "@mantine/hooks";
 
 export const ventureFormConfig = (
   constituedSpeValue: string
@@ -52,6 +51,7 @@ export const speFormConfig = (): UseFormInput<SpeFormValues> => ({
     speAddressCity: "",
     speAddressState: "",
     speAddressZipcode: "",
+    speUploadFile: null,
   },
   validate: {
     speAddressState: isNotEmpty("Campo inválido"),
@@ -62,6 +62,7 @@ export const speFormConfig = (): UseFormInput<SpeFormValues> => ({
     speAddressCity: isNotEmpty("Campo inválido"),
     speAddressZipcode: (value) =>
       value.length === 9 ? null : "Campo inválido",
+    speUploadFile: isNotEmpty("Campo inválido"),
   },
 });
 
@@ -94,7 +95,6 @@ export const ownerFormConfig = (
   mode: "uncontrolled",
   initialValues: {
     ownerType: "",
-    ownerName: "",
     ownerCpf: "",
     ownerRg: "",
     ownerCnpj: "",
@@ -110,12 +110,6 @@ export const ownerFormConfig = (
     ownerAddressState: "",
   },
   validate: {
-    ownerName: (value) => {
-      if (ownerType === "fisicalPerson") {
-        if (value.length) return null;
-        return "Campo inválido";
-      } else return null;
-    },
     ownerCpf: (value) => {
       if (ownerType === "fisicalPerson") {
         if (value.length === 14) return null;
@@ -167,9 +161,7 @@ export const mediatorFormConfig = (
   mode: "uncontrolled",
   initialValues: {
     negotiationStatus: "",
-    brokerName: "",
     brokerCpf: "",
-    brokerRg: "",
     brokerCreci: "",
     realEstateName: "",
     realEstateCnpj: "",
@@ -178,22 +170,10 @@ export const mediatorFormConfig = (
     realEstateCreatedAt: "",
   },
   validate: {
-    brokerName: (value) => {
-      if (intermediaryValue === "broker") {
-        if (value.length) return null;
-        return "Campo inválido";
-      } else return null;
-    },
     brokerCpf: (value) => {
       if (intermediaryValue === "broker") {
         if (value.length === 14) return null;
         return "CPF inválido";
-      } else return null;
-    },
-    brokerRg: (value) => {
-      if (intermediaryValue === "broker") {
-        if (value.length) return null;
-        return "Campo inválido";
       } else return null;
     },
     brokerCreci: (value) => {
@@ -283,12 +263,6 @@ export const partnerFormConfig = (
       },
     },
     pfPartner: {
-      name: (value) => {
-        if (partnerType === "pfPartner") {
-          if (value.length) return null;
-          return "Campo inválido";
-        } else return null;
-      },
       cpf: (value) => {
         if (partnerType === "pfPartner") {
           if (value.length === 14) return null;
@@ -298,12 +272,6 @@ export const partnerFormConfig = (
       function: (value) => {
         if (partnerType === "pfPartner") {
           if (value.length) return null;
-          return "Campo inválido";
-        } else return null;
-      },
-      rg: (value) => {
-        if (partnerType === "pfPartner") {
-          if (value) return null;
           return "Campo inválido";
         } else return null;
       },
@@ -317,13 +285,15 @@ export const partnerFormConfig = (
   },
 });
 
-export const documentaryDiligenceFormConfi =
+export const documentaryDiligenceFormConfig =
   (): UseFormInput<DocumentaryDiligenceFormValues> => ({
     mode: "uncontrolled",
     initialValues: {
       ventureStatus: "",
+      diligenceDocument: null,
     },
     validate: {
       ventureStatus: isNotEmpty("Campo inválido"),
+      diligenceDocument: isNotEmpty("Campo inválido"),
     },
   });

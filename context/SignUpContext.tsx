@@ -10,14 +10,20 @@ export const SignUpContext = createContext<SignUpStore>({
 });
 
 interface SignUpStore {
-  userData: Record<string, string | any[] | undefined>;
-  updateUserData: (_newUserData: Record<string, string | any[]>) => void;
+  userData: Record<string, string | any[] | undefined | File | null>;
+  updateUserData: (
+    _newUserData: Record<string, string | any[] | File | null>
+  ) => void;
 }
 
 export const SignUpProvider = ({ children }: Props) => {
-  const [userData, setUserData] = useState<Record<string, string | any[]>>({});
+  const [userData, setUserData] = useState<
+    Record<string, string | any[] | File | null>
+  >({});
 
-  const updateUserData = (newData: Record<string, string | any[]>) => {
+  const updateUserData = (
+    newData: Record<string, string | any[] | File | null>
+  ) => {
     setUserData((prevUserData) => ({
       ...prevUserData,
       ...newData,

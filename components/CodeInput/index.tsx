@@ -55,7 +55,7 @@ export default function CodeInput({ setVerify }: any) {
   const codeVerify = async () => {
     try {
       const response = await SignUpService.userVerify(
-        userData.email,
+        userData.email as string,
         finalCode
       );
 

@@ -14,9 +14,9 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
     try {
       if (userData && !userData.userId) {
         const response = await SignUpService.signUp(
-          userData.email,
-          userData.password,
-          userData.name
+          userData.email as string,
+          userData.password as string,
+          userData.name as string
         );
         updateUserData({ userId: response.data.data.user_id });
       }

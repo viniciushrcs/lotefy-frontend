@@ -18,6 +18,7 @@ export interface SpeFormValues {
   speAddressCity: string;
   speAddressState: string;
   speAddressZipcode: string;
+  speUploadFile: File | null;
 }
 
 export interface PropertyFormValues {
@@ -33,7 +34,6 @@ export interface PropertyFormValues {
 
 export interface OwnerFormValues {
   ownerType: string;
-  ownerName: string;
   ownerCpf: string;
   ownerRg: string;
   ownerCnpj: string;
@@ -51,9 +51,7 @@ export interface OwnerFormValues {
 
 export interface MediatorFormValues {
   negotiationStatus: string;
-  brokerName: string;
   brokerCpf: string;
-  brokerRg: string;
   brokerCreci: string;
   realEstateName: string;
   realEstateCnpj: string;
@@ -69,4 +67,5 @@ export interface PartnerFormValues {
 
 export interface DocumentaryDiligenceFormValues {
   ventureStatus: string;
+  diligenceDocument: File | null;
 }

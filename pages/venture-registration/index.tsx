@@ -6,8 +6,9 @@ import NextImage from "next/image";
 import { Image } from "@mantine/core";
 import { ventureStepperData } from "../../helpers/stepper-data";
 import { InputVentureRegisterDisplayer } from "../../components/inputVentureRegisterDisplayer";
+import withAuth from "../../components/WithAuth";
 
-export default function VentureRegistration() {
+function VentureRegistration() {
   const [active, setActive] = useState(0);
 
   const nextStep = () =>
@@ -38,3 +39,5 @@ export default function VentureRegistration() {
     </div>
   );
 }
+
+export default withAuth(VentureRegistration);

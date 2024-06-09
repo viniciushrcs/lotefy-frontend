@@ -5,37 +5,33 @@ import { SimpleGrid, Text } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
 import { useRouter } from "next/router";
-import { User } from "../../services/user";
 import { SignUpContext } from "../../context/SignUpContext";
 import { Enterprise } from "../../services/addEnterprise/indext";
 import { AnyObject } from "../../services/http";
+import withAuth from "../../components/WithAuth";
 
-export default function Dashboard() {
+function Dashboard() {
   const [active, setActive] = useState("Empreendimentos");
-  const { updateUserData, userData } = useContext(SignUpContext);
+  const { userData } = useContext(SignUpContext);
   const [venture, setVentures] = useState<AnyObject[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("bearerToken");
-      if (!token) {
-        router.replace("/login");
-        return;
-      }
-
       try {
-        const response = await User.userInfo(token);
-        updateUserData({ userId: response.data.id });
-        const enterprises = await Enterprise.getEnterprises(response.data.id);
-        setVentures(enterprises.data);
+        if (userData.userId) {
+          const enterprises = await Enterprise.getEnterprises(
+            userData.userId.toString()
+          );
+          setVentures(enterprises.data);
+        }
       } catch (error) {
         router.replace("/login");
       }
     };
 
     fetchUserData();
-  }, [router]);
+  }, [router, userData]);
 
   const switchContent = () => {
     switch (active) {
@@ -76,3 +72,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default withAuth(Dashboard);
