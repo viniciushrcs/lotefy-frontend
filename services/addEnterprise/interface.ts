@@ -30,9 +30,7 @@ export interface CreateEnterpriseDto {
   ownerCpf?: string;
   ownerRg?: string;
   intermediary?: string;
-  brokerName?: string;
   brokerCpf?: string;
-  brokerRg?: string;
   brokerCreci?: string;
   realEstateCnpj?: string;
   realEstateSocialReason?: string;
@@ -44,5 +42,5 @@ export interface CreateEnterpriseDto {
   pjPartner: any[];
   pfPartner: any[];
   speUploadFile?: File;
-  diligenceDocument?: File;
+  diligenceDocument?: File | File[];
 }

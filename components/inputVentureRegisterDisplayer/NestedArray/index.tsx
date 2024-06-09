@@ -13,6 +13,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { randomId } from "@mantine/hooks";
 import { IMaskInput } from "react-imask";
 import { PartnerFormValues } from "../../../helpers/interfaces/forms";
+import { useEffect } from "react";
 
 interface Props {
   partnerType: string;
@@ -23,6 +24,30 @@ interface Props {
 }
 
 export function NestedArray({ partnerType, partnerForm }: Props) {
+  const removeEmptyItems = () => {
+    const values = partnerForm.getValues();
+
+    if (partnerType === "pjPartner") {
+      values.pfPartner.forEach((item, index) => {
+        const isEmpty = Object.values(item).some((value) => value === "");
+        if (isEmpty) {
+          partnerForm.removeListItem("pfPartner", index);
+        }
+      });
+    } else {
+      values.pjPartner.forEach((item, index) => {
+        const isEmpty = Object.values(item).some((value) => value === "");
+        if (isEmpty) {
+          partnerForm.removeListItem("pjPartner", index);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    removeEmptyItems();
+  }, [partnerType]);
+
   const pjFields = partnerForm.getValues().pjPartner.map((item, index) => (
     <Group key={item.key} mt="xs" className="flex items-center flex-nowrap">
       <SimpleGrid
@@ -94,13 +119,6 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
         verticalSpacing={{ base: "xs", sm: "xs" }}
       >
         <InputBase
-          placeholder="Nome completo"
-          withAsterisk
-          style={{ flex: 1 }}
-          key={partnerForm.key(`pfPartner.${index}.name`)}
-          {...partnerForm.getInputProps(`pfPartner.${index}.name`)}
-        />
-        <InputBase
           radius="xs"
           size="sm"
           placeholder="CPF"
@@ -108,13 +126,6 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
           mask="000.000.000-00"
           key={partnerForm.key(`pfPartner.${index}.cpf`)}
           {...partnerForm.getInputProps(`pfPartner.${index}.cpf`)}
-        />
-        <InputBase
-          placeholder="RG"
-          key={partnerForm.key(`pfPartner.${index}.rg`)}
-          {...partnerForm.getInputProps(`pfPartner.${index}.rg`)}
-          className="w-[100%]"
-          size="sm"
         />
         <NumberInput
           min={0}
@@ -172,9 +183,7 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
                   key: randomId(),
                 })
               : partnerForm.insertListItem("pfPartner", {
-                  name: "",
                   cpf: "",
-                  rg: "",
                   function: "",
                   participation: "",
                   key: randomId(),

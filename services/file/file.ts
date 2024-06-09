@@ -5,11 +5,13 @@ import { AnyObject, HttpMethods, HttpService } from "../http";
 export class Files {
   static async uploadFile(
     userId: string | undefined,
-    file: File
+    file: File,
+    bucketName: string
   ): Promise<AnyObject> {
     const formData = new FormData();
     formData.append("userId", userId || "");
     formData.append("file", file);
+    formData.append("bucketName", bucketName);
 
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,

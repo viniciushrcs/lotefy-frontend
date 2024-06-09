@@ -37,6 +37,7 @@ import { Enterprise } from "../../services/addEnterprise/indext";
 import { Regex } from "../../helpers/regex";
 import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
 import { Files } from "../../services/file/file";
+import { ValueComponent } from "../ValueComponent";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -93,7 +94,6 @@ export function InputVentureRegisterDisplayer(
       propertyAddressState: propertyForm.getValues().propertyAddressState,
       propertyRegistration: propertyForm.getValues().propertyRegistration,
       ownerType: ownerType,
-      ownerName: ownerForm.getValues().ownerName,
       ownerCpf: Regex.cleanCPF(ownerForm.getValues().ownerCpf),
       ownerRg: ownerForm.getValues().ownerRg,
       ownerCnpj: Regex.cleanCNPJ(ownerForm.getValues().ownerCnpj),
@@ -101,9 +101,7 @@ export function InputVentureRegisterDisplayer(
       ownerPjCreatedAt: ownerForm.getValues().ownerPjCreatedAt,
       ownerCnae: ownerForm.getValues().ownerCnae,
       intermediary: intermediaryValue,
-      brokerName: mediatorForm.getValues().brokerName,
       brokerCpf: Regex.cleanCPF(mediatorForm.getValues().brokerCpf),
-      brokerRg: mediatorForm.getValues().brokerRg,
       brokerCreci: mediatorForm.getValues().brokerCreci,
       realEstateCnpj: Regex.cleanCNPJ(mediatorForm.getValues().realEstateCnpj),
       realEstateSocialReason: mediatorForm.getValues().realEstateSocialReason,
@@ -153,9 +151,7 @@ export function InputVentureRegisterDisplayer(
       ownerCpf: userData.ownerCpf?.toString() || "",
       ownerRg: userData.ownerRg?.toString() || "",
       intermediary: userData.intermediary?.toString() || "",
-      brokerName: userData.brokerName?.toString() || "",
       brokerCpf: userData.brokerCpf?.toString() || "",
-      brokerRg: userData.brokerRg?.toString() || "",
       brokerCreci: userData.brokerCreci?.toString() || "",
       realEstateCnpj: userData.realEstateCnpj?.toString() || "",
       realEstateSocialReason: userData.realEstateSocialReason?.toString() || "",
@@ -168,26 +164,50 @@ export function InputVentureRegisterDisplayer(
       pjPartner: userData.pjPartner as any[],
       pfPartner: userData.pfPartner as any[],
       speUploadFile: userData.speUploadFile as File,
-      diligenceDocument: documentaryDiligenceForm.getValues().diligenceDocument as File,
+      diligenceDocument:
+        documentaryDiligenceForm.getValues().diligenceDocument || undefined,
     };
 
     try {
-
-      const fileProperties: (keyof Partial<CreateEnterpriseDto>)[] = [
-        'speUploadFile',
-        'diligenceDocument',
+      const fileProperties: (keyof CreateEnterpriseDto)[] = [
+        "speUploadFile",
+        "diligenceDocument",
       ];
 
-    fileProperties.forEach(property => {
-        const file = createEnterpriseDto[property];
-        if (file instanceof File) {
-            filesArray.push(file);
-        }
-    });
+      const bucketMapping: Partial<Record<keyof CreateEnterpriseDto, string>> =
+        {
+          speUploadFile: "PJ",
+          diligenceDocument: "Empreendimentos",
+        };
 
-      filesArray.map(async (file: File) => {
-        await Files.uploadFile(userData.userId?.toString(), file);
+      const filesArray: { file: File; bucket: string }[] = [];
+
+      fileProperties.forEach((property) => {
+        const fileOrFiles = createEnterpriseDto[property];
+
+        if (Array.isArray(fileOrFiles)) {
+          fileOrFiles.forEach((file) => {
+            if (file instanceof File) {
+              filesArray.push({
+                file,
+                bucket: bucketMapping[property] as string,
+              });
+            }
+          });
+        } else if (fileOrFiles instanceof File) {
+          filesArray.push({
+            file: fileOrFiles,
+            bucket: bucketMapping[property] as string,
+          });
+        }
       });
+
+      await Promise.all(
+        filesArray.map(async ({ file, bucket }) => {
+          await Files.uploadFile(userData.userId?.toString(), file, bucket);
+        })
+      );
+
       await Enterprise.createEnterprise(createEnterpriseDto);
 
       router.push("/dashboard", { scroll: false });
@@ -620,14 +640,6 @@ export function InputVentureRegisterDisplayer(
                   {ownerType === "fisicalPerson" ? (
                     <>
                       <InputBase
-                        label="Nome completo do proprietário"
-                        radius="xs"
-                        size="md"
-                        placeholder="Nome completo do proprietário"
-                        key={ownerForm.key("ownerName")}
-                        {...ownerForm.getInputProps("ownerName")}
-                      />
-                      <InputBase
                         label="CPF do proprietário"
                         radius="xs"
                         size="md"
@@ -825,14 +837,6 @@ export function InputVentureRegisterDisplayer(
                   {intermediaryValue === "broker" ? (
                     <>
                       <InputBase
-                        label="Nome do corretor"
-                        radius="xs"
-                        size="md"
-                        placeholder="Nome do corretor"
-                        key={mediatorForm.key("brokerName")}
-                        {...mediatorForm.getInputProps("brokerName")}
-                      />
-                      <InputBase
                         radius="xs"
                         size="md"
                         label="CPF do corretor"
@@ -841,14 +845,6 @@ export function InputVentureRegisterDisplayer(
                         mask="000.000.000-00"
                         key={mediatorForm.key("brokerCpf")}
                         {...mediatorForm.getInputProps("brokerCpf")}
-                      />
-                      <InputBase
-                        label="RG do corretor"
-                        radius="xs"
-                        size="md"
-                        placeholder="RG do corretor"
-                        key={mediatorForm.key("brokerRg")}
-                        {...mediatorForm.getInputProps("brokerRg")}
                       />
                       <InputBase
                         className="mb-[0.75rem]"
@@ -1018,10 +1014,12 @@ export function InputVentureRegisterDisplayer(
                     leftSectionPointerEvents="none"
                     accept="image/png,image/jpeg,application/pdf"
                     clearable
+                    multiple
                     key={documentaryDiligenceForm.key("diligenceDocument")}
                     {...documentaryDiligenceForm.getInputProps(
                       "diligenceDocument"
                     )}
+                    valueComponent={ValueComponent}
                   />
                 </SimpleGrid>
               </RegisterInput>

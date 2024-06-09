@@ -34,7 +34,6 @@ export interface PropertyFormValues {
 
 export interface OwnerFormValues {
   ownerType: string;
-  ownerName: string;
   ownerCpf: string;
   ownerRg: string;
   ownerCnpj: string;
@@ -52,9 +51,7 @@ export interface OwnerFormValues {
 
 export interface MediatorFormValues {
   negotiationStatus: string;
-  brokerName: string;
   brokerCpf: string;
-  brokerRg: string;
   brokerCreci: string;
   realEstateName: string;
   realEstateCnpj: string;
