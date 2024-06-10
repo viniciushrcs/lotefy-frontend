@@ -13,6 +13,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconSettingsFilled, IconUserFilled } from "@tabler/icons-react";
 import logo from "../../public/images/Logo.png";
+import Link from "next/link";
 
 export function Header() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
@@ -32,12 +33,14 @@ export function Header() {
             priority
           />
           <Group className="flex" visibleFrom="sm">
-            <div className="flex gap-2 items-center cursor-pointer hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
-              <div className="items-center flex p-2 bg-[#56D963] rounded-xl text-[#FFF]">
-                <IconUserFilled style={{ height: 18 }} />
+            <Link href="/profile" className="no-underline text-[black]">
+              <div className="flex gap-2 items-center cursor-pointer hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
+                <div className="items-center flex p-2 bg-[#56D963] rounded-xl text-[#FFF]">
+                  <IconUserFilled style={{ height: 18 }} />
+                </div>
+                <Text>Perfil</Text>
               </div>
-              <Text>Perfil</Text>
-            </div>
+            </Link>
             <div className="flex gap-2 items-center cursor-pointer hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px] p-[10px]">
               <div className="items-center flex p-2 bg-[#56D963] rounded-xl text-[#FFF]">
                 <IconSettingsFilled style={{ height: 18 }} />
