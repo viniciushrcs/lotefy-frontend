@@ -16,7 +16,7 @@ export class Regex {
       return new Date(year, month, day);
     }
 
-    return new Date(1111, 1, 1);
+    return new Date();
   }
 
   static dateTransform(dateStr: string): string {
