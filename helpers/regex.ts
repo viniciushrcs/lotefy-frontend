@@ -26,4 +26,17 @@ export class Regex {
 
     return formattedDate;
   }
+
+  static getInitials(fullName: string | undefined): string {
+    const match = fullName?.match(/\b\w/g);
+
+    if (match && fullName && match.length > 1) {
+      const initials = match[0] + match[1];
+      return initials.toUpperCase();
+    } else if (match && fullName && match.length === 1) {
+      const firstTwoLetters = fullName.substring(0, 2).toUpperCase();
+      return firstTwoLetters;
+    }
+    return "";
+  }
 }
