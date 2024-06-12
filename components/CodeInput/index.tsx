@@ -1,7 +1,7 @@
 import { Anchor, Button, Text, TextInput } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
-import { SignUpService } from "../../services/signUp";
 import { SignUpContext } from "../../context/SignUpContext";
+import { SignUpService } from "../../services/signUp";
 
 export default function CodeInput({ setVerify }: any) {
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
@@ -93,7 +93,7 @@ export default function CodeInput({ setVerify }: any) {
               ref={(input) => (inputs.current[index] = input)}
               onChange={(e) => handleInputChange(index, e)}
               onKeyDown={(e) => handleInputDelete(index, e)}
-              styles={{ input: { height: "5rem", fontSize: "3rem" } }}
+              styles={{ input: { height: "5rem", fontSize: "2rem" } }}
             />
           ))}
         </form>

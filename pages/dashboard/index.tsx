@@ -1,14 +1,14 @@
-import { Navbar } from "../../components/Navbar";
-import { Header } from "../../components/Header";
-import { Card } from "../../components/Card";
 import { SimpleGrid, Text } from "@mantine/core";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
-import { useRouter } from "next/router";
-import { SignUpContext } from "../../context/SignUpContext";
-import { Enterprise } from "../../services/addEnterprise/indext";
-import { AnyObject } from "../../services/http";
+import { Card } from "../../components/Card";
+import { Header } from "../../components/Header";
+import { Navbar } from "../../components/Navbar";
 import withAuth from "../../components/WithAuth";
+import { SignUpContext } from "../../context/SignUpContext";
+import { Enterprise } from "../../services/addEnterprise";
+import { AnyObject } from "../../services/http";
 
 function Dashboard() {
   const [active, setActive] = useState("Empreendimentos");

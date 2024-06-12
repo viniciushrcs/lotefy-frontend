@@ -1,27 +1,24 @@
-import NextImage from "next/image";
 import {
   Anchor,
+  FileInput,
   Group,
   Image,
   InputBase,
-  Radio,
-  Text,
-  SimpleGrid,
-  Select,
   Loader,
-  TextInput,
-  FileInput,
+  Radio,
   rem,
+  Select,
+  SimpleGrid,
+  Text,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { IconFileCv } from "@tabler/icons-react";
+import NextImage from "next/image";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { IMaskInput } from "react-imask";
 import { SignUpContext } from "../../context/SignUpContext";
-import BackButton from "../../public/icons/BackButton.svg";
-import * as Icons from "../../public/icons/index";
-import RegisterInput from "../RegisterInput";
-import { countryStates } from "../../helpers/states";
-import { useRouter } from "next/navigation";
 import {
   documentaryDiligenceFormConfig,
   mediatorFormConfig,
@@ -31,14 +28,17 @@ import {
   speFormConfig,
   ventureFormConfig,
 } from "../../helpers/forms";
-import { IconFileCv } from "@tabler/icons-react";
-import { NestedArray } from "./NestedArray";
-import { Enterprise } from "../../services/addEnterprise/indext";
 import { Regex } from "../../helpers/regex";
+import { countryStates } from "../../helpers/states";
+import BackButton from "../../public/icons/BackButton.svg";
+import * as Icons from "../../public/icons/index";
+import { Enterprise } from "../../services/addEnterprise";
 import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
 import { Files } from "../../services/file/file";
-import { ValueComponent } from "../ValueComponent";
 import { User } from "../../services/user";
+import RegisterInput from "../RegisterInput";
+import { ValueComponent } from "../ValueComponent";
+import { NestedArray } from "./NestedArray";
 
 export function InputVentureRegisterDisplayer(
   step: number,
