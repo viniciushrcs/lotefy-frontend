@@ -98,4 +98,16 @@ export class User {
 
     return response;
   }
+
+  static async getPjDataByCnpj(cnpj: string | undefined): Promise<AnyObject> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/user/get-pj-by-cnpj/${cnpj}`,
+    });
+
+    if (!response || error) return { error };
+
+    return response;
+  }
 }

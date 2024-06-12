@@ -38,6 +38,7 @@ import { Regex } from "../../helpers/regex";
 import { CreateEnterpriseDto } from "../../services/addEnterprise/interface";
 import { Files } from "../../services/file/file";
 import { ValueComponent } from "../ValueComponent";
+import { User } from "../../services/user";
 
 export function InputVentureRegisterDisplayer(
   step: number,
@@ -54,7 +55,10 @@ export function InputVentureRegisterDisplayer(
   const [partnerType, setPartnerType] = useState("pjPartner");
   const [ownerType, setOwnerType] = useState("fisicalPerson");
   const { updateUserData, userData } = useContext(SignUpContext);
-  const filesArray: File[] = [];
+  const [focused, setFocused] = useState<any>();
+  const [propertyRegistrationValue, setPropertyRegistrationValue] =
+    useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const form = useForm(ventureFormConfig(constituedSpeValue));
@@ -81,6 +85,7 @@ export function InputVentureRegisterDisplayer(
       speAddressComplement: speForm.getValues().speAddressComplement,
       speAddressDistrict: speForm.getValues().speAddressDistrict,
       speAddressCity: speForm.getValues().speAddressCity,
+      speAddressNumber: speForm.getValues().speAddressNumber,
       speAddressState: speForm.getValues().speAddressState,
       speAddressZipcode: speForm.getValues().speAddressZipcode,
       speUploadFile: speForm.getValues().speUploadFile,
@@ -117,6 +122,72 @@ export function InputVentureRegisterDisplayer(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
+  form.watch("speCnpj", async ({ value }) => {
+    if (value.length === 18) {
+      const speData = await User.getPjDataByCnpj(Regex.cleanCNPJ(value));
+      if (speData.error) return;
+
+      const { cnae, razao_social, nome_fantasia, data_de_abertura, pj_id } =
+        speData.data;
+      if (speData.data) {
+        const speAddress = await Enterprise.getSpePjAddressByPjId(
+          speData.data.pj_id
+        );
+
+        if (speAddress.error) return;
+
+        form.setValues({
+          speCnae: cnae,
+          speSocialReason: razao_social,
+          speFantasyName: nome_fantasia,
+          speOpenDate: Regex.dateTransform(data_de_abertura),
+        });
+        if (speAddress) {
+          const { rua, bairro, numero, complemento, cidade, uf } =
+            speAddress.data;
+          speForm.setValues({
+            speAddress: rua,
+            speAddressCity: cidade,
+            speAddressComplement: complemento,
+            speAddressDistrict: bairro,
+            speAddressNumber: numero,
+            speAddressState: uf,
+          });
+        }
+      }
+    }
+  });
+
+  propertyForm.watch("propertyRegistration", ({ value }) => {
+    setPropertyRegistrationValue(value);
+  });
+
+  useEffect(() => {
+    const searchProperty = async () => {
+      if (propertyRegistrationValue && !focused) {
+        const property = await Enterprise.getPropertyByRegistration(
+          propertyRegistrationValue
+        );
+        if (property.error) return;
+        if (!property.error) {
+          const { rua, bairro, numero, complemento, cidade, uf } =
+            property.data.endereco;
+
+          propertyForm.setValues({
+            propertyAddress: rua,
+            propertyAddressCity: cidade,
+            propertyAddressComplement: complemento,
+            propertyAddressDistrict: bairro,
+            propertyAddressNumber: numero,
+            propertyAddressState: uf,
+          });
+        }
+      }
+    };
+
+    searchProperty();
+  }, [focused]);
+
   const handleSubmit = async () => {
     const createEnterpriseDto: CreateEnterpriseDto = {
       constitutedSpe: userData.constitutedSpe === "yes" ? true : false,
@@ -132,6 +203,8 @@ export function InputVentureRegisterDisplayer(
         userData.propertyAddressDistrict?.toString() || "",
       propertyAddressCity: userData.propertyAddressCity?.toString() || "",
       propertyAddressState: userData.propertyAddressState?.toString() || "",
+      propertyAddressComplement:
+        userData.propertyAddressComplement?.toString() || "",
       speCnpj: userData.speCnpj?.toString() || "",
       speSocialReason: userData.speSocialReason?.toString() || "",
       speCnae: userData.speCnae?.toString() || "",
@@ -169,6 +242,7 @@ export function InputVentureRegisterDisplayer(
     };
 
     try {
+      setLoading(true);
       const fileProperties: (keyof CreateEnterpriseDto)[] = [
         "speUploadFile",
         "diligenceDocument",
@@ -213,6 +287,8 @@ export function InputVentureRegisterDisplayer(
       router.push("/dashboard", { scroll: false });
     } catch (error) {
       console.error("Erro ao criar o empreendimento:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -516,6 +592,17 @@ export function InputVentureRegisterDisplayer(
                   verticalSpacing={{ base: "xs", sm: "xs" }}
                 >
                   <InputBase
+                    label="Matrícula do imóvel"
+                    radius="xs"
+                    size="md"
+                    placeholder="Matrícula do imóvel"
+                    className="mb-[1.5rem]"
+                    key={propertyForm.key("propertyRegistration")}
+                    {...propertyForm.getInputProps("propertyRegistration")}
+                    onBlur={() => setFocused(false)}
+                    onFocus={() => setFocused(true)}
+                  />
+                  <InputBase
                     label="CEP"
                     radius="xs"
                     size="md"
@@ -579,15 +666,6 @@ export function InputVentureRegisterDisplayer(
                     data={countryStates.map((state) => state.uf)}
                     key={propertyForm.key("propertyAddressState")}
                     {...propertyForm.getInputProps("propertyAddressState")}
-                  />
-                  <InputBase
-                    label="Matrícula do imóvel"
-                    radius="xs"
-                    size="md"
-                    placeholder="Matrícula do imóvel"
-                    className="mb-[1.5rem]"
-                    key={propertyForm.key("propertyRegistration")}
-                    {...propertyForm.getInputProps("propertyRegistration")}
                   />
                 </SimpleGrid>
               </RegisterInput>
@@ -961,6 +1039,13 @@ export function InputVentureRegisterDisplayer(
       case 6:
         return (
           <div className="mb-[45%]">
+            {loading && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <Loader color="#56D963" type="bars" />
+                </div>
+              </div>
+            )}
             <form
               onSubmit={documentaryDiligenceForm.onSubmit(() => {
                 nextStep();

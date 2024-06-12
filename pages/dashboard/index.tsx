@@ -38,7 +38,7 @@ function Dashboard() {
       case "Empreendimentos":
         return (
           <>
-            <Text className="text-[20px] not-italic font-bold leading-[140%] mb-[1.5rem]">
+            <Text className="text-[20px] not-italic font-medium leading-[140%] mb-[1.5rem] tracking-[2px]">
               Empreendimentos
             </Text>
             <SimpleGrid

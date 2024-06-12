@@ -142,4 +142,32 @@ export class Enterprise {
     }
     return response;
   }
+
+  static async getSpePjAddressByPjId(
+    pjId: string | undefined
+  ): Promise<AnyObject> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `enterprise/get-address-by-pj-id/${pjId}`,
+    });
+
+    if (!response || error) return { error };
+
+    return response;
+  }
+
+  static async getPropertyByRegistration(
+    registration: string | undefined
+  ): Promise<AnyObject> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `enterprise/get-property-by-registration/${registration}`,
+    });
+
+    if (!response || error) return { error };
+
+    return response;
+  }
 }
