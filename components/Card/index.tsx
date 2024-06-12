@@ -1,13 +1,7 @@
 import { Badge, Button, Divider, Group, Paper, Stack, Text } from "@mantine/core";
+import { AnyObject } from "../../services/http";
 
-interface VentureData {
-  nome: string;
-  empreendimento_id: string;
-  imovel_integralizado: boolean;
-  spe_constituida: boolean;
-}
-
-export function Card({ ventureData }: { ventureData: VentureData }) {
+export function Card({ ventureData }: { ventureData: AnyObject }) {
   return (
     <Paper
       withBorder
