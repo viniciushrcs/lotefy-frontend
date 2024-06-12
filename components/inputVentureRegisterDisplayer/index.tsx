@@ -186,6 +186,7 @@ export function InputVentureRegisterDisplayer(
     };
 
     searchProperty();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focused]);
 
   const handleSubmit = async () => {

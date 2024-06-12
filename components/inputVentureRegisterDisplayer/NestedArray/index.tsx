@@ -1,4 +1,3 @@
-import { UseFormReturnType } from "@mantine/form";
 import {
   ActionIcon,
   Box,
@@ -9,11 +8,12 @@ import {
   SimpleGrid,
   Text,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { UseFormReturnType } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
+import { IconTrash } from "@tabler/icons-react";
+import { useEffect } from "react";
 import { IMaskInput } from "react-imask";
 import { PartnerFormValues } from "../../../helpers/interfaces/forms";
-import { useEffect } from "react";
 
 interface Props {
   partnerType: string;
@@ -46,6 +46,7 @@ export function NestedArray({ partnerType, partnerForm }: Props) {
 
   useEffect(() => {
     removeEmptyItems();
+    //eslint-disable-next-line
   }, [partnerType]);
 
   const pjFields = partnerForm.getValues().pjPartner.map((item, index) => (
