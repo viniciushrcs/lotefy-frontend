@@ -1,17 +1,19 @@
 import { APP_ENVS } from "../../helpers/envs";
 import { RequestError } from "../../helpers/responseError";
+import { UserType } from "../../helpers/user-type";
 import { AnyObject, HttpMethods, HttpService } from "../http/index";
 
 export class SignUpService {
   static async signUp(
-    email: string | undefined | any[],
-    password: string | undefined | any[],
-    name: string | undefined | any[]
+    email: string,
+    password: string,
+    name: string,
+    userType: UserType
   ): Promise<AnyObject> {
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,
       baseUrl: APP_ENVS.backendApibaseUrl,
-      url: `/user/signup`,
+      url: `/user/${userType}/signup`,
       body: {
         email,
         password,

@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
 import { RequestError } from "../../helpers/responseError";
+import { UserType } from "../../helpers/user-type";
 
 export default function Verify({ setVerify, prevStep, nextStep }: any) {
   const { userData, updateUserData } = useContext(SignUpContext);
@@ -16,7 +17,8 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
         const response = await SignUpService.signUp(
           userData.email as string,
           userData.password as string,
-          userData.name as string
+          userData.name as string,
+          UserType.LAND_DEVELOPER
         );
         updateUserData({ userId: response.data.data.user_id });
       }
