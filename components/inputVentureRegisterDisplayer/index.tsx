@@ -244,6 +244,18 @@ export function InputVentureRegisterDisplayer(
 
     try {
       setLoading(true);
+
+      const enterpriseData = await Enterprise.createEnterprise(
+        createEnterpriseDto
+      );
+
+      const speId =
+        enterpriseData?.responseObject?.speResponse?.createSpePjData?.data
+          ?.pj_id;
+      const ventureId =
+        enterpriseData?.responseObject?.enterpriseResponse?.enterprise?.data
+          ?.empreendimento_id;
+
       const fileProperties: (keyof CreateEnterpriseDto)[] = [
         "speUploadFile",
         "diligenceDocument",
@@ -279,11 +291,13 @@ export function InputVentureRegisterDisplayer(
 
       await Promise.all(
         filesArray.map(async ({ file, bucket }) => {
-          await Files.uploadFile(userData.userId?.toString(), file, bucket);
+          if (bucket === "PJ") {
+            await Files.uploadFile(speId, file, bucket);
+          } else if (bucket === "Empreendimentos") {
+            await Files.uploadFile(ventureId, file, bucket);
+          }
         })
       );
-
-      await Enterprise.createEnterprise(createEnterpriseDto);
 
       router.push("/dashboard", { scroll: false });
     } catch (error) {
