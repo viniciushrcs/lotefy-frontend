@@ -121,6 +121,8 @@ export class Enterprise {
         statusCode: error?.response?.status || 500,
       });
     }
+
+    return response;
   }
 
   static async getEnterprises(userId: string): Promise<any> {

@@ -4,12 +4,12 @@ import { AnyObject, HttpMethods, HttpService } from "../http";
 
 export class Files {
   static async uploadFile(
-    userId: string | undefined,
+    id: string | undefined,
     file: File,
     bucketName: string
   ): Promise<AnyObject> {
     const formData = new FormData();
-    formData.append("userId", userId || "");
+    formData.append("id", id || "");
     formData.append("file", file);
     formData.append("bucketName", bucketName);
 
