@@ -7,7 +7,6 @@ export function Card({ ventureData }: { ventureData: AnyObject }) {
   const router = useRouter()
 
   const handleClickButton = () => {
-    console.log(ventureData)
     router.push(`/enterprise/${ventureData.empreendimento_id}`)
   }
 

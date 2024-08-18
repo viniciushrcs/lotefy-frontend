@@ -5,9 +5,10 @@ import { Navbar } from "../Navbar"
 type TemplateProps = {
   children: ReactNode;
   menuActive?: string;
+  childrenClasses?: string;
 }
 
-export const Template = ({ children, menuActive = "" }: TemplateProps) => {
+export const Template = ({ children, menuActive = "", childrenClasses = "" }: TemplateProps) => {
   const [active, setActive] = useState(menuActive);
 
   return (
@@ -15,7 +16,7 @@ export const Template = ({ children, menuActive = "" }: TemplateProps) => {
       <Header />
       <div className="flex">
         <Navbar active={active} setActive={setActive} />
-        <div className="m-4 w-[100%]">{children}</div>
+        <div className={`m-4 w-[100%] ${childrenClasses}`}>{children}</div>
       </div>
     </div>
   )

@@ -8,26 +8,27 @@ import { SignUpContext } from '../../context/SignUpContext';
 import { Enterprise } from '../../services/enterprise';
 import { AnyObject } from '../../services/http';
 import { Template } from '../../components/Template';
+import useSWR from 'swr';
 
 function Dashboard() {
   const { userData } = useContext(SignUpContext);
-  const [venture, setVentures] = useState<AnyObject[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (userData.userId) {
-          const enterprises = await Enterprise.getEnterprises(userData.userId.toString());
-          setVentures(enterprises.data);
-        }
-      } catch (error) {
-        router.replace('/login');
+  const { data: venture = [] } = useSWR(
+    () => (userData.userId ? `api/dashboard/?uid=${userData.userId}` : null),
+    async () => {
+      if (userData.userId) {
+         const enterprises = await Enterprise.getEnterprises(userData.userId.toString());
+         return enterprises.data
       }
-    };
-
-    fetchUserData();
-  }, [router, userData]);
+    },
+    {
+      shouldRetryOnError: false,
+      onError: () => {
+        router.replace('/login');
+      },
+    }
+  );
 
   return (
     <Template menuActive={'Empreendimentos'}>
