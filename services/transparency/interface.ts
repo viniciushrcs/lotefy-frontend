@@ -14,7 +14,7 @@ export interface EnterpriseDto {
 }
 
 export interface Imovel {
-  corretor: any
+  corretor: Corretor
   endereco: Endereco[]
   imovel_id: string
   matricula: string
@@ -51,10 +51,26 @@ export interface Imobiliaria {
   data_de_abertura: string
 }
 
+export interface Corretor {
+  rg?: string
+  cpf: string
+  creci: string
+  pf_id: string
+  celular?: string
+  user_id?: string
+  profissao?: string
+  cpf_conjuge?: string
+  estado_civil?: string
+  nome_conjuge?: string
+  email_conjuge?: string
+  nacionalidade?: string
+}
+
 export interface Proprietario {
   pj_id: string
-  cnpj: string
+  cnpj?: string
   cpf: string
+  rg?: string
   razao_social: string
   funcionarios: any
   cnae: string

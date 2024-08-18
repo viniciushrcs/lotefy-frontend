@@ -20,8 +20,9 @@ export default function EnterpriseDetails() {
     },
     {
       shouldRetryOnError: false,
-      onError: () => {
-        router.replace('/dashboard');
+      onError: (error) => {
+        console.error(error);
+        // router.replace('/dashboard');
       },
     }
   );
