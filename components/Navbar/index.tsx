@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Group, Stack, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconHomeFilled, IconFileFilled } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 interface NavbarLinkProps {
   icon: React.ElementType;
@@ -10,11 +11,13 @@ interface NavbarLinkProps {
 }
 
 const data = [
-  { link: "", label: "Empreendimentos", icon: IconHomeFilled },
+  { link: "/dashboard", label: "Empreendimentos", icon: IconHomeFilled },
   { link: "", label: "Portal da transparência", icon: IconFileFilled },
 ];
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+
+
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton
@@ -40,6 +43,7 @@ export function Navbar({
   active: string;
   setActive: (arg: string) => void;
 }) {
+  const router = useRouter()
   const links = data.map((item, index) => (
     <a
       key={index}
@@ -49,10 +53,11 @@ export function Navbar({
           : "hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px]"
       }`}
       data-active={item.label === active || undefined}
-      href={item.link}
+      href=""
       onClick={(event) => {
         event.preventDefault();
         setActive(item.label);
+        router.push(item.link);
       }}
     >
       <div
