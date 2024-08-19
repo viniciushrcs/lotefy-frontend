@@ -1,7 +1,15 @@
+import { useRouter } from 'next/navigation'
+
 import { Badge, Button, Divider, Group, Paper, Stack, Text } from "@mantine/core";
 import { AnyObject } from "../../services/http";
 
 export function Card({ ventureData }: { ventureData: AnyObject }) {
+  const router = useRouter()
+
+  const handleClickButton = () => {
+    router.push(`/enterprise/${ventureData.empreendimento_id}`)
+  }
+
   return (
     <Paper
       withBorder
@@ -38,7 +46,7 @@ export function Card({ ventureData }: { ventureData: AnyObject }) {
 
       <Divider mt="md" />
 
-      <Button variant="outline" color="teal" fullWidth mt="md">
+      <Button onClick={handleClickButton} variant="outline" color="teal" fullWidth mt="md">
         Clique para saber mais
       </Button>
     </Paper>

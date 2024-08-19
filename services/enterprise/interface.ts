@@ -44,3 +44,5 @@ export interface CreateEnterpriseDto {
   speUploadFile?: File;
   diligenceDocument?: File | File[];
 }
+
+

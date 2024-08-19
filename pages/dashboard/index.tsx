@@ -1,75 +1,59 @@
-import { SimpleGrid, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { AddVentureCard } from "../../components/AddVentureCard";
-import { Card } from "../../components/Card";
-import { Header } from "../../components/Header";
-import { Navbar } from "../../components/Navbar";
-import withAuth from "../../components/WithAuth";
-import { SignUpContext } from "../../context/SignUpContext";
-import { Enterprise } from "../../services/addEnterprise";
-import { AnyObject } from "../../services/http";
+import { SimpleGrid, Text } from '@mantine/core';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
+import { AddVentureCard } from '../../components/AddVentureCard';
+import { Card } from '../../components/Card';
+import withAuth from '../../components/WithAuth';
+import { SignUpContext } from '../../context/SignUpContext';
+import { Enterprise } from '../../services/enterprise';
+import { AnyObject } from '../../services/http';
+import { Template } from '../../components/Template';
+import useSWR from 'swr';
 
 function Dashboard() {
-  const [active, setActive] = useState("Empreendimentos");
   const { userData } = useContext(SignUpContext);
-  const [venture, setVentures] = useState<AnyObject[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (userData.userId) {
-          const enterprises = await Enterprise.getEnterprises(
-            userData.userId.toString()
-          );
-          setVentures(enterprises.data);
-        }
-      } catch (error) {
-        router.replace("/login");
+  const { data: venture = [] } = useSWR(
+    () => (userData.userId ? `api/dashboard/?uid=${userData.userId}` : null),
+    async () => {
+      if (userData.userId) {
+         const enterprises = await Enterprise.getEnterprises(userData.userId.toString());
+         return enterprises.data
       }
-    };
-
-    fetchUserData();
-  }, [router, userData]);
-
-  const switchContent = () => {
-    switch (active) {
-      case "Empreendimentos":
-        return (
-          <>
-            <Text className="text-[20px] not-italic font-medium leading-[140%] mb-[1.5rem] tracking-[2px]">
-              Empreendimentos
-            </Text>
-            <SimpleGrid
-              cols={{ base: 1, sm: 2, lg: 3 }}
-              spacing={{ base: 10, sm: "xl" }}
-              verticalSpacing={{ base: "md", sm: "xl" }}
-            >
-              {venture.length ? (
-                <>
-                  {venture.map((item, index) => (
-                    <Card ventureData={item} key={item.id || index} />
-                  ))}
-                  <AddVentureCard />
-                </>
-              ) : (
-                <AddVentureCard />
-              )}
-            </SimpleGrid>
-          </>
-        );
+    },
+    {
+      shouldRetryOnError: false,
+      onError: () => {
+        router.replace('/login');
+      },
     }
-  };
+  );
 
   return (
-    <div className="bg-[#F8F9FA]">
-      <Header />
-      <div className="flex">
-        <Navbar active={active} setActive={setActive} />
-        <div className="m-4 w-[100%]">{switchContent()}</div>
+    <Template menuActive={'Empreendimentos'}>
+      <div>
+        <Text className="text-[20px] not-italic font-medium leading-[140%] mb-[1.5rem] tracking-[2px]">
+          Empreendimentos
+        </Text>
+        <SimpleGrid
+          cols={{ base: 1, sm: 2, lg: 3 }}
+          spacing={{ base: 10, sm: 'xl' }}
+          verticalSpacing={{ base: 'md', sm: 'xl' }}
+        >
+          {venture.length ? (
+            <>
+              {venture.map((item, index) => (
+                <Card ventureData={item} key={item.id || index} />
+              ))}
+              <AddVentureCard />
+            </>
+          ) : (
+            <AddVentureCard />
+          )}
+        </SimpleGrid>
       </div>
-    </div>
+    </Template>
   );
 }
 
