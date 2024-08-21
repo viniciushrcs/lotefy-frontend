@@ -1,5 +1,4 @@
-import { Card, Text, Group, SimpleGrid } from '@mantine/core';
-import Link from 'next/link';
+import { Card, Text, SimpleGrid } from "@mantine/core";
 
 type CardDetailProps = {
   title: string;
@@ -9,7 +8,7 @@ type CardDetailProps = {
 export function CardDetail({ title, details }: CardDetailProps) {
   const content = () => {
     switch (title) {
-      case 'Dados de sócios':
+      case "Dados de sócios":
         return Object.entries(details).map(([key, value], index) => (
           <div key={key}>
             {index > 0 ? <hr className="my-4 text-gray-600" /> : null}
@@ -19,27 +18,36 @@ export function CardDetail({ title, details }: CardDetailProps) {
               </Text>
 
               <SimpleGrid cols={1}>
-                {value && !!value.length ? (
+                {value && Array.isArray(value) && value.length > 0 ? (
                   value.map((associate, index) => (
                     <div key={associate}>
-                      {index > 0 ? <hr className="mb-4 text-gray-600"></hr> : null}
-                      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} key={key}>
-                        {Object.entries(associate).map(([itemTitle, itemValue]) => (
-                          <div key={itemTitle}>
-                            <Text className="text-gray-600" size="md">
-                              {itemTitle}
-                            </Text>
-                            {itemValue && !!itemValue.length ? (
-                              <Text className="text-gray-400" size="sm">
-                                {itemValue}
+                      {index > 0 ? (
+                        <hr className="mb-4 text-gray-600"></hr>
+                      ) : null}
+                      <SimpleGrid
+                        cols={{ base: 1, sm: 2, lg: 3, xl: 4 }}
+                        key={key}
+                      >
+                        {Object.entries(associate).map(
+                          ([itemTitle, itemValue]) => (
+                            <div key={itemTitle}>
+                              <Text className="text-gray-600" size="md">
+                                {itemTitle}
                               </Text>
-                            ) : (
-                              <Text className="text-gray-400" size="md">
-                                -
-                              </Text>
-                            )}
-                          </div>
-                        ))}
+                              {itemValue &&
+                              Array.isArray(itemValue) &&
+                              itemValue.length > 0 ? (
+                                <Text className="text-gray-400" size="sm">
+                                  {itemValue}
+                                </Text>
+                              ) : (
+                                <Text className="text-gray-400" size="md">
+                                  -
+                                </Text>
+                              )}
+                            </div>
+                          )
+                        )}
                       </SimpleGrid>
                     </div>
                   ))
@@ -61,7 +69,7 @@ export function CardDetail({ title, details }: CardDetailProps) {
                 <Text className="text-gray-600" size="md">
                   {key}
                 </Text>
-                {value && !!value.length ? (
+                {value && Array.isArray(value) && value.length > 0 ? (
                   <Text className="text-gray-400" size="sm">
                     {value}
                   </Text>
