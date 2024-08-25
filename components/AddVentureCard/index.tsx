@@ -7,7 +7,7 @@ export function AddVentureCard() {
     <Paper
       withBorder
       radius="md"
-      className="cursor-pointer overflow-hidden bg-[#FFF] h-[250px] w-[100%] text-center p-4 justify-evenly flex-col flex"
+      className="cursor-pointer overflow-hidden bg-[#FFF] h-[300px] w-[100%] text-center p-4 justify-evenly flex-col flex"
     >
       <Text className="text-[22px]">Cadastrar empreendimento</Text>
       <Text c="dimmed">Você não possui empreendimentos cadastrados</Text>
