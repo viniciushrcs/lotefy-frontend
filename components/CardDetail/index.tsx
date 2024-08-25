@@ -10,7 +10,7 @@ export function CardDetail({ title, details }: CardDetailProps) {
     switch (title) {
       case "Dados de sócios":
         return Object.entries(details).map(([key, value], index) => (
-          <div key={key}>
+          <div key={`${key}${index}`}>
             {index > 0 ? <hr className="my-4 text-gray-600" /> : null}
             <SimpleGrid className="mt-4" cols={1} key={key}>
               <Text size="md" fw={600}>
@@ -20,23 +20,24 @@ export function CardDetail({ title, details }: CardDetailProps) {
               <SimpleGrid cols={1}>
                 {value && Array.isArray(value) && value.length > 0 ? (
                   value.map((associate, index) => (
-                    <div key={associate}>
+                    <div key={`${associate}${index}`}>
                       {index > 0 ? (
                         <hr className="mb-4 text-gray-600"></hr>
                       ) : null}
                       <SimpleGrid
                         cols={{ base: 1, sm: 2, lg: 3, xl: 4 }}
-                        key={key}
                       >
                         {Object.entries(associate).map(
-                          ([itemTitle, itemValue]) => (
+                          ([itemTitle, itemValue]) => {
+                            console.log(itemValue)
+                            console.log(typeof itemValue)
+                            
+                            return (
                             <div key={itemTitle}>
                               <Text className="text-gray-600" size="md">
                                 {itemTitle}
                               </Text>
-                              {itemValue &&
-                              Array.isArray(itemValue) &&
-                              itemValue.length > 0 ? (
+                              {itemValue && typeof itemValue === "string" ? (
                                 <Text className="text-gray-400" size="sm">
                                   {itemValue}
                                 </Text>
@@ -46,7 +47,7 @@ export function CardDetail({ title, details }: CardDetailProps) {
                                 </Text>
                               )}
                             </div>
-                          )
+                          )}
                         )}
                       </SimpleGrid>
                     </div>
@@ -64,12 +65,12 @@ export function CardDetail({ title, details }: CardDetailProps) {
       default:
         return (
           <SimpleGrid className="mt-4" cols={{ base: 1, sm: 2, lg: 3, xl: 4 }}>
-            {Object.entries(details).map(([key, value]) => (
-              <div key={key}>
+            {Object.entries(details).map(([key, value], index) => (
+              <div key={`${key}${index}`}>
                 <Text className="text-gray-600" size="md">
                   {key}
                 </Text>
-                {value && Array.isArray(value) && value.length > 0 ? (
+                {value && typeof value === "string" ? (
                   <Text className="text-gray-400" size="sm">
                     {value}
                   </Text>
