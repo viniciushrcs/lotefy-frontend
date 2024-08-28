@@ -9,7 +9,7 @@ export default function ActionableTitle({ title, titleButton, onClickButton }: A
       <Text size="xl" fw={600}>
         {title}
       </Text>
-      <Button onClick={onClickButton} variant="filled" color="teal" rightSection={<IconArrowRight size={14} />}>
+      <Button onClick={onClickButton} variant="filled" color="#56D963" rightSection={<IconArrowRight size={14} />}>
         {titleButton}
       </Button>
     </Flex>
