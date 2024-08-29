@@ -2,41 +2,27 @@ import { Table } from '@mantine/core';
 import { formatDate } from '../../helpers/formats';
 import { IconEye, IconFileDownload } from '@tabler/icons-react';
 
-export function DocumentsTable() {
-  const dateMock = formatDate('2023-10-02');
+type Documents = {
+  name: string;
+  date: string;
+  category: string;
+  link: string;
+};
 
-  const elements = [
-    {
-      name: 'Nome do documento',
-      date: dateMock,
-      category: 'Projeto e Aprovação',
-      href: '',
-    },
-    {
-      name: 'Nome do documento',
-      date: dateMock,
-      category: 'Documento do empreendimento',
-      href: '',
-    },
-    { name: 'Nome do documento', date: dateMock, category: 'SPE e SCP' },
-    { name: 'Nome do documento', date: dateMock, category: 'SPE e SCP', href: '' },
-    {
-      name: 'Nome do documento',
-      date: dateMock,
-      category: 'Documento do empreendimento',
-      href: '',
-    },
-  ];
+type DocumentsTableProp = {
+  documents: Documents[];
+};
 
-  const rows = elements.map((element, index) => (
-    <Table.Tr key={`${element.name}${index}`}>
-      <Table.Td className="font-semibold">{element.name}</Table.Td>
-      <Table.Td>{element.date}</Table.Td>
-      <Table.Td>{element.category}</Table.Td>
+export function DocumentsTable({ documents }: DocumentsTableProp) {
+  const rows = documents.map((doc, index) => (
+    <Table.Tr key={`${doc.name}${index}`}>
+      <Table.Td className="font-semibold">{doc.name}</Table.Td>
+      <Table.Td>{formatDate(doc.date)}</Table.Td>
+      <Table.Td>{doc.category}</Table.Td>
       <Table.Td>
         <div className="flex">
           <a
-            href={element.href}
+            href={doc.link}
             target="_blank"
             rel="noopener noreferrer"
             className="flex justify-center items-center min-w-8 min-h-8 bg-[#F6F6F6] rounded-xl mr-3"
@@ -44,7 +30,7 @@ export function DocumentsTable() {
             <IconEye size={20} color="#737577" />
           </a>
           <a
-            href={element.href}
+            href={doc.link}
             download="document.pdf"
             className="flex justify-center items-center min-w-8 min-h-8 bg-[#F6F6F6] rounded-xl"
           >

@@ -32,13 +32,12 @@ export default function EnterpriseDetails() {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-
   const { data = [], isLoading } = useSWR(
-    `api/enterprise/?uid=${router.query.id}`,
+    `api/documents/?uid=${router.query.id}`,
     async () => {
       if (typeof router.query.id === 'string') {
-        const enterprise = await Transparency.getEnterpriseById(router.query.id);
-        return getFormatterEnterpriseData(enterprise.data);
+        const {data} = await fetch("/docsMock.json").then((r) => r.json())
+        return data
       }
     },
     {
@@ -107,12 +106,12 @@ export default function EnterpriseDetails() {
           </Flex>
         </Card.Section>
         <Card.Section withBorder inheritPadding py="xs">
-          <DocumentsTable />
+          <DocumentsTable documents={data.documents} />
         </Card.Section>
 
         <Flex mih={65} align="center" justify="space-between">
-          <Text size="xs" className='font-light pt-4'>Entradas 1 à 5 de 50</Text>
-          <Pagination total={10} color="#EEFEE9" classNames={{ dots: "text-[#AFB0B1]", control: "data-[active=true]:text-[#59D762] text-[#AFB0B1] border-none" }} />
+          <Text size="xs" className='font-light pt-4'>Entradas 1 à 15 de {data.total}</Text>
+          <Pagination total={15} color="#EEFEE9" classNames={{ dots: "text-[#AFB0B1]", control: "data-[active=true]:text-[#59D762] text-[#AFB0B1] border-none" }} />
         </Flex>
       </Card>
     </Template>
