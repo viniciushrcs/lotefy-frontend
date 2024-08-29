@@ -15,14 +15,14 @@ export function DocumentsTable() {
     { name: 'Nome do documento', date: dateMock, category: 'SPE e SCP' },
     { name: 'Nome do documento', date: dateMock, category: 'SPE e SCP',href: "" },
     {
-      name: 'Nome do documento beeeemmmm compriddoooo',
+      name: 'Nome do documento',
       date: dateMock,
       category: 'Documento do empreendimento',href: ""
     },
   ];
 
-  const rows = elements.map(element => (
-    <Table.Tr key={element.name}>
+  const rows = elements.map((element, index) => (
+    <Table.Tr key={`${element.name}${index}`}>
       <Table.Td className='font-semibold'>{element.name}</Table.Td>
       <Table.Td>{element.date}</Table.Td>
       <Table.Td>{element.category}</Table.Td>
