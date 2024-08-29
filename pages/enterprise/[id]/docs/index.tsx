@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 
 import {
   IconFileUpload,
-  IconFileSearch,
+  IconSearch,
 } from '@tabler/icons-react';
 
 import { Template } from '../../../../components/Template';
@@ -23,7 +23,6 @@ import ActionableTitle from '../../../../components/ActionableTitle';
 
 import { Transparency } from '../../../../services/transparency';
 import { getFormatterEnterpriseData } from '../../../../services/transparency/middleware';
-import { SelectFilter } from '../../../../components/SelectFilter';
 import { DocumentsTable } from '../../../../components/DocumentsTable';
 import { UploadFileModal } from '../../../../components/UploadFileModal';
 import { useDisclosure } from '@mantine/hooks';
@@ -75,13 +74,13 @@ export default function EnterpriseDetails() {
         onClickButton={handleClickDetailButton}
       />
 
-      <Card className="mb-4 p-4 md:p-8" shadow="sm" radius="md">
+      <Card className="mb-4 p-8" shadow="sm" radius="md">
         <Card.Section className="flex justify-between" p="md">
           <TextInput
-            className="w-[300px]"
-            leftSectionPointerEvents="none"
-            leftSection={<IconFileSearch size={20} />}
             label=""
+            className="w-[400px]"
+            leftSectionPointerEvents="none"
+            leftSection={<IconSearch size={20} />}
             placeholder="Pesquisa rápida"
           />
           <Button
@@ -98,14 +97,13 @@ export default function EnterpriseDetails() {
       <Text size="xs" className='font-light pb-4'>300 arquivos encontrados</Text>
 
       <Card>
-        <Card.Section withBorder inheritPadding py="xs">
+        <Card.Section withBorder inheritPadding py="sm" px="xl">
           <Flex mih={65} align="center" justify="space-between">
             <SegmentedControl
               color="#56D963"
               data={['Últimos 30 dias', 'Últimos 60 dias', 'Últimos 90 dias']}
               transitionDuration={0}
             />
-            {/* <SelectFilter /> */}
           </Flex>
         </Card.Section>
         <Card.Section withBorder inheritPadding py="xs">
@@ -113,7 +111,7 @@ export default function EnterpriseDetails() {
         </Card.Section>
 
         <Flex mih={65} align="center" justify="space-between">
-          <Text size="sm">Entradas 1 à 5 de 50</Text>
+          <Text size="xs" className='font-light pt-4'>Entradas 1 à 5 de 50</Text>
           <Pagination total={10} color="#EEFEE9" classNames={{ dots: "text-[#AFB0B1]", control: "data-[active=true]:text-[#59D762] text-[#AFB0B1] border-none" }} />
         </Flex>
       </Card>

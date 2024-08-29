@@ -23,7 +23,7 @@ export function DocumentsTable() {
 
   const rows = elements.map(element => (
     <Table.Tr key={element.name}>
-      <Table.Td>{element.name}</Table.Td>
+      <Table.Td className='font-semibold'>{element.name}</Table.Td>
       <Table.Td>{element.date}</Table.Td>
       <Table.Td>{element.category}</Table.Td>
       <Table.Td>
