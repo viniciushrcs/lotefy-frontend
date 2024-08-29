@@ -12,12 +12,9 @@ interface NavbarLinkProps {
 
 const data = [
   { link: "/dashboard", label: "Empreendimentos", icon: IconHomeFilled },
-  { link: "", label: "Portal da transparência", icon: IconFileFilled },
 ];
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
-
-
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton
@@ -47,9 +44,9 @@ export function Navbar({
   const links = data.map((item, index) => (
     <a
       key={index}
-      className={`flex items-center p-2 rounded-[14px] text-[#A0AEC0] h-[50px] mb-3 no-underline ${
+      className={`flex items-center p-2 rounded-[15px] shadow-[0px_3.5px_5.5px_0px_rgba(0,0,0,0.06)] text-[#A0AEC0] h-[50px] bg-white mb-3 no-underline ${
         item.label === active
-          ? "shadow-[0px_3.5px_5.5px_0px_rgba(0,0,0,0.06)] rounded-[15px] bg-[#FFF] text-[16px]"
+          ? "text-[16px]"
           : "hover:bg-[#D7F5DA] hover:text-gray-800 hover:rounded-[15px] text-[14px]"
       }`}
       data-active={item.label === active || undefined}
