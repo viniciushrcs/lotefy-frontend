@@ -68,7 +68,7 @@ export default function EnterpriseDetails() {
 
       <Breadcrumb data={itemsBreadcrumb} />
       <ActionableTitle
-        title={data[0]?.details['Nome']}
+        title={data.enterpriseName}
         titleButton="Ver Detalhes"
         onClickButton={handleClickDetailButton}
       />
