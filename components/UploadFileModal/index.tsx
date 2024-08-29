@@ -43,7 +43,7 @@ export function UploadFileModal({ opened, close }: UploadFileModalProp) {
         {acceptedFiles.length > 0 ? (
           acceptedFiles.map(file => (
             <Text size='sm' className='text-center' key={file.name}>
-              {file.name} - {file.size}
+              {file.name}
             </Text>
           ))
         ) : (
