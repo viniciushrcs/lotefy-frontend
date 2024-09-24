@@ -1,6 +1,6 @@
-import { SimpleGrid, Text } from "@mantine/core";
+import { SimpleGrid, Skeleton, Text } from "@mantine/core";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
 import { Card } from "../../components/Card";
 import { SignUpContext } from "../../context/SignUpContext";
@@ -8,10 +8,28 @@ import { Enterprise } from "../../services/enterprise";
 import { AnyObject } from "../../services/http";
 import { Template } from "../../components/Template";
 import useSWR from "swr";
+import { User } from "../../services/user";
 
 function Dashboard() {
-  const { userData } = useContext(SignUpContext);
+  const { userData, updateUserData } = useContext(SignUpContext);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  const fetchUserData = async () => {
+    const response = await User.getUser();
+
+    if (response) {
+      updateUserData({
+        userId: response.userId,
+        userName: response.userName,
+        userEmail: response.userEmail,
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const { data: venture = [] } = useSWR(
     () => (userData.userId ? `api/dashboard/?uid=${userData.userId}` : null),
@@ -20,6 +38,7 @@ function Dashboard() {
         const enterprises = await Enterprise.getEnterprises(
           userData.userId.toString()
         );
+        setIsLoading(false);
         return enterprises.data;
       }
     },
@@ -42,7 +61,9 @@ function Dashboard() {
           spacing={{ base: 10, sm: "xl" }}
           verticalSpacing={{ base: "md", sm: "xl" }}
         >
-          {venture.length ? (
+          {isLoading ? (
+            <Skeleton height={200} mb="md" />
+          ) : venture.length ? (
             <>
               {venture.map((item: AnyObject, index: any) => (
                 <Card ventureData={item} key={item.id || index} />

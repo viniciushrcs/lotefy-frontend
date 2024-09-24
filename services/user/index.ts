@@ -1,3 +1,4 @@
+import { parseCookies } from "nookies";
 import { APP_ENVS } from "../../helpers/envs";
 import { RequestError } from "../../helpers/responseError";
 import { AnyObject, HttpMethods, HttpService } from "../http";
@@ -123,5 +124,26 @@ export class User {
     }
 
     return true;
+  }
+
+  static async getUser() {
+    const { "LotefyAPI.token": token } = parseCookies();
+
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/user/me`,
+      headers: {
+        authorization: token,
+      },
+    });
+
+    if (!response || error) return null;
+
+    return {
+      userId: response.data.id,
+      userName: response.data.user_metadata.name,
+      userEmail: response.data.email,
+    };
   }
 }

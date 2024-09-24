@@ -49,9 +49,6 @@ export default function Login() {
           inputs["password-input"]
         );
 
-        updateUserData({
-          accessToken: response.data.accessToken,
-        });
         setCookie(null, "LotefyAPI.token", response?.data?.accessToken, {
           maxAge: 60 * 60 * 24 * 7, // 1 week
           path: "/",
