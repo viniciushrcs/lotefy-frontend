@@ -5,12 +5,14 @@ import { theme } from "../theme";
 import "./../styles/globals.css";
 import { SignUpProvider } from "../context/SignUpContext";
 import { EnterpriseProvider } from "../context/EnterpriseContext";
+import { Notifications } from "@mantine/notifications";
 
 export default function App({ Component, pageProps }: any) {
   return (
     <SignUpProvider>
       <EnterpriseProvider>
         <MantineProvider theme={theme}>
+          <Notifications />
           <Head>
             <title>Lotefy</title>
             <meta

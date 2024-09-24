@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import { Anchor, Button, Image, Text, TextInput } from "@mantine/core";
+import { Anchor, Button, Image, rem, Text, TextInput } from "@mantine/core";
 import logo from "../../public/images/Logo.png";
 import Background from "../../public/images/Section.png";
 import RectangleIcon from "../../public/icons/Rectangle.svg";
@@ -8,6 +8,10 @@ import { FormEvent, useContext, useState } from "react";
 import { LoginService } from "../../services/login";
 import { SignUpContext } from "../../context/SignUpContext";
 import { useRouter } from "next/router";
+import { setCookie } from "nookies";
+import { notifications } from "@mantine/notifications";
+import { IconX } from "@tabler/icons-react";
+import "@mantine/notifications/styles.css";
 
 type KeyboardInputNames = "email-input" | "password-input";
 
@@ -20,24 +24,21 @@ export default function Login() {
   const { updateUserData } = useContext(SignUpContext);
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
-  const [loginError, setLoginError] = useState<string | null>("");
   const router = useRouter();
+
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement> | FormEvent<HTMLInputElement>,
     inputName: KeyboardInputNames
   ) => {
+    setEmailError("");
+    setPasswordError("");
     const { value } = event.currentTarget;
     setInputs((prevInputs) => ({
       ...prevInputs,
       [inputName]: value,
     }));
-
-    if (inputName === "email-input") {
-      setEmailError("");
-    } else if (inputName === "password-input") {
-      setPasswordError("");
-    }
   };
 
   const handleLogin = async () => {
@@ -47,33 +48,38 @@ export default function Login() {
           inputs["email-input"],
           inputs["password-input"]
         );
+
         updateUserData({
           accessToken: response.data.accessToken,
         });
-        setLoginError(null);
-        localStorage.setItem("bearerToken", response.data.accessToken);
+        setCookie(null, "LotefyAPI.token", response?.data?.accessToken, {
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          path: "/",
+        });
         router.push("/dashboard");
         return response;
       } else return null;
-    } catch (error: any) {
-      setLoginError("Erro ao fazer login");
+    } catch (error) {
+      notifications.show({
+        color: "red",
+        title: "Ops! Algo deu errado",
+        message: "Verifique seu e-mail e senha e tente novamente.",
+        icon: xIcon,
+        autoClose: 4000,
+        withCloseButton: true,
+        position: "top-center",
+      });
     }
   };
 
   const verifyFields = () => {
-    setEmailError("");
-    setPasswordError("");
-
     if (!inputs["email-input"].length) setEmailError("E-mail inválido");
     if (!inputs["password-input"].length) setPasswordError("Senha inválida");
   };
 
   const handleSubmit = () => {
     verifyFields();
-
-    if (!emailError && !passwordError) {
-      handleLogin();
-    }
+    handleLogin();
   };
 
   return (
@@ -125,11 +131,6 @@ export default function Login() {
             onChange={(event) => handleInputChange(event, "password-input")}
             error={passwordError}
           />
-          {loginError && (
-            <Text className="text-[#FF624D] text-sm font-normal leading-5 flex justify-center mb-[0.5rem]">
-              {loginError}
-            </Text>
-          )}
 
           <Button
             variant="filled"

@@ -1,3 +1,7 @@
+import { notifications } from "@mantine/notifications";
+import { User } from "../services/user";
+import "@mantine/notifications/styles.css";
+
 type KeyboardInputNames =
   | "cpf-input"
   | "name-input"
@@ -41,10 +45,12 @@ export const verifyPasswordsFields = (
   } else return null;
 };
 
-export const verifyPhoneAndEmail = (
+export const verifyPhoneAndEmail = async (
   inputs: Record<KeyboardInputNames, string>,
   setError: any
 ) => {
+  const existingUser = await User.alreadyRegisteredUser(inputs["email-input"]);
+
   if (!inputs["phone-input"].length || inputs["phone-input"].length < 15) {
     setError((prevInputs: any) => ({
       ...prevInputs,
@@ -60,7 +66,20 @@ export const verifyPhoneAndEmail = (
       ...prevInputs,
       "email-input": "E-mail incorreto",
     }));
-  } else return null;
+  } else if (existingUser) {
+    notifications.show({
+      color: "red",
+      title: "Ops! E-mail já cadastrado",
+      message: "Parece que esse e-mail já está cadastrado.",
+      autoClose: 4000,
+      withCloseButton: true,
+      position: "top-center",
+    });
+    setError((prevInputs: any) => ({
+      ...prevInputs,
+      "email-input": "E-mail já cadastrado",
+    }));
+  } else return true;
 };
 
 export const isEmailStringValid = (string: string) =>
@@ -75,7 +94,7 @@ export const isCompanyFieldsValid = (
       ...prevInputs,
       "social-reason-input": "Campo inválido",
     }));
-  } else if (!inputs["cnpj-input"].length) {
+  } else if (!inputs["cnpj-input"].length || inputs["cnpj-input"].length < 14) {
     setError((prevInputs: any) => ({
       ...prevInputs,
       "cnpj-input": "Campo inválido",
