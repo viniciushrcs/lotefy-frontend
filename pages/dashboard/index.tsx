@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AddVentureCard } from "../../components/AddVentureCard";
 import { Card } from "../../components/Card";
-import withAuth from "../../components/WithAuth";
 import { SignUpContext } from "../../context/SignUpContext";
 import { Enterprise } from "../../services/enterprise";
 import { AnyObject } from "../../services/http";
@@ -59,4 +58,4 @@ function Dashboard() {
   );
 }
 
-export default withAuth(Dashboard);
+export default Dashboard;
