@@ -10,6 +10,7 @@ import styles from "../../styles/animations.module.css";
 import { useContext, useEffect } from "react";
 import { SignUpContext } from "../../context/SignUpContext";
 import { useRouter } from "next/router";
+import { setCookie } from "nookies";
 
 export default function CreatedAccount() {
   const { userData } = useContext(SignUpContext);
@@ -17,7 +18,11 @@ export default function CreatedAccount() {
 
   useEffect(() => {
     if (userData.accessToken) {
-      localStorage.setItem("bearerToken", userData.accessToken.toString());
+      setCookie(null, "LotefyAPI.token", userData.accessToken.toString(), {
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: "/",
+      });
+
       setTimeout(() => {
         router.push("/dashboard");
       }, 7000);
