@@ -20,7 +20,7 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           userData.name as string,
           UserType.LAND_DEVELOPER
         );
-        updateUserData({ userId: response.data.data.user_id });
+        updateUserData({ userId: response.createUser.data.user_id });
       }
     } catch (error) {
       const requestError = error as RequestError;
