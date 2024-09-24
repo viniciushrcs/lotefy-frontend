@@ -219,10 +219,12 @@ export function InputRegisterDisplayer(
                 buttonName={"Verificar"}
                 backAnchorName={"Voltar"}
                 prevStep={prevStep}
-                nextStep={() => {
-                  verifyPhoneAndEmail(inputs, setError) === null
-                    ? setVerify(1)
-                    : verifyPhoneAndEmail(inputs, setError);
+                nextStep={async () => {
+                  const phoneAndEmailVerification = await verifyPhoneAndEmail(
+                    inputs,
+                    setError
+                  );
+                  phoneAndEmailVerification ? setVerify(1) : null;
                 }}
               >
                 <InputBase
@@ -317,6 +319,8 @@ export function InputRegisterDisplayer(
               value={inputs["cnpj-input"]}
               onChange={(event) => handleInputChange(event, "cnpj-input")}
               error={error["cnpj-input"]}
+              component={IMaskInput}
+              mask="00.000.000/0000-00"
             />
             <InputBase
               radius="xs"

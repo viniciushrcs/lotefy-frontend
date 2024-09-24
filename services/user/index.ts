@@ -110,4 +110,18 @@ export class User {
 
     return response;
   }
+
+  static async alreadyRegisteredUser(email: string): Promise<boolean> {
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.GET,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/user/get-by-email/${email}`,
+    });
+
+    if (error && error.response && error.response.status === 404) {
+      return false;
+    }
+
+    return true;
+  }
 }
