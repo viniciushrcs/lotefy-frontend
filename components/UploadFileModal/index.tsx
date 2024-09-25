@@ -1,87 +1,164 @@
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Button, CheckIcon, Flex, Modal, Radio, Text } from '@mantine/core';
-import { IconUpload } from '@tabler/icons-react';
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { Button, CheckIcon, Flex, Modal, Radio, Text } from "@mantine/core";
+import { IconUpload } from "@tabler/icons-react";
+import { Files } from "../../services/file/file";
+import { AnyObject } from "../../services/http";
+import { notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 
 type UploadFileModalProp = {
   opened: boolean;
   close: () => void;
+  enterpriseData: AnyObject;
 };
 
-export function UploadFileModal({ opened, close }: UploadFileModalProp) {
+export function UploadFileModal({
+  opened,
+  close,
+  enterpriseData,
+}: UploadFileModalProp) {
   const [disableButton, setDisableButton] = useState(true);
+  const [documentType, setDocumentType] = useState<string>("");
+
+  const uploadFiles = async (files: File[]) => {
+    await Promise.all(
+      files.map(async (file) => {
+        const documentId =
+          documentType === "PJ"
+            ? enterpriseData.speId
+            : enterpriseData.enterpriseId;
+
+        try {
+          await Files.uploadFile(documentId, file, documentType);
+        } catch (error) {
+          notifications.show({
+            color: "red",
+            title: "Ops! Algo deu errado",
+            message: "Por favor, tente fazer o upload dos arquivos novamente.",
+            autoClose: 4000,
+            withCloseButton: true,
+            position: "top-center",
+          });
+        }
+      })
+    );
+    close();
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Do something with the files
     if (acceptedFiles.length > 0) {
       setDisableButton(false);
     }
-    console.log('Upload', acceptedFiles);
   }, []);
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     maxFiles: 1,
     accept: {
-      'application/pdf': ['.pdf'],
+      "application/pdf": [".pdf"],
     },
   });
 
   return (
     <Modal
       opened={opened}
-      onClose={close}
+      onClose={() => {
+        setDocumentType("");
+        setDisableButton(true);
+        close();
+        acceptedFiles.length = 0;
+      }}
       centered
       size="650px"
       title="Selecione um arquivo para iniciar a importação"
     >
-      <Modal.Body className='flex flex-col'>
-      <div {...getRootProps()} className='mb-8'>
-        <input {...getInputProps()} className='focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none' />
-        <Flex align={'center'} columnGap={"20px"} justify={'center'} className={"w-full border-2 border-dashed border-gray-300 p-12 bg-gray-50"}>
-        <IconUpload color="#56D963" stroke={2} size={30} />
-        {acceptedFiles.length > 0 ? (
-          acceptedFiles.map(file => (
-            <Text size='sm' className='text-center' key={file.name}>
-              {file.name}
-            </Text>
-          ))
-        ) : (
-          <Flex direction={'column'} align={'center'} justify={'center'}>
-            <Text size='sm' fw={500}>Selecione ou arraste o arquivo aqui</Text>
-            <Text size='sm' c="gray" fw={300}>Formatos aceitos ( PDF )</Text>
+      <Modal.Body className="flex flex-col">
+        <div {...getRootProps()} className="mb-8">
+          <input
+            {...getInputProps()}
+            className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          />
+          <Flex
+            align={"center"}
+            columnGap={"20px"}
+            justify={"center"}
+            className={
+              "w-full border-2 border-dashed border-gray-300 p-12 bg-gray-50"
+            }
+          >
+            <IconUpload color="#56D963" stroke={2} size={30} />
+            {acceptedFiles.length > 0 ? (
+              acceptedFiles.map((file) => (
+                <Text size="sm" className="text-center" key={file.name}>
+                  {file.name}
+                </Text>
+              ))
+            ) : (
+              <Flex direction={"column"} align={"center"} justify={"center"}>
+                <Text size="sm" fw={500}>
+                  Selecione ou arraste o arquivo aqui
+                </Text>
+                <Text size="sm" c="gray" fw={300}>
+                  Formatos aceitos ( PDF )
+                </Text>
+              </Flex>
+            )}
           </Flex>
-        )}</Flex>
-      </div>
-      <Flex direction={'column'}>
-        <Text size='sm' fw={500}>Selecione uma categoria:</Text>
-        <Flex columnGap={20} className='pt-4 pb-8'>
-          <Radio
-            icon={CheckIcon}
-            label="Documento do empreendimento"
-            name="check01"
-            value="Documento do empreendimento"
-            color="lime.4"
-          />
-          <Radio
-            icon={CheckIcon}
-            label="Projeto e Aprovação"
-            name="check02"
-            value="Projeto e Aprovação"
-            color="lime.4"
-          />
-          <Radio
-            icon={CheckIcon}
-            label="SPE e SCP"
-            name="check03"
-            value="SPE e SCP"
-            color="lime.4"
-          />
+        </div>
+        <Flex direction={"column"}>
+          <Text size="sm" fw={500}>
+            Selecione uma categoria:
+          </Text>
+          <Radio.Group value={documentType} onChange={setDocumentType}>
+            <Flex columnGap={20} className="pt-4 pb-8">
+              <Radio
+                icon={CheckIcon}
+                label="Documento do empreendimento"
+                name="check01"
+                value="Empreendimentos"
+                color="lime.4"
+              />
+              <Radio
+                icon={CheckIcon}
+                label="Projeto e Aprovação"
+                name="check02"
+                value="Projetos"
+                color="lime.4"
+              />
+              <Radio
+                icon={CheckIcon}
+                label="SPE e SCP"
+                name="check03"
+                value="PJ"
+                color="lime.4"
+              />
+            </Flex>
+          </Radio.Group>
         </Flex>
-      </Flex>
-      <Button className='self-end' w={100} variant="filled" color="#56D963" disabled={disableButton}>
-        Salvar
-      </Button></Modal.Body>
+        <Button
+          onClick={() =>
+            !documentType
+              ? notifications.show({
+                  color: "yellow",
+                  title: "Selecione uma categoria.",
+                  message:
+                    "Por favor, selecione uma categoria e tente fazer o upload dos arquivos novamente.",
+                  autoClose: 4000,
+                  withCloseButton: true,
+                  position: "top-center",
+                })
+              : uploadFiles(acceptedFiles)
+          }
+          className="self-end"
+          w={100}
+          variant="filled"
+          color="#56D963"
+          disabled={disableButton}
+        >
+          Salvar
+        </Button>
+      </Modal.Body>
     </Modal>
   );
 }
