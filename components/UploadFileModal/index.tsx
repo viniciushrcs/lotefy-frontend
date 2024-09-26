@@ -21,16 +21,28 @@ export function UploadFileModal({
   const [disableButton, setDisableButton] = useState(true);
   const [documentType, setDocumentType] = useState<string>("");
 
+  function formatFileName(fileName: string) {
+    return fileName
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ç/g, "c");
+  }
+
   const uploadFiles = async (files: File[]) => {
     await Promise.all(
       files.map(async (file) => {
+        const formattedName = formatFileName(file.name);
+        const newFile = new File([file], formattedName, { type: file.type });
+
         const documentId =
           documentType === "PJ"
             ? enterpriseData.speId
             : enterpriseData.enterpriseId;
-
         try {
-          await Files.uploadFile(documentId, file, documentType);
+          await Files.uploadFile(documentId, newFile, documentType);
+          setDocumentType("");
+          setDisableButton(true);
+          acceptedFiles.length = 0;
         } catch (error) {
           notifications.show({
             color: "red",
