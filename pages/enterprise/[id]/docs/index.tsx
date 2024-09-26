@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import {
   Button,
@@ -23,6 +23,7 @@ import { DocumentsTable } from "../../../../components/DocumentsTable";
 import { UploadFileModal } from "../../../../components/UploadFileModal";
 import { useDisclosure } from "@mantine/hooks";
 import { AnyObject } from "../../../../services/http";
+import { Files } from "../../../../services/file/file";
 
 export default function EnterpriseDetails() {
   const router = useRouter();
@@ -136,7 +137,10 @@ export default function EnterpriseDetails() {
           </Flex>
         </Card.Section>
         <Card.Section withBorder inheritPadding py="xs">
-          <DocumentsTable documents={currentDocuments} />
+          <DocumentsTable
+            documents={currentDocuments}
+            enterpriseData={data.enterprise}
+          />
         </Card.Section>
 
         <Flex mih={65} align="center" justify="space-between">

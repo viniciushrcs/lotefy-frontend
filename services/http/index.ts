@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 export type AnyObject = Record<string, any>;
 
@@ -15,6 +15,7 @@ interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string | boolean | number>;
   body?: AnyObject;
+  responseType?: AxiosRequestConfig["responseType"];
 }
 
 interface RequestResult<T, E> {
@@ -30,6 +31,7 @@ export class HttpService {
     headers,
     body,
     params,
+    responseType,
   }: RequestOptions): Promise<RequestResult<T, E>> {
     try {
       const response = await axios<T>({
@@ -39,6 +41,7 @@ export class HttpService {
         headers,
         data: body,
         params,
+        responseType,
       });
 
       return { response: response.data };

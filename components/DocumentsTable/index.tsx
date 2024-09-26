@@ -1,6 +1,10 @@
 import { Table } from "@mantine/core";
 import { formatDate } from "../../helpers/formats";
 import { IconEye, IconFileDownload } from "@tabler/icons-react";
+import { Files } from "../../services/file/file";
+import { AnyObject } from "../../services/http";
+import { notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 
 type Documents = {
   name: string;
@@ -12,9 +16,13 @@ type Documents = {
 
 type DocumentsTableProp = {
   documents: Documents[];
+  enterpriseData: AnyObject;
 };
 
-export function DocumentsTable({ documents }: DocumentsTableProp) {
+export function DocumentsTable({
+  documents,
+  enterpriseData,
+}: DocumentsTableProp) {
   const rows = documents.map((doc, index) => (
     <Table.Tr key={`${doc.name}${index}`}>
       <Table.Td className="font-semibold">{doc.name}</Table.Td>
@@ -33,7 +41,27 @@ export function DocumentsTable({ documents }: DocumentsTableProp) {
           <a
             href={doc.signedUrl}
             target="_blank"
-            download={doc.fullDocumentName}
+            onClick={async (event) => {
+              event.preventDefault();
+              try {
+                await Files.downloadFile(
+                  doc.category === "SPE e SCP"
+                    ? enterpriseData.speId
+                    : enterpriseData.enterpriseId,
+                  doc.category,
+                  doc.fullDocumentName
+                );
+              } catch (error) {
+                notifications.show({
+                  color: "red",
+                  title: "Ops! Algo deu errado",
+                  message: "Por favor, tente baixar novamente o documento.",
+                  autoClose: 4000,
+                  withCloseButton: true,
+                  position: "top-center",
+                });
+              }
+            }}
             className="flex justify-center items-center min-w-8 min-h-8 bg-[#F6F6F6] rounded-xl"
           >
             <IconFileDownload size={20} color="#737577" />
