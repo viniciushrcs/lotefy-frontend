@@ -6,6 +6,8 @@ import { Files } from "../../services/file/file";
 import { AnyObject } from "../../services/http";
 import { notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
+import { mutate } from "swr";
+import { useRouter } from "next/router";
 
 type UploadFileModalProp = {
   opened: boolean;
@@ -20,6 +22,8 @@ export function UploadFileModal({
 }: UploadFileModalProp) {
   const [disableButton, setDisableButton] = useState(true);
   const [documentType, setDocumentType] = useState<string>("");
+
+  const router = useRouter();
 
   function formatFileName(fileName: string) {
     return fileName
@@ -55,6 +59,7 @@ export function UploadFileModal({
         }
       })
     );
+    mutate(`api/documents/?uid=${router.query.id}`);
     close();
   };
 
