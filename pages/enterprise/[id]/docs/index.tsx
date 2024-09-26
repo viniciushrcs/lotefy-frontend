@@ -23,7 +23,6 @@ import { DocumentsTable } from "../../../../components/DocumentsTable";
 import { UploadFileModal } from "../../../../components/UploadFileModal";
 import { useDisclosure } from "@mantine/hooks";
 import { AnyObject } from "../../../../services/http";
-import { Files } from "../../../../services/file/file";
 
 export default function EnterpriseDetails() {
   const router = useRouter();
@@ -91,6 +90,7 @@ export default function EnterpriseDetails() {
         opened={opened}
         close={close}
         enterpriseData={data.enterprise}
+        docs={filteredDocuments.length}
       />
 
       <Breadcrumb data={itemsBreadcrumb} />

@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import { Button, Checkbox, Divider, Image, Text } from "@mantine/core";
+import { Button, Checkbox, Divider, Image, Loader, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import { useDisclosure } from "@mantine/hooks";
 import PrivacyModal from "../PrivacyModal";
@@ -8,29 +8,44 @@ import { useRouter } from "next/router";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
 import { Regex } from "../../helpers/regex";
+import { notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 
 export default function PrivacyPolicy() {
   const [opened, { open, close }] = useDisclosure(false);
   const [firstChecked, setFirstChecked] = useState(false);
   const [secondChecked, setSecondChecked] = useState(false);
   const { updateUserData, userData } = useContext(SignUpContext);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   const handleNextClick = async () => {
-    const response = await SignUpService.createPjData(
-      userData.userId?.toString(),
-      Regex.cleanCNPJ(userData.cnpj?.toString()),
-      userData.socialReason?.toString(),
-      userData.employees?.toString(),
-      userData.email?.toString(),
-      Regex.formatDate(userData.createdAt?.toString()),
-      userData.userCnae?.toString()
-    );
+    setLoading(true);
+    try {
+      const response = await SignUpService.createPjData(
+        userData.userId?.toString(),
+        Regex.cleanCNPJ(userData.cnpj?.toString()),
+        userData.socialReason?.toString(),
+        userData.employees?.toString(),
+        userData.email?.toString(),
+        Regex.formatDate(userData.createdAt?.toString()),
+        userData.userCnae?.toString()
+      );
 
-    updateUserData({ userPjId: response.data.pj_id });
-
-    router.push("/created-account");
+      updateUserData({ userPjId: response.data.pj_id });
+      router.push("/created-account");
+    } catch (error) {
+      setLoading(false);
+      notifications.show({
+        color: "red",
+        title: "Ops! Algo deu errado",
+        message: "Por favor, tente novamente mais tarde.",
+        autoClose: 4000,
+        withCloseButton: true,
+        position: "top-center",
+      });
+    }
   };
 
   return (
@@ -92,6 +107,14 @@ export default function PrivacyPolicy() {
           Próximo
         </Button>
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <Loader color="#56D963" type="bars" />
+          </div>
+        </div>
+      )}
+
       <PrivacyModal
         opened={opened}
         close={close}

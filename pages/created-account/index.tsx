@@ -7,29 +7,19 @@ import CircleVector from "../../public/icons/circle-vector.svg";
 import GreenElipse from "../../public/icons/green-elipse.svg";
 import YellowVector from "../../public/icons/yellow-vector.svg";
 import styles from "../../styles/animations.module.css";
-import { useContext, useEffect } from "react";
-import { SignUpContext } from "../../context/SignUpContext";
 import { useRouter } from "next/router";
-import { setCookie } from "nookies";
+import { useEffect } from "react";
 
 export default function CreatedAccount() {
-  const { userData } = useContext(SignUpContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (userData.accessToken) {
-      setCookie(null, "LotefyAPI.token", userData.accessToken.toString(), {
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-        path: "/",
-      });
-
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 7000);
-    } else {
+    const timeoutId = setTimeout(() => {
       router.push("/login");
-    }
-  }, [userData, router]);
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [router]);
 
   return (
     <div className="flex justify-center items-center h-screen">

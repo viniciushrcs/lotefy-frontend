@@ -132,7 +132,14 @@ export default function CodeInput({ setVerify }: any) {
       </Button>
       <div className="flex gap-[2.5px] mb-[2rem] justify-center mt-4">
         <Text>Não recebeu?</Text>
-        <Anchor className="text-[#56D963]">Reenviar código</Anchor>
+        <Anchor
+          onClick={() =>
+            SignUpService.resendEmailConfirmation(userData.email as string)
+          }
+          className="text-[#56D963]"
+        >
+          Reenviar código
+        </Anchor>
       </div>
     </div>
   );
