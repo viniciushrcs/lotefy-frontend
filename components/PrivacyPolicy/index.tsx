@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import { Anchor, Button, Checkbox, Divider, Image, Text } from "@mantine/core";
+import { Button, Checkbox, Divider, Image, Text } from "@mantine/core";
 import * as Icons from "../../public/icons/index";
 import { useDisclosure } from "@mantine/hooks";
 import PrivacyModal from "../PrivacyModal";
@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
   const handleNextClick = async () => {
     const response = await SignUpService.createPjData(
       userData.userId?.toString(),
-      userData.cnpj?.toString(),
+      Regex.cleanCNPJ(userData.cnpj?.toString()),
       userData.socialReason?.toString(),
       userData.employees?.toString(),
       userData.email?.toString(),

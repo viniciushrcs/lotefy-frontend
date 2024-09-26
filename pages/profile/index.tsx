@@ -1,12 +1,12 @@
 import { Avatar, Button, Card, Skeleton, Text } from "@mantine/core";
 import { Header } from "../../components/Header";
-import withAuth from "../../components/WithAuth";
 import { IconArrowNarrowLeft, IconEdit } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { User } from "../../services/user";
 import { SignUpContext } from "../../context/SignUpContext";
 import { Regex } from "../../helpers/regex";
+import { parseCookies } from "nookies";
 
 function Profile() {
   const router = useRouter();
@@ -15,7 +15,8 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("bearerToken");
+      const { "LotefyAPI.token": token } = parseCookies();
+
       if (!token) {
         router.replace("/login");
         return;
@@ -23,7 +24,6 @@ function Profile() {
 
       try {
         const response = await User.userInfo(token);
-        console.log(response, "LELELELEL");
         updateUserData({
           userName: response.data.user_metadata.name,
           userEmail: response.data.user_metadata.email,
@@ -120,4 +120,4 @@ function Profile() {
   );
 }
 
-export default withAuth(Profile);
+export default Profile;

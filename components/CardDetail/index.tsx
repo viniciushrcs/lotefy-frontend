@@ -24,30 +24,26 @@ export function CardDetail({ title, details }: CardDetailProps) {
                       {index > 0 ? (
                         <hr className="mb-4 text-gray-600"></hr>
                       ) : null}
-                      <SimpleGrid
-                        cols={{ base: 1, sm: 2, lg: 3, xl: 4 }}
-                      >
+                      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }}>
                         {Object.entries(associate).map(
                           ([itemTitle, itemValue]) => {
-                            console.log(itemValue)
-                            console.log(typeof itemValue)
-                            
                             return (
-                            <div key={itemTitle}>
-                              <Text className="text-gray-600" size="md">
-                                {itemTitle}
-                              </Text>
-                              {itemValue && typeof itemValue === "string" ? (
-                                <Text className="text-gray-400" size="sm">
-                                  {itemValue}
+                              <div key={itemTitle}>
+                                <Text className="text-gray-600" size="md">
+                                  {itemTitle}
                                 </Text>
-                              ) : (
-                                <Text className="text-gray-400" size="md">
-                                  -
-                                </Text>
-                              )}
-                            </div>
-                          )}
+                                {itemValue && typeof itemValue === "string" ? (
+                                  <Text className="text-gray-400" size="sm">
+                                    {itemValue}
+                                  </Text>
+                                ) : (
+                                  <Text className="text-gray-400" size="md">
+                                    -
+                                  </Text>
+                                )}
+                              </div>
+                            );
+                          }
                         )}
                       </SimpleGrid>
                     </div>

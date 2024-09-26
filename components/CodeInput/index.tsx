@@ -2,6 +2,7 @@ import { Anchor, Button, Text, TextInput } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SignUpContext } from "../../context/SignUpContext";
 import { SignUpService } from "../../services/signUp";
+import { notifications } from "@mantine/notifications";
 
 export default function CodeInput({ setVerify }: any) {
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
@@ -59,7 +60,16 @@ export default function CodeInput({ setVerify }: any) {
         finalCode
       );
 
-      if (!response.data.session.access_token) setCodeError(true);
+      if (!response.data.session.access_token) {
+        notifications.show({
+          color: "red",
+          title: "Ops! Algo deu errado",
+          message: "Verifique o código inserido e tente novamente.",
+          autoClose: 4000,
+          withCloseButton: true,
+          position: "top-center",
+        });
+      }
 
       updateUserData({
         isVerified: "verified",
@@ -70,8 +80,14 @@ export default function CodeInput({ setVerify }: any) {
 
       return response;
     } catch (error) {
-      updateUserData({ verifyCodeError: "codeVerify Error" });
-      setCodeError(true);
+      notifications.show({
+        color: "red",
+        title: "Ops! Algo deu errado",
+        message: "Verifique o código inserido e tente novamente.",
+        autoClose: 4000,
+        withCloseButton: true,
+        position: "top-center",
+      });
     }
   };
 
@@ -98,11 +114,6 @@ export default function CodeInput({ setVerify }: any) {
           ))}
         </form>
       </div>
-      {codeError && (
-        <Text className="flex text-[#FF624D] mb-[1rem] justify-center">
-          Código inválido
-        </Text>
-      )}
       <Button
         variant="filled"
         color="#56D963"

@@ -29,4 +29,47 @@ export class Files {
 
     return response;
   }
+
+  static async downloadFile(
+    id: string,
+    bucketName: string,
+    fullDocumentName: string
+  ) {
+    let bucket;
+    if (bucketName === "Documento do empreendimento") {
+      bucket = "Empreendimentos";
+    } else if (bucketName === "SPE e SCP") bucket = "PJ";
+    else if (bucketName === "Projeto e Aprovação") bucket = "Projetos";
+
+    const { response, error } = await HttpService.request({
+      method: HttpMethods.POST,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/files/download`,
+      body: {
+        folderId: id,
+        bucketName: bucket,
+        fullDocumentName: fullDocumentName,
+      },
+      responseType: "blob",
+    });
+
+    if (!response || error)
+      throw new RequestError({
+        message: error?.response?.data.message || "No message",
+        code: error?.code || "No code",
+        statusCode: error?.response?.status || 500,
+      });
+
+    const url = window.URL.createObjectURL(response as Blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fullDocumentName);
+    document.body.appendChild(link);
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+
+    return response;
+  }
 }
