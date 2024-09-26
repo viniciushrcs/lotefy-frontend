@@ -36,10 +36,11 @@ export class Files {
     fullDocumentName: string
   ) {
     let bucket;
-    if (bucketName === "Documento do empreendimento") {
+    if (bucketName.includes("empreendimento")) {
       bucket = "Empreendimentos";
-    } else if (bucketName === "SPE e SCP") bucket = "PJ";
-    else if (bucketName === "Projeto e Aprovação") bucket = "Projetos";
+    } else if (bucketName.includes("spe")) bucket = "PJ";
+    else if (bucketName.includes("projeto") || bucketName.includes("aprovação"))
+      bucket = "Projetos";
 
     const { response, error } = await HttpService.request({
       method: HttpMethods.POST,

@@ -48,7 +48,7 @@ export function DocumentsTable({
                   doc.category === "SPE e SCP"
                     ? enterpriseData.speId
                     : enterpriseData.enterpriseId,
-                  doc.category,
+                  doc.category.toLowerCase(),
                   doc.fullDocumentName
                 );
               } catch (error) {
