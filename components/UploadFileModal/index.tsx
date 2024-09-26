@@ -1,6 +1,14 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Button, CheckIcon, Flex, Modal, Radio, Text } from "@mantine/core";
+import {
+  Button,
+  CheckIcon,
+  Flex,
+  Loader,
+  Modal,
+  Radio,
+  Text,
+} from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 import { Files } from "../../services/file/file";
 import { AnyObject } from "../../services/http";
@@ -13,15 +21,18 @@ type UploadFileModalProp = {
   opened: boolean;
   close: () => void;
   enterpriseData: AnyObject;
+  docs: number;
 };
 
 export function UploadFileModal({
   opened,
   close,
   enterpriseData,
+  docs,
 }: UploadFileModalProp) {
   const [disableButton, setDisableButton] = useState(true);
   const [documentType, setDocumentType] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -32,7 +43,16 @@ export function UploadFileModal({
       .replace(/ç/g, "c");
   }
 
+  useEffect(() => {
+    close();
+    setIsLoading(false);
+    setDocumentType("");
+    acceptedFiles.length = 0;
+  }, [docs]);
+
   const uploadFiles = async (files: File[]) => {
+    setIsLoading(true);
+    setDisableButton(true);
     await Promise.all(
       files.map(async (file) => {
         const formattedName = formatFileName(file.name);
@@ -44,10 +64,8 @@ export function UploadFileModal({
             : enterpriseData.enterpriseId;
         try {
           await Files.uploadFile(documentId, newFile, documentType);
-          setDocumentType("");
-          setDisableButton(true);
-          acceptedFiles.length = 0;
         } catch (error) {
+          setIsLoading(false);
           notifications.show({
             color: "red",
             title: "Ops! Algo deu errado",
@@ -56,11 +74,11 @@ export function UploadFileModal({
             withCloseButton: true,
             position: "top-center",
           });
+        } finally {
+          mutate(`api/documents/?uid=${router.query.id}`);
         }
       })
     );
-    mutate(`api/documents/?uid=${router.query.id}`);
-    close();
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -149,6 +167,7 @@ export function UploadFileModal({
                 name="check03"
                 value="PJ"
                 color="lime.4"
+                disabled={!enterpriseData.speId}
               />
             </Flex>
           </Radio.Group>
@@ -173,7 +192,13 @@ export function UploadFileModal({
           color="#56D963"
           disabled={disableButton}
         >
-          Salvar
+          {isLoading ? (
+            <div className={"flex justify-center items-center"}>
+              <Loader color="white" size={20} />
+            </div>
+          ) : (
+            "Salvar"
+          )}
         </Button>
       </Modal.Body>
     </Modal>

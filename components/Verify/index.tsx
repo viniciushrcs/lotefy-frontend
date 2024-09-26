@@ -91,21 +91,23 @@ export default function Verify({ setVerify, prevStep, nextStep }: any) {
           </Button>
         </>
       )}
-      <div className="flex gap-[0.25rem] justify-center items-center">
-        <Image
-          component={NextImage}
-          src={BackButton}
-          alt="Logo"
-          h={20}
-          w={20}
-        />
-        <Anchor
-          className="text-[#56D963] text-sm font-normal leading-5"
-          onClick={prevStep}
-        >
-          Voltar
-        </Anchor>
-      </div>
+      {userData.isVerified !== "verified" && (
+        <div className="flex gap-[0.25rem] justify-center items-center">
+          <Image
+            component={NextImage}
+            src={BackButton}
+            alt="Logo"
+            h={20}
+            w={20}
+          />
+          <Anchor
+            className="text-[#56D963] text-sm font-normal leading-5"
+            onClick={prevStep}
+          >
+            Voltar
+          </Anchor>
+        </div>
+      )}
     </div>
   );
 }

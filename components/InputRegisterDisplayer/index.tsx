@@ -275,7 +275,6 @@ export function InputRegisterDisplayer(
                 inputDescription={
                   "Enviamos um código de verificação para o endereço de e-mail fornecido"
                 }
-                backAnchorName={"Voltar"}
                 prevStep={() => setVerify(1)}
               >
                 <CodeInput setVerify={() => setVerify(1)} />

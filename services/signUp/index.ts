@@ -31,6 +31,17 @@ export class SignUpService {
     return response;
   }
 
+  static async resendEmailConfirmation(email: string) {
+    await HttpService.request({
+      method: HttpMethods.POST,
+      baseUrl: APP_ENVS.backendApibaseUrl,
+      url: `/user/signup/resend-code`,
+      body: {
+        email,
+      },
+    });
+  }
+
   static async userVerify(
     email: string | undefined | any[],
     token: string | undefined
